@@ -5,14 +5,24 @@ import android.app.Application;
 import com.facebook.stetho.Stetho;
 import com.squareup.leakcanary.LeakCanary;
 
+import de.alternadev.georenting.modules.ApplicationComponent;
+import de.alternadev.georenting.modules.ApplicationModule;
+import de.alternadev.georenting.modules.DaggerApplicationComponent;
 import timber.log.Timber;
 
 public class GeoRentingApplication extends Application {
+
+    private ApplicationComponent mComponent;
+
     @Override
     public void onCreate() {
         super.onCreate();
 
-        LeakCanary.install(this);
+        mComponent = DaggerApplicationComponent.builder()
+                .applicationModule(new ApplicationModule(this))
+                .build();
+
+        mComponent.inject(this);
 
         if(BuildConfig.DEBUG) {
             Timber.plant(new Timber.DebugTree());
@@ -29,5 +39,9 @@ public class GeoRentingApplication extends Application {
         }
 
         Timber.d("GeoRenting started.");
+    }
+
+    public ApplicationComponent getComponent() {
+        return mComponent;
     }
 }
