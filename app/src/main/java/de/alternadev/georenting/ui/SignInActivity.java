@@ -5,11 +5,7 @@ import android.content.IntentSender;
 import android.databinding.DataBindingUtil;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
-import android.widget.Toast;
 
 import com.google.android.gms.auth.GoogleAuthException;
 import com.google.android.gms.auth.GoogleAuthUtil;
@@ -24,7 +20,6 @@ import de.alternadev.georenting.GeoRentingApplication;
 import de.alternadev.georenting.R;
 import de.alternadev.georenting.databinding.ActivitySignInBinding;
 import hugo.weaving.DebugLog;
-import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 import rx.util.async.Async;
@@ -42,7 +37,7 @@ public class SignInActivity extends AppCompatActivity implements GoogleApiClient
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        ((GeoRentingApplication)getApplication()).getComponent().inject(this);
+        ((GeoRentingApplication) getApplication()).getComponent().inject(this);
 
         ActivitySignInBinding b = DataBindingUtil.setContentView(this, R.layout.activity_sign_in);
         b.signInButton.setOnClickListener(this::onClickSignIn);
@@ -82,6 +77,8 @@ public class SignInActivity extends AppCompatActivity implements GoogleApiClient
         .observeOn(AndroidSchedulers.mainThread())
         .subscribe((token) -> {
             Timber.d("Test: " + token);
+
+            //TODO: Send this to our server to authorize, then proceed().
         });
     }
 
@@ -105,6 +102,10 @@ public class SignInActivity extends AppCompatActivity implements GoogleApiClient
             }
         }
 
+    }
+
+    private void proceed() {
+        finish();
     }
 
     @Override
