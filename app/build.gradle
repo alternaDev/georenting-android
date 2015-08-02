@@ -19,9 +19,9 @@ android {
     signingConfigs {
         releaseSigning {
             storeFile file("../keystore.jks")
-            storePassword ""
-            keyAlias ""
-            keyPassword ""
+            storePassword georentingKeystorePassword
+            keyAlias "georenting"
+            keyPassword georentingKeystorePassword
         }
     }
 

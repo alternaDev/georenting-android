@@ -1,13 +1,16 @@
 language: android
 jdk:
-  - oraclejdk8
+- oraclejdk8
 android:
   components:
-    - build-tools-22.0.1
-    - android-22
-    - extra-google-m2repository
-    - extra-android-m2repository
-
+  - build-tools-22.0.1
+  - android-22
+  - extra-google-m2repository
+  - extra-android-m2repository
 before_install:
 - openssl aes-256-cbc -K $encrypted_6ca2067ed10f_key -iv $encrypted_6ca2067ed10f_iv
   -in keystore.jks.enc -out keystore.jks -d
+- echo "georentingKeystorePassword=$KEYSTORE_PASSWORD" > ~/.gradle/gradle.properties
+env:
+  global:
+    secure: d4ZbKRpfuc7a1CDwSesPwZhBd2O1M0eNIbJKPMnv88op3WI90vs9545ea6E7br+5ADy2kJw9fnNUdBr0VEMiJUOGfYPvBJEUOQq7nwYp7Px0zaGyVMf7QJb+aXQUEDi8Pe9etOTTrXxGA4ycko6UQeL1wV6buWAtw+H+GRWVR9VzV8dMpxqv0Ye0iJVOMZ1f4TxTDJosvmhKDPsK+//CaZqe0L+kShwfMMeitwAoNdwCkU5vlx6Q9j65y42SXnbTjQM/Bh/meHkLkFeEcNDRJTg1UvQnC4WmC/rMxZbNWmtDRZHUk904gHGeb/pPyLa8LNIYKQ3fT4kfkS3QzFB+Nw6SqyelOJ8+7iDw/95PuUx2pyuZiSyn/bxsnldvpg6IjaBFfKOdZ2GftoKJG10QiRHVP3fKfWemdxJ9N83JIrZFHBCsmjGUEwi1e8QHaq24+v3RzY+s06+kx+VpzAfqHPEjGMi+dHZjGijK5ds2ix1akLYW4a+CYI0HnedGaCbOS0x4ZEIPu5mDao5vD6ebl2A7oWvMXjq5eFobNV+r9sF58QMRFhDaJKJ0GoborwsOe4a1voDXrvuFjFL3Xa08w85ETfmadLEJLWybljP2XzsKSOJa+yz2fTDVfJ8qMu1QV+/NmsiMMK72vaJpexU+VqQ0Ry+upbwugOsg1xKIaCI=
