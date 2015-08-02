@@ -7,7 +7,7 @@
         <item name="colorAccent">@color/accent</item>
     </style>
 
-    <color name="primary_color">#8EE6E1</color>
-    <color name="dark_primary_color">#6AABA8</color>
-    <color name="accent">#CF9757</color>
+    <color name="primary_color">#E8B780</color>
+    <color name="dark_primary_color">#CF9757</color>
+    <color name="accent">#8EE6E1</color>
 </resources>
