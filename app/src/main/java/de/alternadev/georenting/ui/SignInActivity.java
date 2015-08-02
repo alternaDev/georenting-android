@@ -90,7 +90,7 @@ public class SignInActivity extends AppCompatActivity implements GoogleApiClient
     @Override
     @DebugLog
     public void onConnectionFailed(ConnectionResult connectionResult) {
-        Timber.e("Connection to Google+ failed: ", connectionResult.getErrorCode());
+        Timber.e("Connection to Google+ failed: " + connectionResult.toString());
 
         if(connectionResult.hasResolution()) {
             Timber.i("Attempting to use the given resolution.");

@@ -45,19 +45,19 @@ android {
 
         versionCode versionMajor * 10000 + versionMinor * 1000 + versionPatch * 100 + versionBuild
         versionName "${versionMajor}.${versionMinor}.${versionPatch}"
-
-        signingConfig signingConfigs.georenting
     }
 
 
 
     buildTypes {
         release {
+            signingConfig signingConfigs.georenting
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
 
         debug {
+            signingConfig signingConfigs.georenting
             applicationIdSuffix '.debug'
         }
     }
