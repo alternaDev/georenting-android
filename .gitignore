@@ -6,3 +6,6 @@
 /build
 /captures
 keystore.jks
+*.iml
+.idea/
+app/build/
