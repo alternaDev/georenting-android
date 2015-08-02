@@ -3,21 +3,30 @@ apply plugin: 'com.android.databinding'
 apply plugin: 'me.tatarka.retrolambda'
 apply plugin: 'com.jakewharton.hugo'
 apply plugin: 'com.neenbedankt.android-apt'
+apply plugin: 'testfairy'
+
+def versionMajor = 1
+def versionMinor = 0
+def versionPatch = 0
+def versionBuild = 0 // bump for dogfood builds, public betas, etc.
+
+def gitSha = 'git rev-parse --short HEAD'.execute([], project.rootDir).text.trim()
+def buildTime = new Date().format("yyyy-MM-dd'T'HH:mm:ss'Z'", TimeZone.getTimeZone("UTC"))
+
+def isTravis = "true".equals(System.getenv("TRAVIS"))
+def preDexEnabled = "true".equals(System.getProperty("pre-dex", "true"))
 
 android {
     compileSdkVersion 22
     buildToolsVersion '22.0.1'
 
-    defaultConfig {
-        applicationId "de.alternadev.georenting"
-        minSdkVersion 15
-        targetSdkVersion 22
-        versionCode 1
-        versionName "1.0"
+    dexOptions {
+        // Skip pre-dexing when running on Travis CI or when disabled via -Dpre-dex=false.
+        preDexLibraries = preDexEnabled && !isTravis
     }
 
     signingConfigs {
-        releaseSigning {
+        georenting {
             storeFile file("../keystore.jks")
             storePassword georentingKeystorePassword
             keyAlias "georenting"
@@ -25,25 +34,51 @@ android {
         }
     }
 
+    defaultConfig {
+        minSdkVersion 15
+        targetSdkVersion 22
+
+        versionCode versionMajor * 10000 + versionMinor * 1000 + versionPatch * 100 + versionBuild
+        versionName "${versionMajor}.${versionMinor}.${versionPatch}"
+
+        signingConfig signingConfigs.georenting
+    }
+
+
+
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-            signingConfig signingConfigs.releaseSigning
         }
 
         debug {
-            signingConfig signingConfigs.releaseSigning
+            applicationIdSuffix '.debug'
+        }
+    }
+
+    productFlavors {
+        internal {
+            applicationId 'de.alternadev.georenting.internal'
+        }
+        production {
+            applicationId 'de.alternadev.georenting'
         }
     }
 
     lintOptions {
         abortOnError false
+        textReport true
+        textOutput 'stdout'
     }
 
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    testfairyConfig {
+        apiKey testfairyKey
     }
 }
 
@@ -74,4 +109,12 @@ dependencies {
 
     compile 'com.google.android.gms:play-services-identity:7.5.0'
     compile 'com.google.android.gms:play-services-plus:7.5.0'
+}
+
+def installAll = tasks.create('installAll')
+installAll.description = 'Install all applications.'
+android.applicationVariants.all { variant ->
+    installAll.dependsOn(variant.install)
+    // Ensure we end up in the same group as the other install tasks.
+    installAll.group = variant.install.group
 }
