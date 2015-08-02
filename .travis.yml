@@ -1,1 +1,4 @@
 language: android
+before_install:
+- openssl aes-256-cbc -K $encrypted_6ca2067ed10f_key -iv $encrypted_6ca2067ed10f_iv
+  -in keystore.jks.enc -out keystore.jks -d
