@@ -1,4 +1,4 @@
-package de.alternadev.georenting.modules;
+package de.alternadev.georenting;
 
 import android.app.Application;
 import android.content.SharedPreferences;
@@ -14,10 +14,10 @@ import dagger.Module;
 import dagger.Provides;
 
 @Module
-public class ApplicationModule {
+public class GeoRentingModule {
     private Application mApp;
 
-    public ApplicationModule(Application app) {
+    public GeoRentingModule(Application app) {
         this.mApp = app;
     }
 
