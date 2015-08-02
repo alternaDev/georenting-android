@@ -11,22 +11,29 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import com.google.android.gms.auth.GoogleAuthException;
 import com.google.android.gms.auth.GoogleAuthUtil;
+import com.google.android.gms.auth.UserRecoverableAuthException;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.plus.Plus;
+
+import java.io.IOException;
 
 import de.alternadev.georenting.GeoRentingApplication;
 import de.alternadev.georenting.R;
 import de.alternadev.georenting.databinding.ActivitySignInBinding;
 import hugo.weaving.DebugLog;
 import rx.Observable;
+import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
+import rx.util.async.Async;
 import timber.log.Timber;
 
 public class SignInActivity extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 
     private static final int REQUEST_CODE_RESOLVE_ERR = 42;
+    private static final int REQUEST_CODE_REQUEST_PERMISSION = 43;
 
 
     private GoogleApiClient mApiClient;
@@ -55,16 +62,27 @@ public class SignInActivity extends AppCompatActivity implements GoogleApiClient
     @Override
     @DebugLog
     public void onConnected(Bundle bundle) {
-        //Plus.AccountApi.getAccountName()
-
-        /*Observable
-                .just(GoogleAuthUtil
+        Async.start(() -> {
+            try {
+                return GoogleAuthUtil
                         .getToken(this,
                                 Plus.AccountApi.getAccountName(mApiClient),
-                                "oauth2:https://www.googleapis.com/auth/userinfo.profile"))
-                .subscribeOn(Schedulers.newThread())
-
-        ;*/
+                                "oauth2:https://www.googleapis.com/auth/userinfo.profile");
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (UserRecoverableAuthException e) {
+                e.printStackTrace();
+                startActivityForResult(e.getIntent(), REQUEST_CODE_REQUEST_PERMISSION);
+            } catch (GoogleAuthException e) {
+                e.printStackTrace();
+            }
+            return "No Token";
+        }, Schedulers.newThread())
+        .subscribeOn(Schedulers.newThread())
+        .observeOn(AndroidSchedulers.mainThread())
+        .subscribe((token) -> {
+            Timber.d("Test: " + token);
+        });
     }
 
     @Override
@@ -93,7 +111,7 @@ public class SignInActivity extends AppCompatActivity implements GoogleApiClient
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if(requestCode == REQUEST_CODE_RESOLVE_ERR) {
+        if(requestCode == REQUEST_CODE_RESOLVE_ERR || requestCode == REQUEST_CODE_REQUEST_PERMISSION) {
             mApiClient.connect();
         }
     }

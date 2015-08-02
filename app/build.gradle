@@ -31,6 +31,10 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.releaseSigning
         }
+
+        debug {
+            signingConfig signingConfigs.releaseSigning
+        }
     }
 
     lintOptions {
@@ -49,6 +53,8 @@ dependencies {
     compile 'com.android.support:appcompat-v7:22.2.1'
 
     compile 'io.reactivex:rxandroid:0.25.0'
+    compile 'io.reactivex:rxjava:1.0.13'
+    compile 'io.reactivex:rxjava-async-util:0.21.0'
 
     compile 'com.jakewharton.timber:timber:3.1.0'
 
