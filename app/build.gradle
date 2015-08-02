@@ -91,6 +91,7 @@ android {
         maxDuration "15m"
         recordOnBackground true
         uploadProguardMapping true
+        iconWatermark true
     }
 }
 
