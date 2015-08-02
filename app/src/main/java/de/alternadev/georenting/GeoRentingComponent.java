@@ -4,6 +4,7 @@ import javax.inject.Singleton;
 
 import dagger.Component;
 import de.alternadev.georenting.data.NetworkModule;
+import de.alternadev.georenting.ui.SignInActivity;
 
 @Singleton
 @Component(
@@ -14,4 +15,6 @@ import de.alternadev.georenting.data.NetworkModule;
 )
 public interface GeoRentingComponent {
     void inject(GeoRentingApplication app);
+
+    void inject(SignInActivity signInActivity);
 }
