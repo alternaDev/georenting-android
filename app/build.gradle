@@ -8,7 +8,12 @@ apply plugin: 'testfairy'
 def versionMajor = 0
 def versionMinor = 1
 def versionPatch = 0
-def versionBuild = System.getenv("TRAVIS_BUILD_NUMBER").equals("null") ? Integer.valueOf("$System.env.TRAVIS_BUILD_NUMBER") : 0 // bump for dogfood builds, public betas, etc.
+def versionBuild = 0  // bump for dogfood builds, public betas, etc.
+
+try {
+    versionBuild = Integer.valueOf(System.getenv("TRAVIS_BUILD_NUMBER"))
+} catch (e) {
+}
 
 def gitSha = 'git rev-parse --short HEAD'.execute([], project.rootDir).text.trim()
 def buildTime = new Date().format("yyyy-MM-dd'T'HH:mm:ss'Z'", TimeZone.getTimeZone("UTC"))
