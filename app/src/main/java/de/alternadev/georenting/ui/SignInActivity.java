@@ -11,6 +11,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import com.google.android.gms.auth.GoogleAuthUtil;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.plus.Plus;
@@ -19,6 +20,8 @@ import de.alternadev.georenting.GeoRentingApplication;
 import de.alternadev.georenting.R;
 import de.alternadev.georenting.databinding.ActivitySignInBinding;
 import hugo.weaving.DebugLog;
+import rx.Observable;
+import rx.schedulers.Schedulers;
 import timber.log.Timber;
 
 public class SignInActivity extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
@@ -53,6 +56,15 @@ public class SignInActivity extends AppCompatActivity implements GoogleApiClient
     @DebugLog
     public void onConnected(Bundle bundle) {
         //Plus.AccountApi.getAccountName()
+
+        /*Observable
+                .just(GoogleAuthUtil
+                        .getToken(this,
+                                Plus.AccountApi.getAccountName(mApiClient),
+                                "oauth2:https://www.googleapis.com/auth/userinfo.profile"))
+                .subscribeOn(Schedulers.newThread())
+
+        ;*/
     }
 
     @Override
