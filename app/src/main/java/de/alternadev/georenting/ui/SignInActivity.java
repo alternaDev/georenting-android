@@ -1,7 +1,9 @@
 package de.alternadev.georenting.ui;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.IntentSender;
+import android.content.SharedPreferences;
 import android.databinding.DataBindingUtil;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -16,6 +18,8 @@ import com.google.android.gms.plus.Plus;
 
 import java.io.IOException;
 
+import javax.inject.Inject;
+
 import de.alternadev.georenting.GeoRentingApplication;
 import de.alternadev.georenting.R;
 import de.alternadev.georenting.databinding.ActivitySignInBinding;
@@ -29,9 +33,14 @@ public class SignInActivity extends AppCompatActivity implements GoogleApiClient
 
     private static final int REQUEST_CODE_RESOLVE_ERR = 42;
     private static final int REQUEST_CODE_REQUEST_PERMISSION = 43;
+    private static final String PREF_SIGNED_IN_BEFORE = "signedIn";
 
 
     private GoogleApiClient mApiClient;
+    private ProgressDialog mProgressDialog;
+
+    @Inject
+    SharedPreferences mPreferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,15 +51,26 @@ public class SignInActivity extends AppCompatActivity implements GoogleApiClient
         ActivitySignInBinding b = DataBindingUtil.setContentView(this, R.layout.activity_sign_in);
         b.signInButton.setOnClickListener(this::onClickSignIn);
 
+        mProgressDialog = new ProgressDialog(this);
+        mProgressDialog.setCancelable(false);
+        mProgressDialog.setIndeterminate(true);
+        mProgressDialog.setMessage(getString(R.string.message_signing_in));
+
         mApiClient = new GoogleApiClient.Builder(this)
                 .addApi(Plus.API, new Plus.PlusOptions.Builder().build())
                 .addScope(Plus.SCOPE_PLUS_LOGIN)
                 .addConnectionCallbacks(this)
                 .addOnConnectionFailedListener(this)
                 .build();
+
+        if(mPreferences.getBoolean(PREF_SIGNED_IN_BEFORE, false)) {
+            mApiClient.connect();
+            mProgressDialog.show();
+        }
     }
 
     public void onClickSignIn(View v) {
+        mProgressDialog.show();
         mApiClient.connect();
     }
 
@@ -77,6 +97,8 @@ public class SignInActivity extends AppCompatActivity implements GoogleApiClient
         .observeOn(AndroidSchedulers.mainThread())
         .subscribe((token) -> {
             Timber.d("Test: " + token);
+            mProgressDialog.dismiss();
+            mPreferences.edit().putBoolean(PREF_SIGNED_IN_BEFORE, true).apply();
 
             //TODO: Send this to our server to authorize, then proceed().
         });
