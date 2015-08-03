@@ -3,6 +3,7 @@ package de.alternadev.georenting;
 import android.app.Application;
 
 import com.facebook.stetho.Stetho;
+import com.uphyca.stetho_realm.RealmInspectorModulesProvider;
 
 import timber.log.Timber;
 
@@ -29,8 +30,7 @@ public class GeoRentingApplication extends Application {
                     Stetho.newInitializerBuilder(this)
                             .enableDumpapp(
                                     Stetho.defaultDumperPluginsProvider(this))
-                            .enableWebKitInspector(
-                                    Stetho.defaultInspectorModulesProvider(this))
+                            .enableWebKitInspector(RealmInspectorModulesProvider.builder(this).build())
                             .build());
         }
 
