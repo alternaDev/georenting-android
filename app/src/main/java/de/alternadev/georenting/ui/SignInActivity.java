@@ -83,32 +83,34 @@ public class SignInActivity extends AppCompatActivity implements GoogleApiClient
     @Override
     @DebugLog
     public void onConnected(Bundle bundle) {
-        Async.start(() -> {
-            try {
-                return new User(GoogleAuthUtil
-                        .getToken(this,
-                                Plus.AccountApi.getAccountName(mApiClient),
-                                "oauth2:" + SCOPE_PROFILE));
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (UserRecoverableAuthException e) {
-                e.printStackTrace();
-                startActivityForResult(e.getIntent(), REQUEST_CODE_REQUEST_PERMISSION);
-            } catch (GoogleAuthException e) {
-                e.printStackTrace();
-            }
-            return new User();
-        }, Schedulers.newThread())
-        .subscribeOn(Schedulers.newThread())
-        .observeOn(AndroidSchedulers.mainThread())
-        .flatMap((user) -> mGeoRentingService.auth((User) user))
-        .subscribe((sessionToken) -> {
-            Timber.d("Test: " + sessionToken);
-            mProgressDialog.dismiss();
-            mPreferences.edit().putBoolean(PREF_SIGNED_IN_BEFORE, true).apply();
+        Async.start(this::getGoogleAuthToken, Schedulers.newThread())
+            .subscribeOn(Schedulers.newThread())
+            .observeOn(AndroidSchedulers.mainThread())
+            .flatMap((user) -> mGeoRentingService.auth((User) user))
+            .subscribe((sessionToken) -> {
+                Timber.d("Test: " + sessionToken);
+                mProgressDialog.dismiss();
+                mPreferences.edit().putBoolean(PREF_SIGNED_IN_BEFORE, true).apply();
 
-            ((GeoRentingApplication) getApplication()).setSessionToken(sessionToken);
-        });
+                ((GeoRentingApplication) getApplication()).setSessionToken(sessionToken);
+            });
+    }
+
+    private User getGoogleAuthToken() {
+        try {
+            return new User(GoogleAuthUtil
+                    .getToken(this,
+                            Plus.AccountApi.getAccountName(mApiClient),
+                            "oauth2:" + SCOPE_PROFILE));
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (UserRecoverableAuthException e) {
+            e.printStackTrace();
+            startActivityForResult(e.getIntent(), REQUEST_CODE_REQUEST_PERMISSION);
+        } catch (GoogleAuthException e) {
+            e.printStackTrace();
+        }
+        return new User();
     }
 
     @Override
