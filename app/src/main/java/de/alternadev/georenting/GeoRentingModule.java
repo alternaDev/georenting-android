@@ -14,9 +14,9 @@ import dagger.Provides;
 
 @Module
 public class GeoRentingModule {
-    private Application mApp;
+    private GeoRentingApplication mApp;
 
-    public GeoRentingModule(Application app) {
+    public GeoRentingModule(GeoRentingApplication app) {
         this.mApp = app;
     }
 
@@ -30,5 +30,9 @@ public class GeoRentingModule {
     @Singleton
     RefWatcher provideLeakCanary() {
         return LeakCanary.install(mApp);
+    }
+
+    @Provides @Singleton Application provideApplication() {
+        return mApp;
     }
 }

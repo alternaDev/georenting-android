@@ -1,15 +1,18 @@
 package de.alternadev.georenting;
 
 import android.app.Application;
+import android.content.pm.PackageInstaller;
 
 import com.facebook.stetho.Stetho;
 import com.uphyca.stetho_realm.RealmInspectorModulesProvider;
 
+import de.alternadev.georenting.data.api.model.SessionToken;
 import timber.log.Timber;
 
 public class GeoRentingApplication extends Application {
 
     private GeoRentingComponent mComponent;
+    private SessionToken mSessionToken = new SessionToken();
 
     @Override
     public void onCreate() {
@@ -40,4 +43,8 @@ public class GeoRentingApplication extends Application {
     public GeoRentingComponent getComponent() {
         return mComponent;
     }
+
+    public SessionToken getSessionToken() {return mSessionToken;}
+
+    public void setSessionToken(SessionToken sessionToken) { this.mSessionToken = sessionToken;}
 }

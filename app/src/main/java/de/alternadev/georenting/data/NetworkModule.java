@@ -4,6 +4,7 @@ import android.app.Application;
 import android.net.Uri;
 
 import com.facebook.stetho.okhttp.StethoInterceptor;
+import com.google.gson.Gson;
 import com.squareup.okhttp.Cache;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.picasso.OkHttpDownloader;
@@ -50,5 +51,10 @@ public class NetworkModule {
                 .downloader(new OkHttpDownloader(client))
                 .listener((picasso, uri, exception) -> Timber.e(exception, "Failed to load image %s: ", uri))
                 .build();
+    }
+
+    @Provides
+    Gson provideGson() {
+        return new Gson();
     }
 }

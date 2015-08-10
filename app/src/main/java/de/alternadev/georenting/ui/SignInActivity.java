@@ -22,6 +22,8 @@ import javax.inject.Inject;
 
 import de.alternadev.georenting.GeoRentingApplication;
 import de.alternadev.georenting.R;
+import de.alternadev.georenting.data.api.GeoRentingService;
+import de.alternadev.georenting.data.api.model.User;
 import de.alternadev.georenting.databinding.ActivitySignInBinding;
 import hugo.weaving.DebugLog;
 import rx.android.schedulers.AndroidSchedulers;
@@ -42,6 +44,9 @@ public class SignInActivity extends AppCompatActivity implements GoogleApiClient
 
     @Inject
     SharedPreferences mPreferences;
+
+    @Inject
+    GeoRentingService mGeoRentingService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,10 +85,10 @@ public class SignInActivity extends AppCompatActivity implements GoogleApiClient
     public void onConnected(Bundle bundle) {
         Async.start(() -> {
             try {
-                return GoogleAuthUtil
+                return new User(GoogleAuthUtil
                         .getToken(this,
                                 Plus.AccountApi.getAccountName(mApiClient),
-                                "oauth2:" + SCOPE_PROFILE);
+                                "oauth2:" + SCOPE_PROFILE));
             } catch (IOException e) {
                 e.printStackTrace();
             } catch (UserRecoverableAuthException e) {
@@ -92,16 +97,17 @@ public class SignInActivity extends AppCompatActivity implements GoogleApiClient
             } catch (GoogleAuthException e) {
                 e.printStackTrace();
             }
-            return "No Token";
+            return new User();
         }, Schedulers.newThread())
         .subscribeOn(Schedulers.newThread())
         .observeOn(AndroidSchedulers.mainThread())
-        .subscribe((token) -> {
-            Timber.d("Test: " + token);
+        .flatMap((user) -> mGeoRentingService.auth((User) user))
+        .subscribe((sessionToken) -> {
+            Timber.d("Test: " + sessionToken);
             mProgressDialog.dismiss();
             mPreferences.edit().putBoolean(PREF_SIGNED_IN_BEFORE, true).apply();
 
-            //TODO: Send this to our server to authorize, then proceed().
+            ((GeoRentingApplication) getApplication()).setSessionToken(sessionToken);
         });
     }
 
