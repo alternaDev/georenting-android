@@ -123,6 +123,7 @@ dependencies {
 
     compile 'com.google.android.gms:play-services-identity:7.5.0'
     compile 'com.google.android.gms:play-services-plus:7.5.0'
+    compile 'com.google.android.gms:play-services-gcm:7.5.0'
 
     compile 'io.realm:realm-android:0.82.0'
 }
