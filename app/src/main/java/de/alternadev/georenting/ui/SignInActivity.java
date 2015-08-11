@@ -23,6 +23,7 @@ import javax.inject.Inject;
 import de.alternadev.georenting.GeoRentingApplication;
 import de.alternadev.georenting.R;
 import de.alternadev.georenting.data.api.GeoRentingService;
+import de.alternadev.georenting.data.api.gcm.GcmRegistrationIntentService;
 import de.alternadev.georenting.data.api.model.User;
 import de.alternadev.georenting.databinding.ActivitySignInBinding;
 import hugo.weaving.DebugLog;
@@ -93,6 +94,7 @@ public class SignInActivity extends AppCompatActivity implements GoogleApiClient
                 mPreferences.edit().putBoolean(PREF_SIGNED_IN_BEFORE, true).apply();
 
                 ((GeoRentingApplication) getApplication()).setSessionToken(sessionToken);
+                startService(new Intent(this, GcmRegistrationIntentService.class));
             });
     }
 

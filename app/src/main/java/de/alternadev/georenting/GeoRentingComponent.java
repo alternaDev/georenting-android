@@ -7,6 +7,7 @@ import javax.inject.Singleton;
 import dagger.Component;
 import de.alternadev.georenting.data.NetworkModule;
 import de.alternadev.georenting.data.api.ApiModule;
+import de.alternadev.georenting.data.api.gcm.GcmRegistrationIntentService;
 import de.alternadev.georenting.ui.SignInActivity;
 
 @Singleton
@@ -21,4 +22,6 @@ public interface GeoRentingComponent {
     void inject(GeoRentingApplication app);
 
     void inject(SignInActivity signInActivity);
+
+    void inject(GcmRegistrationIntentService gcmRegistrationIntentService);
 }
