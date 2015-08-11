@@ -15,6 +15,8 @@ import de.alternadev.georenting.R;
 import de.alternadev.georenting.data.api.GeoRentingService;
 import de.alternadev.georenting.data.api.model.GcmToken;
 import hugo.weaving.DebugLog;
+import retrofit.RetrofitError;
+import timber.log.Timber;
 
 public class GcmRegistrationIntentService extends IntentService {
 
@@ -39,8 +41,9 @@ public class GcmRegistrationIntentService extends IntentService {
     protected void onHandleIntent(Intent intent) {
         try {
             mGeoRentingService.registerGcmToken(new GcmToken(getToken()));
-        } catch (IOException e) {
+        } catch (IOException | RetrofitError e ) {
             e.printStackTrace();
+            Timber.e(e, "Sending GCM token failed. ");
         }
     }
 

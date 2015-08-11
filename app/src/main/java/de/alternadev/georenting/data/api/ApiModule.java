@@ -32,7 +32,7 @@ public class ApiModule {
     @Singleton
     @Named("sessionToken")
     RequestInterceptor provideRequestInterceptor(Application application) {
-        return request -> request.addHeader("Authentication", ((GeoRentingApplication)application).getSessionToken().token);
+        return request -> request.addHeader("Authorization", ((GeoRentingApplication)application).getSessionToken().token);
     }
 
     @Provides

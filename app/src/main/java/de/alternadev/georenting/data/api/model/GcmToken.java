@@ -7,6 +7,7 @@ public class GcmToken {
     public String gcmToken;
 
     public GcmToken(String token) {
+        this.gcmToken = token;
     }
     public GcmToken() {}
 }

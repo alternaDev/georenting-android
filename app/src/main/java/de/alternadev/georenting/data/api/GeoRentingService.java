@@ -13,5 +13,5 @@ public interface GeoRentingService {
     Observable<SessionToken> auth(@Body User user);
 
     @POST("/users/me/gcm")
-    Observable<Object> registerGcmToken(@Body GcmToken token);
+    Object registerGcmToken(@Body GcmToken token);
 }
