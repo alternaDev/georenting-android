@@ -23,10 +23,6 @@ public class GcmRegistrationIntentService extends IntentService {
     @Inject
     GeoRentingService mGeoRentingService;
 
-    /**
-     * Creates an IntentService.  Invoked by your subclass's constructor.
-     *
-     */
     public GcmRegistrationIntentService() {
         super("Register GCM");
     }
