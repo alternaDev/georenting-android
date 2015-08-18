@@ -25,6 +25,11 @@
             </intent-filter>
         </activity>
 
+        <activity
+            android:name=".ui.main.MainActivity"
+            android:label="@string/title_activity_main">
+        </activity>
+
         <receiver
             android:name="com.google.android.gms.gcm.GcmReceiver"
             android:exported="true"
@@ -54,10 +59,7 @@
             android:name=".data.api.gcm.GcmRegistrationIntentService"
             android:exported="false" />
 
-        <activity
-            android:name=".ui.main.MainActivity"
-            android:label="@string/title_activity_main" >
-        </activity>
+
     </application>
 
 </manifest>

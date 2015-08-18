@@ -26,6 +26,7 @@ import de.alternadev.georenting.data.api.GeoRentingService;
 import de.alternadev.georenting.data.api.gcm.GcmRegistrationIntentService;
 import de.alternadev.georenting.data.api.model.User;
 import de.alternadev.georenting.databinding.ActivitySignInBinding;
+import de.alternadev.georenting.ui.main.MainActivity;
 import hugo.weaving.DebugLog;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
@@ -95,6 +96,8 @@ public class SignInActivity extends AppCompatActivity implements GoogleApiClient
 
                 ((GeoRentingApplication) getApplication()).setSessionToken(sessionToken);
                 startService(new Intent(this, GcmRegistrationIntentService.class));
+
+                proceed();
             });
     }
 
@@ -138,6 +141,7 @@ public class SignInActivity extends AppCompatActivity implements GoogleApiClient
     }
 
     private void proceed() {
+        startActivity(new Intent(this, MainActivity.class));
         finish();
     }
 

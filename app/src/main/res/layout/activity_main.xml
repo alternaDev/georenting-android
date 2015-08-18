@@ -1,19 +1,25 @@
-<android.support.v4.widget.DrawerLayout
+<layout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:fitsSystemWindows="true">
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <FrameLayout
-        android:id="@+id/main_content_frame"
+    <data>
+    </data>
+
+    <android.support.v4.widget.DrawerLayout
+        tools:context="de.alternadev.georenting.gui.main.MainActivity"
+        app:windowActionBar="false"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
-
-    <android.support.design.widget.NavigationView
-        android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:layout_gravity="start"
-        app:headerLayout="@layout/main_drawer_header"
-        app:menu="@menu/main_drawer"/>
-</android.support.v4.widget.DrawerLayout>
+        android:fitsSystemWindows="true">
+
+        <include layout="@layout/main_content" />
+
+        <android.support.design.widget.NavigationView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="start"
+            app:headerLayout="@layout/main_drawer_header"
+            app:menu="@menu/main_drawer"/>
+    </android.support.v4.widget.DrawerLayout>
+</layout>
