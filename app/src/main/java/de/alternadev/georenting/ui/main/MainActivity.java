@@ -84,17 +84,19 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
     }
 
     private boolean onNavigationItemSelected(MenuItem menuItem) {
-        menuItem.setChecked(true);
         switch (menuItem.getItemId()) {
             case R.id.nav_my_geofences:
+                menuItem.setChecked(true);
                 showFragment(MyGeofencesFragment.newInstance());
 
                 break;
             case R.id.nav_map:
+                menuItem.setChecked(true);
                 showFragment(MapFragment.newInstance());
 
                 break;
             case R.id.nav_profile:
+                menuItem.setChecked(true);
                 showFragment(ProfileFragment.newInstance());
                 break;
         }
