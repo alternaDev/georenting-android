@@ -1,7 +1,12 @@
 package de.alternadev.georenting.ui.main;
 
+import android.app.Fragment;
+import android.app.FragmentTransaction;
 import android.content.res.Configuration;
 import android.databinding.DataBindingUtil;
+import android.support.design.widget.NavigationView;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
@@ -10,6 +15,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.FrameLayout;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -31,6 +37,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
 
     private ActionBarDrawerToggle mDrawerToggle;
     private HeaderView mHeaderView;
+    private DrawerLayout mDrawerLayout;
 
     private GoogleApiClient mClient;
 
@@ -53,6 +60,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
 
         mHeaderView = new HeaderView(this);
         b.mainNavigationView.addHeaderView(mHeaderView);
+        b.mainNavigationView.setNavigationItemSelectedListener(this::onNavigationItemSelected);
 
         mClient = new GoogleApiClient.Builder(this)
                 .addApi(Plus.API)
@@ -62,6 +70,38 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
                 .addConnectionCallbacks(this)
                 .build();
         mClient.connect();
+
+        mDrawerLayout = b.mainDrawerLayout;
+    }
+
+    private void showFragment(Fragment fragment) {
+        FragmentTransaction transaction = getFragmentManager().beginTransaction();
+
+        transaction.replace(R.id.main_content_frame, fragment);
+        transaction.addToBackStack(null);
+
+        transaction.commit();
+    }
+
+    private boolean onNavigationItemSelected(MenuItem menuItem) {
+        menuItem.setChecked(true);
+        switch (menuItem.getItemId()) {
+            case R.id.nav_my_geofences:
+                showFragment(MyGeofencesFragment.newInstance());
+
+                break;
+            case R.id.nav_map:
+                showFragment(MapFragment.newInstance());
+
+                break;
+            case R.id.nav_profile:
+                showFragment(ProfileFragment.newInstance());
+                break;
+        }
+
+        mDrawerLayout.closeDrawer(GravityCompat.START);
+
+        return true;
     }
 
     @Override

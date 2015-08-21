@@ -13,4 +13,7 @@
     <string name="main_drawer_support">Support</string>
     <string name="main_drawer_map">Map</string>
     <string name="main_drawer_profile">Profile</string>
+
+<!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
