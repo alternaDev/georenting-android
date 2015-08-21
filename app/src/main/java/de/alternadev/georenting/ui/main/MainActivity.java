@@ -72,6 +72,8 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
         mClient.connect();
 
         mDrawerLayout = b.mainDrawerLayout;
+
+        showFragment(MyGeofencesFragment.newInstance());
     }
 
     private void showFragment(Fragment fragment) {

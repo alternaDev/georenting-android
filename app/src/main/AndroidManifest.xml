@@ -59,6 +59,8 @@
             android:name=".data.api.gcm.GcmRegistrationIntentService"
             android:exported="false" />
 
+        <meta-data android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyABPuKI1AlNdy55U8r4i3K4kum_0AjduRQ" />
 
     </application>
 
