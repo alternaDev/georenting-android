@@ -7,9 +7,9 @@
             android:icon="@drawable/ic_plusone_medium_off_client"
             android:title="@string/main_drawer_my_geofences"/>
         <item
-            android:id="@+id/navigation_item_2"
+            android:id="@+id/nav_map"
             android:icon="@drawable/ic_plusone_medium_off_client"
-            android:title="@string/hello_world"/>
+            android:title="@string/main_drawer_map"/>
     </group>
 
     <group android:id="@+id/nav_footer"

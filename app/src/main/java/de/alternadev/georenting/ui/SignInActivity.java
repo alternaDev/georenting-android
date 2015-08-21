@@ -39,6 +39,7 @@ public class SignInActivity extends AppCompatActivity implements GoogleApiClient
     private static final int REQUEST_CODE_REQUEST_PERMISSION = 43;
     private static final String PREF_SIGNED_IN_BEFORE = "signedIn";
     private static final String SCOPE_PROFILE = "https://www.googleapis.com/auth/userinfo.profile";
+    private static final String SCOPE_EMAIL = "https://www.googleapis.com/auth/userinfo.email";
 
 
     private GoogleApiClient mApiClient;
@@ -106,7 +107,7 @@ public class SignInActivity extends AppCompatActivity implements GoogleApiClient
             return new User(GoogleAuthUtil
                     .getToken(this,
                             Plus.AccountApi.getAccountName(mApiClient),
-                            "oauth2:" + SCOPE_PROFILE));
+                            "oauth2:" + SCOPE_PROFILE + " " + SCOPE_EMAIL));
         } catch (IOException e) {
             e.printStackTrace();
         } catch (UserRecoverableAuthException e) {

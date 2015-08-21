@@ -27,5 +27,8 @@ allprojects {
     repositories {
         jcenter()
         maven { url 'https://raw.github.com/uPhyca/stetho-realm/master/maven-repo' }
+        maven {
+            url 'http://dl.bintray.com/raphaelbussa/maven'
+        }
     }
 }
