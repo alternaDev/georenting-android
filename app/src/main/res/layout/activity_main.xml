@@ -11,7 +11,8 @@
         app:windowActionBar="false"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:fitsSystemWindows="true">
+        android:fitsSystemWindows="true"
+        android:id="@+id/main_drawer_layout">
 
         <include layout="@layout/main_content" />
 
