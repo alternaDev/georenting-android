@@ -15,6 +15,9 @@ import android.support.v7.widget.Toolbar;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -74,6 +77,16 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
         mDrawerLayout = b.mainDrawerLayout;
 
         showFragment(MyGeofencesFragment.newInstance());
+
+        /* Workaround for bug in AppCompat v23.0.0: https://code.google.com/p/android/issues/detail?id=183166 */
+        ViewGroup appBarLayout = b.appbar;
+        for (int i = 0; i < appBarLayout.getChildCount(); i++) {
+            View childView = appBarLayout.getChildAt(i);
+            if (!childView.isClickable()) {
+                childView.setOnTouchListener((view, motionEvent) -> true);
+            }
+        }
+        /* End workaround */
     }
 
     private void showFragment(Fragment fragment) {
