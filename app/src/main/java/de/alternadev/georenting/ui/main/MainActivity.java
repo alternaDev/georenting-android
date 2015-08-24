@@ -146,10 +146,18 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
     }
 
     private void showUserInHeader(Person user) {
-        picasso.load(user.getCover().getCoverPhoto().getUrl())
-               .into(mHeaderView.background());
-        picasso.load(user.getImage().getUrl() + "&sz=250")
-               .into(mHeaderView.avatar());
+        if(user.getCover() != null && user.getCover().getCoverPhoto() != null) {
+            picasso.load(user.getCover().getCoverPhoto().getUrl())
+                    .into(mHeaderView.background());
+        } else {
+            picasso.load(R.drawable.default_background)
+                    .fit()
+                    .into(mHeaderView.background());
+        }
+        if(user.getImage() != null) {
+            picasso.load(user.getImage().getUrl() + "&sz=250")
+                    .into(mHeaderView.avatar());
+        }
         mHeaderView.username(user.getDisplayName());
         mHeaderView.email(Plus.AccountApi.getAccountName(mClient));
     }
