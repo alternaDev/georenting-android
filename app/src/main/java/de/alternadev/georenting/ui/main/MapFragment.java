@@ -8,7 +8,6 @@ import android.view.ViewGroup;
 
 import com.google.android.gms.maps.MapView;
 
-import de.alternadev.georenting.R;
 import de.alternadev.georenting.databinding.FragmentMapBinding;
 
 public class MapFragment extends Fragment {

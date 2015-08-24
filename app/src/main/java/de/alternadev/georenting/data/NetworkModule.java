@@ -1,7 +1,6 @@
 package de.alternadev.georenting.data;
 
 import android.app.Application;
-import android.net.Uri;
 
 import com.facebook.stetho.okhttp.StethoInterceptor;
 import com.google.gson.Gson;

@@ -1,7 +1,6 @@
 package de.alternadev.georenting;
 
 import android.app.Application;
-import android.content.pm.PackageInstaller;
 
 import com.facebook.stetho.Stetho;
 import com.uphyca.stetho_realm.RealmInspectorModulesProvider;

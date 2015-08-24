@@ -1,7 +1,5 @@
 package de.alternadev.georenting;
 
-import android.app.Application;
-
 import javax.inject.Singleton;
 
 import dagger.Component;
