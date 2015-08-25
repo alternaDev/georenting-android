@@ -13,6 +13,7 @@ import com.google.android.gms.auth.GoogleAuthException;
 import com.google.android.gms.auth.GoogleAuthUtil;
 import com.google.android.gms.auth.UserRecoverableAuthException;
 import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.plus.Plus;
 
@@ -59,6 +60,7 @@ public class SignInActivity extends AppCompatActivity implements GoogleApiClient
 
         ActivitySignInBinding b = DataBindingUtil.setContentView(this, R.layout.activity_sign_in);
         b.signInButton.setOnClickListener(this::onClickSignIn);
+        b.signInButton.setStyle(SignInButton.SIZE_WIDE, SignInButton.SIZE_WIDE);
 
         mProgressDialog = new ProgressDialog(this);
         mProgressDialog.setCancelable(false);
