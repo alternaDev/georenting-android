@@ -60,7 +60,7 @@ public class SignInActivity extends AppCompatActivity implements GoogleApiClient
 
         ActivitySignInBinding b = DataBindingUtil.setContentView(this, R.layout.activity_sign_in);
         b.signInButton.setOnClickListener(this::onClickSignIn);
-        b.signInButton.setStyle(SignInButton.SIZE_WIDE, SignInButton.SIZE_WIDE);
+        b.signInButton.setStyle(SignInButton.SIZE_WIDE, SignInButton.COLOR_DARK);
 
         mProgressDialog = new ProgressDialog(this);
         mProgressDialog.setCancelable(false);
@@ -70,6 +70,7 @@ public class SignInActivity extends AppCompatActivity implements GoogleApiClient
         mApiClient = new GoogleApiClient.Builder(this)
                 .addApi(Plus.API, new Plus.PlusOptions.Builder().build())
                 .addScope(Plus.SCOPE_PLUS_LOGIN)
+                .addScope(Plus.SCOPE_PLUS_PROFILE)
                 .addConnectionCallbacks(this)
                 .addOnConnectionFailedListener(this)
                 .build();
