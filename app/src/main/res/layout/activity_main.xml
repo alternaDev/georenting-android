@@ -47,8 +47,8 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_gravity="start"
-            app:itemIconTint="@color/primaryDark"
-            app:itemTextColor="@color/primaryDark"
+            app:itemIconTint="@color/state_list_icon"
+            app:itemTextColor="@color/state_list_text"
             android:id="@+id/main_navigation_view"
             app:menu="@menu/main_drawer"/>
     </android.support.v4.widget.DrawerLayout>
