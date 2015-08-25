@@ -24,10 +24,16 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".ui.main.MainActivity"
-            android:label="@string/title_activity_main">
+            android:label="@string/title_activity_main" >
+        </activity>
+        <activity
+            android:name=".ui.settings.SettingsActivity"
+            android:parentActivityName=".ui.main.MainActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="de.alternadev.georenting.ui.main.MainActivity" />
         </activity>
 
         <receiver
@@ -59,8 +65,10 @@
             android:name=".data.api.gcm.GcmRegistrationIntentService"
             android:exported="false" />
 
-        <meta-data android:name="com.google.android.geo.API_KEY"
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyABPuKI1AlNdy55U8r4i3K4kum_0AjduRQ" />
+
 
     </application>
 

@@ -2,6 +2,7 @@ package de.alternadev.georenting.ui.main;
 
 import android.app.Fragment;
 import android.app.FragmentTransaction;
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
@@ -25,6 +26,7 @@ import javax.inject.Inject;
 import de.alternadev.georenting.GeoRentingApplication;
 import de.alternadev.georenting.R;
 import de.alternadev.georenting.databinding.ActivityMainBinding;
+import de.alternadev.georenting.ui.settings.SettingsActivity;
 import rebus.header.view.HeaderView;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
@@ -107,6 +109,10 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
             case R.id.nav_profile:
                 menuItem.setChecked(true);
                 showFragment(ProfileFragment.newInstance());
+                break;
+            case R.id.nav_settings:
+                menuItem.setChecked(false);
+                startActivity(new Intent(this, SettingsActivity.class));
                 break;
         }
 
