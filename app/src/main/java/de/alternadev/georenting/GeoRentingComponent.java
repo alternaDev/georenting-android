@@ -8,6 +8,7 @@ import de.alternadev.georenting.data.api.ApiModule;
 import de.alternadev.georenting.data.api.gcm.GcmRegistrationIntentService;
 import de.alternadev.georenting.ui.SignInActivity;
 import de.alternadev.georenting.ui.main.MainActivity;
+import de.alternadev.georenting.ui.main.ProfileFragment;
 
 @Singleton
 @Component(
@@ -25,4 +26,6 @@ public interface GeoRentingComponent {
     void inject(GcmRegistrationIntentService gcmRegistrationIntentService);
 
     void inject(MainActivity mainActivity);
+
+    void inject(ProfileFragment profileFragment);
 }

@@ -42,6 +42,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
 
     @Inject
     Picasso picasso;
+    private Person mGoogleUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -108,7 +109,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
                 break;
             case R.id.nav_profile:
                 menuItem.setChecked(true);
-                showFragment(ProfileFragment.newInstance());
+                showFragment(ProfileFragment.newInstance(mGoogleUser));
                 break;
             case R.id.nav_settings:
                 menuItem.setChecked(false);
@@ -146,6 +147,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
     }
 
     private void showUserInHeader(Person user) {
+        this.mGoogleUser = user;
         if(user.getCover() != null && user.getCover().getCoverPhoto() != null) {
             picasso.load(user.getCover().getCoverPhoto().getUrl())
                     .into(mHeaderView.background());
