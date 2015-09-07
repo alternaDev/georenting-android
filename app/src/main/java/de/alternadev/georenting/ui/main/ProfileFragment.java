@@ -59,6 +59,10 @@ public class ProfileFragment extends Fragment {
                     .into(b.backgroundImage);
         }
 
+        b.setUser(mGoogleUser);
+
+        b.profileImage.bringToFront(); //HACKS
+
         return b.getRoot();
     }
 
