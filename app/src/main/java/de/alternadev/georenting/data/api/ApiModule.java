@@ -22,11 +22,9 @@ import retrofit.converter.GsonConverter;
 public class ApiModule {
 
     public static final String PRODUCTION_API_URL = "https://georenting.herokuapp.com/";
+    public static final String STAGING_API_URL = "https://georenting-staging.herokuapp.com/";
 
-    @Provides @Singleton
-    Endpoint provideEndpoint() {
-        return Endpoints.newFixedEndpoint(PRODUCTION_API_URL);
-    }
+
 
     @Provides
     @Singleton
