@@ -105,6 +105,7 @@ public class SignInActivity extends AppCompatActivity implements GoogleApiClient
             });
     }
 
+    @DebugLog
     private User getGoogleAuthToken() {
         try {
             return new User(GoogleAuthUtil

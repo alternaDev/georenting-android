@@ -133,6 +133,9 @@ dependencies {
     compile 'io.realm:realm-android:0.82.0'
 
     compile 'rebus:header-view:1.0.0'
+
+    compile "org.parceler:parceler-api:1.0.3"
+    apt "org.parceler:parceler:1.0.3"
 }
 
 def installAll = tasks.create('installAll')

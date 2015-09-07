@@ -25,6 +25,7 @@ import javax.inject.Inject;
 
 import de.alternadev.georenting.GeoRentingApplication;
 import de.alternadev.georenting.R;
+import de.alternadev.georenting.data.api.model.User;
 import de.alternadev.georenting.databinding.ActivityMainBinding;
 import de.alternadev.georenting.ui.settings.SettingsActivity;
 import rebus.header.view.HeaderView;
@@ -32,17 +33,16 @@ import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 import rx.util.async.Async;
 
-public class MainActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener, GoogleApiClient.ConnectionCallbacks {
+public class MainActivity extends AppCompatActivity {
 
     private ActionBarDrawerToggle mDrawerToggle;
     private HeaderView mHeaderView;
     private DrawerLayout mDrawerLayout;
 
-    private GoogleApiClient mClient;
-
     @Inject
     Picasso picasso;
-    private Person mGoogleUser;
+
+    private User mCurrentUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,14 +62,8 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
         b.mainNavigationView.addHeaderView(mHeaderView);
         b.mainNavigationView.setNavigationItemSelectedListener(this::onNavigationItemSelected);
 
-        mClient = new GoogleApiClient.Builder(this)
-                .addApi(Plus.API)
-                .addScope(Plus.SCOPE_PLUS_PROFILE)
-                .addScope(Plus.SCOPE_PLUS_LOGIN)
-                .addOnConnectionFailedListener(this)
-                .addConnectionCallbacks(this)
-                .build();
-        mClient.connect();
+        mCurrentUser = ((GeoRentingApplication) getApplication()).getSessionToken().user;
+        showUserInHeader(mCurrentUser);
 
         mDrawerLayout = b.mainDrawerLayout;
 
@@ -109,7 +103,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
                 break;
             case R.id.nav_profile:
                 menuItem.setChecked(true);
-                showFragment(ProfileFragment.newInstance(mGoogleUser));
+                showFragment(ProfileFragment.newInstance(mCurrentUser));
                 break;
             case R.id.nav_settings:
                 menuItem.setChecked(false);
@@ -133,39 +127,25 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
         return mDrawerToggle.onOptionsItemSelected(item) || super.onOptionsItemSelected(item);
     }
 
-    @Override
-    public void onConnectionFailed(ConnectionResult connectionResult) {
 
-    }
-
-    @Override
-    public void onConnected(Bundle bundle) {
-        Async.start(() -> Plus.PeopleApi.getCurrentPerson(mClient), Schedulers.newThread())
-                .subscribeOn(Schedulers.newThread())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(this::showUserInHeader);
-    }
-
-    private void showUserInHeader(Person user) {
-        this.mGoogleUser = user;
-        if(user.getCover() != null && user.getCover().getCoverPhoto() != null) {
-            picasso.load(user.getCover().getCoverPhoto().getUrl())
+    private void showUserInHeader(User user) {
+        if(user.coverUrl != null && !user.coverUrl.isEmpty()) {
+            picasso.load(user.coverUrl)
                     .into(mHeaderView.background());
         } else {
             picasso.load(R.drawable.default_background)
                     .fit()
                     .into(mHeaderView.background());
         }
-        if(user.getImage() != null) {
-            picasso.load(user.getImage().getUrl() + "&sz=250")
+        if(user.avatarUrl != null && !user.avatarUrl.isEmpty()) {
+            picasso.load(user.avatarUrl + "&sz=250")
                     .into(mHeaderView.avatar());
         }
-        mHeaderView.username(user.getDisplayName());
-        mHeaderView.email(Plus.AccountApi.getAccountName(mClient));
+        mHeaderView.username(user.name);
     }
 
     @Override
-    public void onConnectionSuspended(int i) {
-
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
     }
 }

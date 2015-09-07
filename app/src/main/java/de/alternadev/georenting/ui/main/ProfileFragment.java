@@ -6,34 +6,36 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.google.android.gms.plus.model.people.Person;
 import com.squareup.picasso.Picasso;
+
+import org.parceler.Parcels;
 
 import javax.inject.Inject;
 
 import de.alternadev.georenting.GeoRentingApplication;
-import de.alternadev.georenting.R;
+import de.alternadev.georenting.data.api.model.User;
 import de.alternadev.georenting.databinding.FragmentProfileBinding;
 
 public class ProfileFragment extends Fragment {
-    public static ProfileFragment newInstance(Person googleUser) {
-        return new ProfileFragment(googleUser);
+    private static final String SAVED_INSTANCE_CURRENT_USER = "currentUser";
+
+    public static ProfileFragment newInstance(User currentUser) {
+        ProfileFragment f = new ProfileFragment();
+
+        Bundle args = new Bundle();
+        args.putParcelable(SAVED_INSTANCE_CURRENT_USER, Parcels.wrap(currentUser));
+        f.setArguments(args);
+
+        return f;
     }
 
-    private final Person mGoogleUser;
-
+    private User mCurrentUser;
 
     @Inject
     Picasso picasso;
 
 
     public ProfileFragment() {
-        // Required empty public constructor
-        mGoogleUser = null;
-    }
-
-    public ProfileFragment(Person googleUser) {
-        this.mGoogleUser = googleUser;
     }
 
     @Override
@@ -45,25 +47,37 @@ public class ProfileFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
+        if(getArguments() != null && getArguments().getParcelable(SAVED_INSTANCE_CURRENT_USER) != null)
+            mCurrentUser = Parcels.unwrap(getArguments().getParcelable(SAVED_INSTANCE_CURRENT_USER));
+
+        if(mCurrentUser == null)
+            mCurrentUser = Parcels.unwrap(savedInstanceState.getParcelable(SAVED_INSTANCE_CURRENT_USER));
+
         // Inflate the layout for this fragment
         FragmentProfileBinding b = FragmentProfileBinding.inflate(inflater, container, false);
 
-        if(mGoogleUser.hasImage() && mGoogleUser.getImage().hasUrl()) {
-            picasso.load(mGoogleUser.getImage().getUrl() + "&sz=250")
+        if(mCurrentUser.avatarUrl != null && !mCurrentUser.avatarUrl.isEmpty()) {
+            picasso.load(mCurrentUser.avatarUrl + "&sz=250")
                     .into(b.profileImage);
         }
 
-        if(mGoogleUser.hasCover() && mGoogleUser.getCover().hasCoverPhoto()) {
-            picasso.load(mGoogleUser.getCover().getCoverPhoto().getUrl())
+        if(mCurrentUser.coverUrl != null && !mCurrentUser.coverUrl.isEmpty()) {
+            picasso.load(mCurrentUser.coverUrl)
                     .fit()
+                    .centerCrop()
                     .into(b.backgroundImage);
         }
 
-        b.setUser(mGoogleUser);
-
-        b.profileImage.bringToFront(); //HACKS
+        b.setUser(mCurrentUser);
 
         return b.getRoot();
     }
 
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        outState.putParcelable(SAVED_INSTANCE_CURRENT_USER, Parcels.wrap(mCurrentUser));
+    }
 }
