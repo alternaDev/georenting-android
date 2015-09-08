@@ -4,19 +4,30 @@ apply plugin: 'me.tatarka.retrolambda'
 apply plugin: 'com.jakewharton.hugo'
 apply plugin: 'com.neenbedankt.android-apt'
 apply plugin: 'testfairy'
+apply plugin: 'com.github.triplet.play'
 
-def versionMajor = 0
-def versionMinor = 1
-def versionPatch = 0
-def versionBuild = 0  // bump for dogfood builds, public betas, etc.
+def vCode = 10000
 
 try {
-    versionBuild = Integer.valueOf(System.getenv("TRAVIS_BUILD_NUMBER"))
+    vCode = Integer.valueOf(System.getenv("TRAVIS_BUILD_NUMBER"))
 } catch (e) {
 }
 
+def vName = System.getenv("TRAVIS_TAG")
+
 def gitSha = 'git rev-parse --short HEAD'.execute([], project.rootDir).text.trim()
-def buildTime = new Date().format("yyyy-MM-dd'T'HH:mm:ss'Z'", TimeZone.getTimeZone("UTC"))
+
+if(!vName) {
+    if(System.getenv("TRAVIS_COMMIT")) {
+        vName = System.getenv("TRAVIS_COMMIT").substring(0, 10)
+    } else {
+        vName = gitSha + "-Dev"
+    }
+} else {
+    vName = vName.replace("v", "")
+}
+
+
 
 def isTravis = "true".equals(System.getenv("TRAVIS"))
 def preDexEnabled = "true".equals(System.getProperty("pre-dex", "true"))
@@ -43,8 +54,8 @@ android {
         minSdkVersion 15
         targetSdkVersion 23
 
-        versionCode versionMajor * 10000 + versionMinor * 1000 + versionPatch * 100 + versionBuild
-        versionName "${versionMajor}.${versionMinor}.${versionPatch}"
+        versionCode vCode + 1000
+        versionName "${vName}"
     }
 
 
@@ -92,6 +103,12 @@ android {
         recordOnBackground true
         uploadProguardMapping true
         iconWatermark true
+    }
+
+    play {
+        serviceAccountEmail = '807533877543-r2nl3jgumug06qauj00q9eallhnru6oi@developer.gserviceaccount.com'
+        pk12File = file('../google.p12')
+        track = 'production'
     }
 }
 
