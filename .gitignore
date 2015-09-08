@@ -6,6 +6,7 @@
 /build
 /captures
 keystore.jks
+google.p12
 *.iml
 .idea/
 app/build/
