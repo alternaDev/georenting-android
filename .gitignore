@@ -10,3 +10,4 @@ google.p12
 *.iml
 .idea/
 app/build/
+secrets.tar
