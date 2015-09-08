@@ -29,9 +29,6 @@ import de.alternadev.georenting.data.api.model.User;
 import de.alternadev.georenting.databinding.ActivityMainBinding;
 import de.alternadev.georenting.ui.settings.SettingsActivity;
 import rebus.header.view.HeaderView;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
-import rx.util.async.Async;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -63,6 +60,12 @@ public class MainActivity extends AppCompatActivity {
         b.mainNavigationView.setNavigationItemSelectedListener(this::onNavigationItemSelected);
 
         mCurrentUser = ((GeoRentingApplication) getApplication()).getSessionToken().user;
+
+        if(mCurrentUser == null) {
+            finish();
+            return;
+        }
+
         showUserInHeader(mCurrentUser);
 
         mDrawerLayout = b.mainDrawerLayout;

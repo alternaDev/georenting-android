@@ -4,4 +4,11 @@
         android:key="things"
         android:title="Do Things."
         android:defaultValue="true" />
+
+    <PreferenceCategory
+        android:title="@string/pref_account_title"
+        android:key="pref_key_account_settings">
+        <Preference android:title="@string/pref_account_logout"
+            android:key="@string/pref_key_account_logout" />
+    </PreferenceCategory>
 </PreferenceScreen>

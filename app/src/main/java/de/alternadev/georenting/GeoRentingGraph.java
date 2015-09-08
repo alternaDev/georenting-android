@@ -4,6 +4,7 @@ import de.alternadev.georenting.data.api.gcm.GcmRegistrationIntentService;
 import de.alternadev.georenting.ui.SignInActivity;
 import de.alternadev.georenting.ui.main.MainActivity;
 import de.alternadev.georenting.ui.main.ProfileFragment;
+import de.alternadev.georenting.ui.settings.SettingsFragment;
 
 public interface GeoRentingGraph {
     void inject(GeoRentingApplication app);
@@ -15,4 +16,6 @@ public interface GeoRentingGraph {
     void inject(MainActivity mainActivity);
 
     void inject(ProfileFragment profileFragment);
+
+    void inject(SettingsFragment settingsFragment);
 }

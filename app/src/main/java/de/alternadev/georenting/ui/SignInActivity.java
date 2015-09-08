@@ -38,7 +38,7 @@ public class SignInActivity extends AppCompatActivity implements GoogleApiClient
 
     private static final int REQUEST_CODE_RESOLVE_ERR = 42;
     private static final int REQUEST_CODE_REQUEST_PERMISSION = 43;
-    private static final String PREF_SIGNED_IN_BEFORE = "signedIn";
+    public static final String PREF_SIGNED_IN_BEFORE = "signedIn";
     private static final String SCOPE_PROFILE = "https://www.googleapis.com/auth/userinfo.profile";
     private static final String SCOPE_EMAIL = "https://www.googleapis.com/auth/userinfo.email";
 
