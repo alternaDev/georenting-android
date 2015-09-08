@@ -15,7 +15,11 @@ import javax.inject.Inject;
 
 import de.alternadev.georenting.GeoRentingApplication;
 import de.alternadev.georenting.R;
+import de.alternadev.georenting.data.api.GeoRentingService;
 import de.alternadev.georenting.ui.SignInActivity;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
+import timber.log.Timber;
 
 /**
  * Created by jhbruhn on 25.08.15 for georenting-android.
@@ -24,6 +28,9 @@ public class SettingsFragment extends PreferenceFragment implements GoogleApiCli
 
     @Inject
     SharedPreferences mPreferences;
+
+    @Inject
+    GeoRentingService mApi;
 
     private GoogleApiClient mGoogleClient;
 
@@ -52,10 +59,16 @@ public class SettingsFragment extends PreferenceFragment implements GoogleApiCli
     private boolean logOut() {
 
         if(mGoogleClient.isConnected()) {
-            mGoogleClient.clearDefaultAccountAndReconnect();
-            mPreferences.edit().putBoolean(SignInActivity.PREF_SIGNED_IN_BEFORE, false).commit();
 
-            ProcessPhoenix.triggerRebirth(this.getActivity(), new Intent(this.getActivity(), SignInActivity.class));
+            mApi.deAuth()
+                    .subscribeOn(Schedulers.newThread())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(sessionToken -> {
+                        mGoogleClient.clearDefaultAccountAndReconnect();
+                        mPreferences.edit().putBoolean(SignInActivity.PREF_SIGNED_IN_BEFORE, false).commit();
+
+                        ProcessPhoenix.triggerRebirth(this.getActivity(), new Intent(this.getActivity(), SignInActivity.class));
+                    }, throwable -> Timber.e(throwable, "Failed to log out."));
         }
 
         return true;
