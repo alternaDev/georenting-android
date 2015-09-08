@@ -10,7 +10,7 @@ android:
 
 before_install:
 - openssl aes-256-cbc -K $encrypted_e8c7a373402f_key -iv $encrypted_e8c7a373402f_iv
-  -in google.p12.enc -out .\\google.p12 -d
+  -in google.p12.enc -out google.p12 -d
 - openssl aes-256-cbc -K $encrypted_6ca2067ed10f_key -iv $encrypted_6ca2067ed10f_iv
   -in keystore.jks.enc -out keystore.jks -d
 - mkdir -p ~/.gradle
