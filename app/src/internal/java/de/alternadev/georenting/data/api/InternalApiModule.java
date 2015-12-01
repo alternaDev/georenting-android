@@ -1,17 +1,18 @@
 package de.alternadev.georenting.data.api;
 
+import com.squareup.okhttp.HttpUrl;
+
 import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
-import retrofit.Endpoint;
-import retrofit.Endpoints;
+import retrofit.BaseUrl;
 
 @Module(includes = ApiModule.class)
 public class InternalApiModule {
     @Provides
     @Singleton
-    Endpoint provideEndpoint() {
-        return Endpoints.newFixedEndpoint(ApiModule.STAGING_API_URL);
+    BaseUrl provideBaseURL() {
+        return () -> HttpUrl.parse(ApiModule.STAGING_API_URL);
     }
 }

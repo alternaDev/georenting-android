@@ -33,12 +33,8 @@ public class NetworkModule {
 
         // Install an HTTP cache in the application cache directory.
         File cacheDir = new File(app.getCacheDir(), "http");
-        Cache cache = null;
-        try {
-            cache = new Cache(cacheDir, DISK_CACHE_SIZE);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        Cache cache = new Cache(cacheDir, DISK_CACHE_SIZE);
+
         client.setCache(cache);
 
         return client;

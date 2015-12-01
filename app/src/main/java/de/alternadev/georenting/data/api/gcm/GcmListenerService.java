@@ -10,6 +10,6 @@ public class GcmListenerService extends com.google.android.gms.gcm.GcmListenerSe
     @DebugLog
     public void onMessageReceived(String from, Bundle data) {
         super.onMessageReceived(from, data);
-        Timber.d("Message from " + from);
+        Timber.d("Message from %s", from);
     }
 }
