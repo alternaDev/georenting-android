@@ -36,11 +36,14 @@ public class ApiModule {
         return chain -> {
             Request original = chain.request();
 
-            Request request = original.newBuilder().header("Authorization", ((GeoRentingApplication) application).getSessionToken().token)
-                    .method(original.method(), original.body())
-                    .build();
+            if (((GeoRentingApplication) application).getSessionToken() != null && ((GeoRentingApplication) application).getSessionToken().token != null) {
+                Request request = original.newBuilder().header("Authorization", ((GeoRentingApplication) application).getSessionToken().token)
+                        .method(original.method(), original.body())
+                        .build();
 
-            return chain.proceed(request);
+                return chain.proceed(request);
+            }
+            return chain.proceed(original);
         };
     }
 

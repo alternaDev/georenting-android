@@ -1,11 +1,11 @@
 package de.alternadev.georenting.data.api;
 
 
-import com.squareup.okhttp.Call;
 
 import de.alternadev.georenting.data.api.model.GcmToken;
 import de.alternadev.georenting.data.api.model.SessionToken;
 import de.alternadev.georenting.data.api.model.User;
+import retrofit.Call;
 import retrofit.http.Body;
 import retrofit.http.DELETE;
 import retrofit.http.POST;
@@ -19,5 +19,5 @@ public interface GeoRentingService {
     Observable<SessionToken> deAuth();
 
     @POST("users/me/gcm")
-    Call registerGcmToken(@Body GcmToken token);
+    Call<Void> registerGcmToken(@Body GcmToken token);
 }

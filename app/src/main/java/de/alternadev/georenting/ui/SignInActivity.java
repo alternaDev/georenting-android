@@ -1,11 +1,13 @@
 package de.alternadev.georenting.ui;
 
+import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.content.SharedPreferences;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
+import android.support.annotation.RequiresPermission;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
@@ -29,11 +31,14 @@ import de.alternadev.georenting.data.api.model.User;
 import de.alternadev.georenting.databinding.ActivitySignInBinding;
 import de.alternadev.georenting.ui.main.MainActivity;
 import hugo.weaving.DebugLog;
+import permissions.dispatcher.NeedsPermission;
+import permissions.dispatcher.RuntimePermissions;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 import rx.util.async.Async;
 import timber.log.Timber;
 
+@RuntimePermissions
 public class SignInActivity extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 
     private static final int REQUEST_CODE_RESOLVE_ERR = 42;
@@ -89,20 +94,26 @@ public class SignInActivity extends AppCompatActivity implements GoogleApiClient
     @Override
     @DebugLog
     public void onConnected(Bundle bundle) {
+        SignInActivityPermissionsDispatcher.handleSignInWithCheck(this);
+    }
+
+    @NeedsPermission(Manifest.permission.GET_ACCOUNTS)
+    @DebugLog
+    void handleSignIn() {
         Async.start(this::getGoogleAuthToken, Schedulers.newThread())
-            .subscribeOn(Schedulers.newThread())
-            .observeOn(AndroidSchedulers.mainThread())
-            .flatMap((user) -> mGeoRentingService.auth((User) user))
-            .subscribe((sessionToken) -> {
-                Timber.d("Test: " + sessionToken);
-                mProgressDialog.dismiss();
-                mPreferences.edit().putBoolean(PREF_SIGNED_IN_BEFORE, true).apply();
+                .subscribeOn(Schedulers.newThread())
+                .observeOn(Schedulers.newThread())
+                .flatMap((user) -> mGeoRentingService.auth((User) user))
+                .subscribe((sessionToken) -> {
+                    Timber.d("Test: " + sessionToken);
+                    mProgressDialog.dismiss();
+                    mPreferences.edit().putBoolean(PREF_SIGNED_IN_BEFORE, true).apply();
 
-                ((GeoRentingApplication) getApplication()).setSessionToken(sessionToken);
-                startService(new Intent(this, GcmRegistrationIntentService.class));
+                    ((GeoRentingApplication) getApplication()).setSessionToken(sessionToken);
+                    startService(new Intent(this, GcmRegistrationIntentService.class));
 
-                proceed();
-            });
+                    proceed();
+                });
     }
 
     @DebugLog
