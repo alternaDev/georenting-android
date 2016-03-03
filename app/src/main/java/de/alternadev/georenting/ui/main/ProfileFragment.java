@@ -1,6 +1,7 @@
 package de.alternadev.georenting.ui.main;
 
 import android.app.Fragment;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -71,6 +72,10 @@ public class ProfileFragment extends Fragment {
 
         b.setUser(mCurrentUser);
 
+        if(Build.VERSION.SDK_INT >= 21) {
+            b.profileUserCard.setClipToOutline(false);
+            b.profileImage.setClipToOutline(false);
+        }
         return b.getRoot();
     }
 
