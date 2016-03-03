@@ -33,7 +33,6 @@ import de.alternadev.georenting.ui.main.MainActivity;
 import hugo.weaving.DebugLog;
 import permissions.dispatcher.NeedsPermission;
 import permissions.dispatcher.RuntimePermissions;
-import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 import rx.util.async.Async;
 import timber.log.Timber;
