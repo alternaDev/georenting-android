@@ -3,9 +3,13 @@ package de.alternadev.georenting;
 import android.app.Application;
 
 import com.facebook.stetho.Stetho;
+import com.facebook.stetho.inspector.elements.ShadowDocument;
+import com.google.android.gms.gcm.GcmNetworkManager;
+import com.google.android.gms.gcm.PeriodicTask;
 import com.uphyca.stetho_realm.RealmInspectorModulesProvider;
 
 import de.alternadev.georenting.data.api.model.SessionToken;
+import de.alternadev.georenting.data.tasks.UpdateGeofencesTask;
 import timber.log.Timber;
 
 public class GeoRentingApplication extends Application {
@@ -36,7 +40,21 @@ public class GeoRentingApplication extends Application {
                             .build());
         }
 
+        initializeSyncTask();
+
         Timber.d("GeoRenting started.");
+    }
+
+    private void initializeSyncTask() {
+        PeriodicTask t = new PeriodicTask.Builder()
+                .setRequiredNetwork(PeriodicTask.NETWORK_STATE_CONNECTED)
+                .setService(UpdateGeofencesTask.class)
+                .setPeriod(60 * 10)
+                .setFlex(30)
+                .setUpdateCurrent(true)
+                .setTag("GeofenceUpdater")
+                .build();
+        GcmNetworkManager.getInstance(this).schedule(t);
     }
 
     public GeoRentingComponent getComponent() {

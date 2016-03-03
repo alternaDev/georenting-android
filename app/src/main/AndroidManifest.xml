@@ -8,6 +8,7 @@
     <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="de.alternadev.georenting.permission.C2D_MESSAGE" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
 
     <application
         android:name=".GeoRentingApplication"
@@ -65,6 +66,16 @@
         <service
             android:name=".data.api.gcm.GcmRegistrationIntentService"
             android:exported="false" />
+
+        <service android:name=".data.tasks.UpdateGeofencesTask"
+            android:exported="true"
+            android:permission="com.google.android.gms.permission.BIND_NETWORK_TASK_SERVICE" >
+            <intent-filter>
+                <action android:name="com.google.android.gms.gcm.ACTION_TASK_READY" />
+            </intent-filter>
+        </service>
+        <service android:name=".data.GeofenceTransitionsIntentService"/>
+
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"

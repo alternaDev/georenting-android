@@ -28,6 +28,7 @@ import de.alternadev.georenting.R;
 import de.alternadev.georenting.data.api.model.User;
 import de.alternadev.georenting.databinding.ActivityMainBinding;
 import de.alternadev.georenting.ui.settings.SettingsActivity;
+import hugo.weaving.DebugLog;
 import rebus.header.view.HeaderView;
 
 public class MainActivity extends AppCompatActivity {
@@ -92,7 +93,9 @@ public class MainActivity extends AppCompatActivity {
         transaction.commit();
     }
 
+    @DebugLog
     private boolean onNavigationItemSelected(MenuItem menuItem) {
+
         switch (menuItem.getItemId()) {
             case R.id.nav_my_geofences:
                 menuItem.setChecked(true);
