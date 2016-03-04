@@ -6,8 +6,12 @@ import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
 
+import com.google.android.gms.auth.api.Auth;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.common.api.Status;
 import com.jakewharton.processphoenix.ProcessPhoenix;
 
 import javax.inject.Inject;
@@ -39,9 +43,15 @@ public class SettingsFragment extends PreferenceFragment implements GoogleApiCli
 
         ((GeoRentingApplication) getActivity().getApplication()).getComponent().inject(this);
 
+        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestEmail()
+                .requestProfile()
+                .requestServerAuthCode(getString(R.string.google_server_id), false)
+                .build();
         mGoogleClient = new GoogleApiClient.Builder(this.getActivity())
                 .addConnectionCallbacks(this)
                 .addOnConnectionFailedListener(this)
+                .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
                 .build();
 
         mGoogleClient.connect();
@@ -60,10 +70,14 @@ public class SettingsFragment extends PreferenceFragment implements GoogleApiCli
                     .subscribeOn(Schedulers.newThread())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(sessionToken -> {
-                        mGoogleClient.clearDefaultAccountAndReconnect();
-                        mPreferences.edit().putBoolean(SignInActivity.PREF_SIGNED_IN_BEFORE, false).commit();
+                        Auth.GoogleSignInApi.signOut(mGoogleClient).setResultCallback(
+                                status -> {
+                                    mGoogleClient.clearDefaultAccountAndReconnect();
+                                    mPreferences.edit().putBoolean(SignInActivity.PREF_SIGNED_IN_BEFORE, false).commit();
 
-                        ProcessPhoenix.triggerRebirth(this.getActivity(), new Intent(this.getActivity(), SignInActivity.class));
+                                    ProcessPhoenix.triggerRebirth(this.getActivity(), new Intent(this.getActivity(), SignInActivity.class));
+                                });
+
                     }, throwable -> Timber.e(throwable, "Failed to log out."));
         }
 

@@ -40,7 +40,6 @@ import permissions.dispatcher.NeedsPermission;
 import permissions.dispatcher.RuntimePermissions;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
-import rx.util.async.Async;
 import timber.log.Timber;
 
 @RuntimePermissions
@@ -101,7 +100,7 @@ public class SignInActivity extends AppCompatActivity implements GoogleApiClient
         } else {
             mProgressDialog.show();
             opr.setResultCallback(googleSignInResult -> {
-                mProgressDialog.hide();
+                mProgressDialog.dismiss();
                 handleSignIn(googleSignInResult);
             });
         }
@@ -113,6 +112,8 @@ public class SignInActivity extends AppCompatActivity implements GoogleApiClient
 
     @NeedsPermission({Manifest.permission.GET_ACCOUNTS, Manifest.permission.ACCESS_FINE_LOCATION})
     void startSignIn() {
+        mProgressDialog.show();
+
         Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mApiClient);
         startActivityForResult(signInIntent, REQUEST_CODE_SIGN_IN);
     }
@@ -120,7 +121,6 @@ public class SignInActivity extends AppCompatActivity implements GoogleApiClient
     @DebugLog
     private void handleSignIn(GoogleSignInResult result) {
         if(result.isSuccess()) {
-            Log.d("Token", result.getSignInAccount().getServerAuthCode());
             mGeoRentingService.auth(new User(result.getSignInAccount().getServerAuthCode()))
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
