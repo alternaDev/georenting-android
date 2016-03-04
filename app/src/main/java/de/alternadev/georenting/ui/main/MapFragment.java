@@ -75,16 +75,16 @@ public class MapFragment extends Fragment {
         FragmentMapBinding b = FragmentMapBinding.inflate(inflater, container, false);
         mMapView = b.fragmentMapMapView;
         mMapView.onCreate(savedInstanceState);
-        loadGeofences();
+        mMapView.getMapAsync(this::initMap);
         return b.getRoot();
     }
 
-    private void loadGeofences() {
+    private void initMap(GoogleMap map) {
         Realm.getDefaultInstance().where(Fence.class).findAllAsync().asObservable().observeOn(AndroidSchedulers.mainThread()).subscribe(fences -> {
             Log.i("Fence", fences + "");
             for(Fence f : fences) {
                 Log.i("Fence", f.getId());
-                mMapView.getMap().addCircle(new CircleOptions().center(new LatLng(f.getLatitude(), f.getLongitude())).radius(f.getRadius()));
+                map.addCircle(new CircleOptions().center(new LatLng(f.getLatitude(), f.getLongitude())).radius(f.getRadius()));
             }
         });
     }

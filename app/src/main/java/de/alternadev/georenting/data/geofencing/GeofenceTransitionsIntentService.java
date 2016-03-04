@@ -1,4 +1,4 @@
-package de.alternadev.georenting.data;
+package de.alternadev.georenting.data.geofencing;
 
 import android.app.IntentService;
 import android.app.NotificationManager;
