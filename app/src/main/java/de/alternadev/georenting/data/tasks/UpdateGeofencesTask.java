@@ -5,6 +5,7 @@ import android.app.PendingIntent;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.support.v4.app.ActivityCompat;
+import android.util.Log;
 
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.gcm.GcmNetworkManager;
@@ -32,6 +33,7 @@ public class UpdateGeofencesTask extends GcmTaskService {
 
     @Override
     public int onRunTask(TaskParams taskParams) {
+        Log.i("Task", "Initializing Google");
         GoogleApiClient mApiClient = new GoogleApiClient.Builder(this)
                 .addApi(LocationServices.API)
                 .build();
@@ -44,6 +46,7 @@ public class UpdateGeofencesTask extends GcmTaskService {
          * 4. Put new Geofences into Google, save IDs
          * 5. Put new Geofences into Realm, with IDs
          */
+        Log.i("Task", "removing old Fences");
 
         Realm realm = Realm.getDefaultInstance();
         List<String> reqIDs = new ArrayList<>();
@@ -51,8 +54,11 @@ public class UpdateGeofencesTask extends GcmTaskService {
             reqIDs.add(fence.getGeofenceID());
         }
 
-        if (!LocationServices.GeofencingApi.removeGeofences(mApiClient, reqIDs).await().isSuccess()) {
-            return GcmNetworkManager.RESULT_RESCHEDULE;
+        if(reqIDs.size() > 0) {
+            if (!LocationServices.GeofencingApi.removeGeofences(mApiClient, reqIDs).await().isSuccess()) {
+                realm.close();
+                return GcmNetworkManager.RESULT_RESCHEDULE;
+            }
         }
 
         realm.beginTransaction();
@@ -61,10 +67,11 @@ public class UpdateGeofencesTask extends GcmTaskService {
 
         // TODO: Get Geofences from Server
 
+        Log.i("Task", "Adding new Fences");
 
         List<Fence> fences = new ArrayList<>();
         realm.beginTransaction();
-        Fence f = new Fence();
+        Fence f = realm.createObject(Fence.class);
         f.setName("Ulf's Castle");
         f.setLatitude(53.128932);
         f.setLongitude(8.189734);
@@ -72,7 +79,7 @@ public class UpdateGeofencesTask extends GcmTaskService {
         f.setOwner("Peter");
         f.setId("1");
         fences.add(f);
-        f = new Fence();
+        f = realm.createObject(Fence.class);
         f.setName("Pedas Chillout Area");
         f.setLatitude(53.120569);
         f.setLongitude(8.192223);
@@ -103,13 +110,17 @@ public class UpdateGeofencesTask extends GcmTaskService {
                 .setInitialTrigger(GeofencingRequest.INITIAL_TRIGGER_ENTER)
                 .build();
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            realm.close();
             return GcmNetworkManager.RESULT_FAILURE;
         }
+        Log.i("Task", "Exec adding new Fences");
+
         LocationServices.GeofencingApi.addGeofences(mApiClient,
-                r, PendingIntent.getService(this, 0, new Intent(this, GeofenceTransitionsIntentService.class), PendingIntent.FLAG_UPDATE_CURRENT));
+                r, PendingIntent.getService(this, 0, new Intent(this, GeofenceTransitionsIntentService.class), PendingIntent.FLAG_UPDATE_CURRENT)).await();
 
 
-
+        Log.i("Task", "Done!");
+        realm.close();
         return GcmNetworkManager.RESULT_SUCCESS;
     }
 }

@@ -96,7 +96,7 @@ public class SignInActivity extends AppCompatActivity implements GoogleApiClient
         SignInActivityPermissionsDispatcher.handleSignInWithCheck(this);
     }
 
-    @NeedsPermission(Manifest.permission.GET_ACCOUNTS)
+    @NeedsPermission({Manifest.permission.GET_ACCOUNTS, Manifest.permission.ACCESS_FINE_LOCATION})
     @DebugLog
     void handleSignIn() {
         Async.start(this::getGoogleAuthToken, Schedulers.newThread())

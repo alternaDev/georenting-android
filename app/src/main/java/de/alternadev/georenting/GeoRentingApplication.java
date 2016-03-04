@@ -5,11 +5,15 @@ import android.app.Application;
 import com.facebook.stetho.Stetho;
 import com.facebook.stetho.inspector.elements.ShadowDocument;
 import com.google.android.gms.gcm.GcmNetworkManager;
+import com.google.android.gms.gcm.OneoffTask;
 import com.google.android.gms.gcm.PeriodicTask;
+import com.google.android.gms.gcm.Task;
 import com.uphyca.stetho_realm.RealmInspectorModulesProvider;
 
 import de.alternadev.georenting.data.api.model.SessionToken;
 import de.alternadev.georenting.data.tasks.UpdateGeofencesTask;
+import io.realm.Realm;
+import io.realm.RealmConfiguration;
 import timber.log.Timber;
 
 public class GeoRentingApplication extends Application {
@@ -37,24 +41,41 @@ public class GeoRentingApplication extends Application {
                             .enableDumpapp(
                                     Stetho.defaultDumperPluginsProvider(this))
                             .enableWebKitInspector(RealmInspectorModulesProvider.builder(this).build())
+
                             .build());
         }
+
+        initRealm();
 
         initializeSyncTask();
 
         Timber.d("GeoRenting started.");
     }
 
+    private void initRealm() {
+        Realm.setDefaultConfiguration(new RealmConfiguration.Builder(this).build());
+    }
+
     private void initializeSyncTask() {
-        PeriodicTask t = new PeriodicTask.Builder()
+        Task task = new PeriodicTask.Builder()
                 .setRequiredNetwork(PeriodicTask.NETWORK_STATE_CONNECTED)
                 .setService(UpdateGeofencesTask.class)
-                .setPeriod(60 * 10)
+                .setPeriod(3 * 60)
                 .setFlex(30)
                 .setUpdateCurrent(true)
                 .setTag("GeofenceUpdater")
                 .build();
-        GcmNetworkManager.getInstance(this).schedule(t);
+
+
+        GcmNetworkManager.getInstance(this).schedule(task);
+
+        task = new OneoffTask.Builder()
+                .setService(UpdateGeofencesTask.class)
+                .setTag("UpdateFences")
+                .setExecutionWindow(0L, 5L)
+                .build();
+        GcmNetworkManager.getInstance(this).schedule(task);
+
     }
 
     public GeoRentingComponent getComponent() {
