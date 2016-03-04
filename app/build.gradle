@@ -35,6 +35,10 @@ android {
     compileSdkVersion 23
     buildToolsVersion '23.0.2'
 
+    retrolambda {
+        jvmArgs '-noverify'
+    }
+
     dexOptions {
         // Skip pre-dexing when running on Travis CI or when disabled via -Dpre-dex=false.
         preDexLibraries = preDexEnabled && !isTravis
@@ -149,8 +153,7 @@ dependencies {
 
     compile 'com.jakewharton.byteunits:byteunits:0.9.0'
 
-    compile 'com.google.android.gms:play-services-identity:8.4.0'
-    compile 'com.google.android.gms:play-services-plus:8.4.0'
+    compile 'com.google.android.gms:play-services-auth:8.4.0'
     compile 'com.google.android.gms:play-services-gcm:8.4.0'
     compile 'com.google.android.gms:play-services-maps:8.4.0'
     compile 'com.google.android.gms:play-services-location:8.4.0'
@@ -175,3 +178,4 @@ android.applicationVariants.all { variant ->
     // Ensure we end up in the same group as the other install tasks.
     installAll.group = variant.install.group
 }
+apply plugin: 'com.google.gms.google-services'

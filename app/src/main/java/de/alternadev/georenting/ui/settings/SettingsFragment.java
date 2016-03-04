@@ -8,7 +8,6 @@ import android.preference.PreferenceFragment;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.plus.Plus;
 import com.jakewharton.processphoenix.ProcessPhoenix;
 
 import javax.inject.Inject;
@@ -41,9 +40,6 @@ public class SettingsFragment extends PreferenceFragment implements GoogleApiCli
         ((GeoRentingApplication) getActivity().getApplication()).getComponent().inject(this);
 
         mGoogleClient = new GoogleApiClient.Builder(this.getActivity())
-                .addApi(Plus.API, new Plus.PlusOptions.Builder().build())
-                .addScope(Plus.SCOPE_PLUS_LOGIN)
-                .addScope(Plus.SCOPE_PLUS_PROFILE)
                 .addConnectionCallbacks(this)
                 .addOnConnectionFailedListener(this)
                 .build();

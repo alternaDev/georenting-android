@@ -17,8 +17,6 @@ import android.view.ViewGroup;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.plus.Plus;
-import com.google.android.gms.plus.model.people.Person;
 import com.squareup.picasso.Picasso;
 
 import javax.inject.Inject;
