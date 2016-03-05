@@ -2,6 +2,7 @@ package de.alternadev.georenting.data.tasks;
 
 import android.Manifest;
 import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.support.v4.app.ActivityCompat;
@@ -10,6 +11,9 @@ import android.util.Log;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.gcm.GcmNetworkManager;
 import com.google.android.gms.gcm.GcmTaskService;
+import com.google.android.gms.gcm.OneoffTask;
+import com.google.android.gms.gcm.PeriodicTask;
+import com.google.android.gms.gcm.Task;
 import com.google.android.gms.gcm.TaskParams;
 import com.google.android.gms.location.Geofence;
 import com.google.android.gms.location.GeofencingRequest;
@@ -55,7 +59,7 @@ public class UpdateGeofencesTask extends GcmTaskService {
 
         if(!removeOldGeofences(getOldRequestIDs())) {
             mRealm.close();
-            return GcmNetworkManager.RESULT_RESCHEDULE;
+            return GcmNetworkManager.RESULT_FAILURE;
         }
 
         removeAllFences();
@@ -138,8 +142,39 @@ public class UpdateGeofencesTask extends GcmTaskService {
                 .setCircularRegion(f.getLatitude(), f.getLongitude(), (int) f.getRadius())
                 .setRequestId(id + "")
                 .setExpirationDuration(Geofence.NEVER_EXPIRE)
-                .setNotificationResponsiveness(30000)
+                .setNotificationResponsiveness(60 * 1000) // Notify every minute.
                 .setTransitionTypes(Geofence.GEOFENCE_TRANSITION_ENTER)
                 .build();
+    }
+
+    @Override
+    public void onInitializeTasks() {
+        super.onInitializeTasks();
+
+        initializeTasks(this);
+    }
+
+    public static void initializeTasks(Context ctx) {
+        Task task = new PeriodicTask.Builder()
+                .setRequiredNetwork(PeriodicTask.NETWORK_STATE_CONNECTED)
+                .setService(UpdateGeofencesTask.class)
+                .setPeriod(15 * 60) // Every 15 Minutes.
+                .setFlex(30)
+                .setUpdateCurrent(true)
+                .setTag("GeofenceUpdater")
+                .setPersisted(true)
+                .build();
+
+        GcmNetworkManager.getInstance(ctx).schedule(task);
+
+        task = new OneoffTask.Builder()
+                .setService(UpdateGeofencesTask.class)
+                .setTag("UpdateFences")
+                .setExecutionWindow(0L, 5L)
+                .setUpdateCurrent(true)
+                .setPersisted(true)
+                .setRequiredNetwork(PeriodicTask.NETWORK_STATE_CONNECTED)
+                .build();
+        GcmNetworkManager.getInstance(ctx).schedule(task);
     }
 }

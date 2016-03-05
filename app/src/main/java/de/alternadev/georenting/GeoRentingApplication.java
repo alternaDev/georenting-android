@@ -1,16 +1,26 @@
 package de.alternadev.georenting;
 
 import android.app.Application;
+import android.os.Bundle;
+import android.support.annotation.Nullable;
 
 import com.facebook.stetho.Stetho;
 import com.facebook.stetho.inspector.elements.ShadowDocument;
+import com.google.android.gms.auth.api.Auth;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.auth.api.signin.GoogleSignInResult;
+import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.gcm.GcmNetworkManager;
 import com.google.android.gms.gcm.OneoffTask;
 import com.google.android.gms.gcm.PeriodicTask;
 import com.google.android.gms.gcm.Task;
 import com.uphyca.stetho_realm.RealmInspectorModulesProvider;
 
+import javax.inject.Inject;
+
+import de.alternadev.georenting.data.api.GeoRentingService;
 import de.alternadev.georenting.data.api.model.SessionToken;
+import de.alternadev.georenting.data.api.model.User;
 import de.alternadev.georenting.data.tasks.UpdateGeofencesTask;
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
@@ -20,6 +30,9 @@ public class GeoRentingApplication extends Application {
 
     private GeoRentingComponent mComponent;
     private SessionToken mSessionToken = new SessionToken();
+
+    @Inject
+    GeoRentingService mService;
 
     @Override
     public void onCreate() {
@@ -47,8 +60,6 @@ public class GeoRentingApplication extends Application {
 
         initRealm();
 
-        initializeSyncTask();
-
         Timber.d("GeoRenting started.");
     }
 
@@ -56,26 +67,42 @@ public class GeoRentingApplication extends Application {
         Realm.setDefaultConfiguration(new RealmConfiguration.Builder(this).build());
     }
 
-    private void initializeSyncTask() {
-        Task task = new PeriodicTask.Builder()
-                .setRequiredNetwork(PeriodicTask.NETWORK_STATE_CONNECTED)
-                .setService(UpdateGeofencesTask.class)
-                .setPeriod(3 * 60)
-                .setFlex(30)
-                .setUpdateCurrent(true)
-                .setTag("GeofenceUpdater")
+    public boolean blockingSignIn() {
+        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestEmail()
+                .requestProfile()
+                .requestServerAuthCode(getString(R.string.google_server_id), false)
                 .build();
 
+        GoogleApiClient client = new GoogleApiClient.Builder(this)
+                .addConnectionCallbacks(new GoogleApiClient.ConnectionCallbacks() {
+                    @Override
+                    public void onConnected(@Nullable Bundle bundle) {
 
-        GcmNetworkManager.getInstance(this).schedule(task);
+                    }
 
-        task = new OneoffTask.Builder()
-                .setService(UpdateGeofencesTask.class)
-                .setTag("UpdateFences")
-                .setExecutionWindow(0L, 5L)
+                    @Override
+                    public void onConnectionSuspended(int i) {
+
+                    }
+                })
+                .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
                 .build();
-        GcmNetworkManager.getInstance(this).schedule(task);
+        client.blockingConnect();
 
+        GoogleSignInResult r = Auth.GoogleSignInApi.silentSignIn(client).await();
+
+        if(r.isSuccess()) {
+            String authCode = r.getSignInAccount().getServerAuthCode();
+            if(authCode == null) return false;
+
+            SessionToken sessionToken = mService.auth(new User(authCode)).toBlocking().first();
+            setSessionToken(sessionToken);
+
+            return true;
+        }
+
+        return false;
     }
 
     public GeoRentingComponent getComponent() {

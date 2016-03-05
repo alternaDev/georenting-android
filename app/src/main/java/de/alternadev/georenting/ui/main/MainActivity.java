@@ -24,6 +24,7 @@ import javax.inject.Inject;
 import de.alternadev.georenting.GeoRentingApplication;
 import de.alternadev.georenting.R;
 import de.alternadev.georenting.data.api.model.User;
+import de.alternadev.georenting.data.tasks.UpdateGeofencesTask;
 import de.alternadev.georenting.databinding.ActivityMainBinding;
 import de.alternadev.georenting.ui.settings.SettingsActivity;
 import hugo.weaving.DebugLog;
@@ -80,6 +81,8 @@ public class MainActivity extends AppCompatActivity {
             }
         }
         /* End workaround */
+
+        UpdateGeofencesTask.initializeTasks(this);
     }
 
     private void showFragment(Fragment fragment) {
