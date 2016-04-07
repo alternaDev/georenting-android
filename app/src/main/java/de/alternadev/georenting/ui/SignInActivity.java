@@ -110,7 +110,7 @@ public class SignInActivity extends AppCompatActivity implements GoogleApiClient
         SignInActivityPermissionsDispatcher.startSignInWithCheck(this);
     }
 
-    @NeedsPermission({Manifest.permission.GET_ACCOUNTS, Manifest.permission.ACCESS_FINE_LOCATION})
+    @NeedsPermission({Manifest.permission.GET_ACCOUNTS, Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION})
     void startSignIn() {
         mProgressDialog.show();
 

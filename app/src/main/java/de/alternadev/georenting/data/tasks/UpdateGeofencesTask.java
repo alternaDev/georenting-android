@@ -5,6 +5,7 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.location.Location;
 import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 
@@ -22,6 +23,11 @@ import com.google.android.gms.location.LocationServices;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.inject.Inject;
+
+import de.alternadev.georenting.GeoRentingApplication;
+import de.alternadev.georenting.data.api.GeoRentingService;
+import de.alternadev.georenting.data.api.model.GeoFence;
 import de.alternadev.georenting.data.geofencing.GeofenceTransitionsIntentService;
 import de.alternadev.georenting.data.models.Fence;
 import io.realm.Realm;
@@ -31,11 +37,14 @@ public class UpdateGeofencesTask extends GcmTaskService {
     private Realm mRealm;
     private GoogleApiClient mApiClient;
 
+    @Inject
+    GeoRentingService mService;
+
     @Override
     public void onCreate() {
         super.onCreate();
 
-        //((GeoRentingApplication) getApplication()).getComponent().inject(this);
+        ((GeoRentingApplication) getApplication()).getComponent().inject(this);
     }
 
     @Override
@@ -57,45 +66,44 @@ public class UpdateGeofencesTask extends GcmTaskService {
 
         mRealm = Realm.getDefaultInstance();
 
-        if(!removeOldGeofences(getOldRequestIDs())) {
+        if (!removeOldGeofences(getOldRequestIDs())) {
             mRealm.close();
             return GcmNetworkManager.RESULT_FAILURE;
         }
 
         removeAllFences();
 
-        // TODO: Get Geofences from Server
+        List<GeoFence> remoteFences = getRemoteGeoFences();
+
+        if(remoteFences == null) {
+            mRealm.close();
+            return GcmNetworkManager.RESULT_FAILURE;
+        }
 
         Log.i("Task", "Adding new Fences");
 
         List<Fence> fences = new ArrayList<>();
+
         mRealm.beginTransaction();
-        Fence f = mRealm.createObject(Fence.class);
-        f.setName("Ulf's Castle");
-        f.setLatitude(53.128932);
-        f.setLongitude(8.189734);
-        f.setRadius(100);
-        f.setOwner("Peter");
-        f.setId("1");
-        fences.add(f);
-        f = mRealm.createObject(Fence.class);
-        f.setName("Pedas Chillout Area");
-        f.setLatitude(53.120569);
-        f.setLongitude(8.192223);
-        f.setRadius(100);
-        f.setOwner("Ralf");
-        f.setId("2");
-        fences.add(f);
+        for(GeoFence remoteFence : remoteFences) {
+            Fence f = mRealm.createObject(Fence.class);
+            f.setName(remoteFence.name);
+            f.setLatitude(remoteFence.centerLat);
+            f.setLongitude(remoteFence.centerLon);
+            f.setRadius(remoteFence.radius);
+            f.setId(remoteFence.id);
+            fences.add(f);
+        }
 
         List<Geofence> geofences = new ArrayList<>();
         for (int i = 0; i < fences.size(); i++) {
-            f = fences.get(i);
+            Fence f = fences.get(i);
             geofences.add(createGeoFence(f, i));
             f.setGeofenceID(i + "");
         }
         mRealm.commitTransaction();
 
-        if(!addGeoFences(geofences)) {
+        if (!addGeoFences(geofences)) {
             mRealm.close();
             return GcmNetworkManager.RESULT_FAILURE;
         }
@@ -103,6 +111,16 @@ public class UpdateGeofencesTask extends GcmTaskService {
         Log.i("Task", "Done!");
         mRealm.close();
         return GcmNetworkManager.RESULT_SUCCESS;
+    }
+
+    private List<GeoFence> getRemoteGeoFences() {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            return null;
+        }
+        Location mLastLocation = LocationServices.FusedLocationApi.getLastLocation(
+                mApiClient);
+
+        return mService.getFencesNear(mLastLocation.getLatitude(), mLastLocation.getLongitude(), 2000);
     }
 
     private boolean addGeoFences(List<Geofence> fences) {

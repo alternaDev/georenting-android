@@ -23,5 +23,7 @@ public interface GeoRentingGraph {
 
     void inject(GeofenceTransitionsIntentService geofenceTransitionsIntentService);
 
+    void inject(UpdateGeofencesTask updateGeofencesTask);
+
     //void inject(UpdateGeofencesTask updateGeofencesTask);
 }
