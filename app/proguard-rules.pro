@@ -21,3 +21,5 @@
 -keep @io.realm.internal.Keep class * { *; }
 -dontwarn javax.**
 -dontwarn io.realm.**
+
+-keepattributes EnclosingMethod

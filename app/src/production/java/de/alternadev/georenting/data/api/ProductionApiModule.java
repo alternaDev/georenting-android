@@ -13,6 +13,6 @@ public class ProductionApiModule {
     @Provides
     @Singleton
     HttpUrl provideBaseURL() {
-        HttpUrl.parse(ApiModule.PRODUCTION_API_URL);
+        return HttpUrl.parse(ApiModule.PRODUCTION_API_URL);
     }
 }

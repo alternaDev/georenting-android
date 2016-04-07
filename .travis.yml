@@ -16,5 +16,15 @@ before_install:
 - echo "georentingKeystorePassword=$KEYSTORE_PASSWORD" >> ~/.gradle/gradle.properties
 - echo "testfairyKey=$TESTFAIRY_KEY" >> ~/.gradle/gradle.properties
 script:
+- "./gradlew assemble"
 - "./gradlew testfairyInternalRelease"
 - if [ "$TRAVIS_TAG" ]; then ./gradlew publishProductionRelease; fi;
+deploy:
+  provider: releases
+  api-key: $GITHUB_TOKEN
+  file:
+    - "./app/build/outputs/apk/app-production-release.apk"
+    - "./app/build/outputs/apk/app-internal-release.apk"
+  skip_cleanup: true
+  on:
+    tags: true
