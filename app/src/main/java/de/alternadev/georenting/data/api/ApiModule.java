@@ -3,10 +3,6 @@ package de.alternadev.georenting.data.api;
 import android.app.Application;
 
 import com.google.gson.Gson;
-import com.squareup.okhttp.Interceptor;
-import com.squareup.okhttp.OkHttpClient;
-import com.squareup.okhttp.Request;
-import com.squareup.okhttp.Response;
 
 import java.io.IOException;
 
@@ -16,10 +12,13 @@ import javax.inject.Singleton;
 import dagger.Module;
 import dagger.Provides;
 import de.alternadev.georenting.GeoRentingApplication;
-import retrofit.BaseUrl;
-import retrofit.GsonConverterFactory;
-import retrofit.Retrofit;
-import retrofit.RxJavaCallAdapterFactory;
+import okhttp3.HttpUrl;
+import okhttp3.Interceptor;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import retrofit2.converter.gson.GsonConverterFactory;
+import retrofit2.Retrofit;
+import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
 
 
 @Module
@@ -49,7 +48,7 @@ public class ApiModule {
 
     @Provides
     @Singleton
-    Retrofit provideRetrofit(OkHttpClient client, BaseUrl baseUrl, Gson gson, @Named("sessionToken") Interceptor interceptor) {
+    Retrofit provideRetrofit(OkHttpClient client, HttpUrl baseUrl, Gson gson, @Named("sessionToken") Interceptor interceptor) {
         client.interceptors().add(interceptor);
         return new Retrofit.Builder()
                 .client(client)

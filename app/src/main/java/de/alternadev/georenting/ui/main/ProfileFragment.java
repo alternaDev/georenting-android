@@ -22,7 +22,6 @@ public class ProfileFragment extends Fragment {
 
     public static ProfileFragment newInstance(User currentUser) {
         ProfileFragment f = new ProfileFragment();
-
         Bundle args = new Bundle();
         args.putParcelable(SAVED_INSTANCE_CURRENT_USER, Parcels.wrap(currentUser));
         f.setArguments(args);
