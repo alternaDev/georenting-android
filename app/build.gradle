@@ -116,7 +116,7 @@ android {
     play {
         serviceAccountEmail = '807533877543-r2nl3jgumug06qauj00q9eallhnru6oi@developer.gserviceaccount.com'
         pk12File = file('../google.p12')
-        track = 'production'
+        track = 'beta'
     }
 }
 
