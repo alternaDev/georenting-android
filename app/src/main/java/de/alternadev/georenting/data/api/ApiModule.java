@@ -48,12 +48,11 @@ public class ApiModule {
 
     @Provides
     @Singleton
-    Retrofit provideRetrofit(OkHttpClient client, HttpUrl baseUrl, Gson gson, @Named("sessionToken") Interceptor interceptor) {
-        client.interceptors().add(interceptor);
+    Retrofit provideRetrofit(OkHttpClient client, HttpUrl baseUrl, Gson gson) {
         return new Retrofit.Builder()
                 .client(client)
                 .baseUrl(baseUrl)
-                .addConverterFactory(GsonConverterFactory.create())
+                .addConverterFactory(GsonConverterFactory.create(gson))
                 .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
                 .build();
     }
