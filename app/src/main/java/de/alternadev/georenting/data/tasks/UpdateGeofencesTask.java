@@ -111,7 +111,7 @@ public class UpdateGeofencesTask extends GcmTaskService {
         }
         mRealm.commitTransaction();
 
-        if (!addGeoFences(geofences)) {
+        if (geofences.size() > 0 && !addGeoFences(geofences)) {
             mRealm.close();
             return GcmNetworkManager.RESULT_FAILURE;
         }
