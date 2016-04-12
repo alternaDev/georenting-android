@@ -19,6 +19,7 @@ import javax.inject.Inject;
 import de.alternadev.georenting.GeoRentingApplication;
 import de.alternadev.georenting.R;
 import de.alternadev.georenting.data.api.GeoRentingService;
+import de.alternadev.georenting.data.tasks.UpdateGeofencesTask;
 import de.alternadev.georenting.ui.SignInActivity;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
@@ -74,6 +75,7 @@ public class SettingsFragment extends PreferenceFragment implements GoogleApiCli
                                 status -> {
                                     mGoogleClient.clearDefaultAccountAndReconnect();
                                     mPreferences.edit().putBoolean(SignInActivity.PREF_SIGNED_IN_BEFORE, false).commit();
+                                    removeUpdateGeofenceTask();
 
                                     ProcessPhoenix.triggerRebirth(this.getActivity(), new Intent(this.getActivity(), SignInActivity.class));
                                 });
@@ -82,6 +84,10 @@ public class SettingsFragment extends PreferenceFragment implements GoogleApiCli
         }
 
         return true;
+    }
+
+    private void removeUpdateGeofenceTask() {
+        UpdateGeofencesTask.removeTasks(getActivity());
     }
 
     @Override

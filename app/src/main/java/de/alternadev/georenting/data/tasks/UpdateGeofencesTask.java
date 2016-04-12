@@ -203,4 +203,8 @@ public class UpdateGeofencesTask extends GcmTaskService {
                 .build();
         GcmNetworkManager.getInstance(ctx).schedule(task);
     }
+
+    public static void removeTasks(Context ctx) {
+        GcmNetworkManager.getInstance(ctx).cancelAllTasks(UpdateGeofencesTask.class);
+    }
 }
