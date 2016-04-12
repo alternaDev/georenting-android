@@ -66,7 +66,7 @@ public class SignInActivity extends AppCompatActivity implements GoogleApiClient
 
         ActivitySignInBinding b = DataBindingUtil.setContentView(this, R.layout.activity_sign_in);
         b.signInButton.setOnClickListener(this::onClickSignIn);
-        b.signInButton.setStyle(SignInButton.SIZE_WIDE, SignInButton.COLOR_DARK);
+        b.signInButton.setStyle(SignInButton.SIZE_WIDE, SignInButton.COLOR_AUTO);
 
         mProgressDialog = new ProgressDialog(this);
         mProgressDialog.setCancelable(false);
