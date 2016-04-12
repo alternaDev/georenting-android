@@ -38,7 +38,7 @@
             android:layout_width="225dp"
             android:layout_height="wrap_content"
             android:id="@+id/imageView2"
-            android:src="@drawable/tempLogo"
+            android:src="@drawable/temporary_logo"
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true" />
 
