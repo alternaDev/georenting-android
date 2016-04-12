@@ -46,12 +46,8 @@ import timber.log.Timber;
 public class SignInActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener {
 
     private static final int REQUEST_CODE_RESOLVE_ERR = 42;
-    private static final int REQUEST_CODE_REQUEST_PERMISSION = 43;
     private static final int REQUEST_CODE_SIGN_IN = 44;
     public static final String PREF_SIGNED_IN_BEFORE = "signedIn";
-    private static final String SCOPE_PROFILE = "https://www.googleapis.com/auth/userinfo.profile";
-    private static final String SCOPE_EMAIL = "https://www.googleapis.com/auth/userinfo.email";
-
 
     private GoogleApiClient mApiClient;
     private ProgressDialog mProgressDialog;
@@ -94,15 +90,13 @@ public class SignInActivity extends AppCompatActivity implements GoogleApiClient
         super.onStart();
 
         OptionalPendingResult<GoogleSignInResult> opr = Auth.GoogleSignInApi.silentSignIn(mApiClient);
+        mProgressDialog.show();
+
         if(opr.isDone()) {
             GoogleSignInResult result = opr.get();
             handleSignIn(result);
         } else {
-            mProgressDialog.show();
-            opr.setResultCallback(googleSignInResult -> {
-                mProgressDialog.dismiss();
-                handleSignIn(googleSignInResult);
-            });
+            opr.setResultCallback(this::handleSignIn);
         }
     }
 
@@ -134,6 +128,8 @@ public class SignInActivity extends AppCompatActivity implements GoogleApiClient
 
                         proceed();
                     });
+        } else {
+            mProgressDialog.dismiss();
         }
     }
 
@@ -147,7 +143,6 @@ public class SignInActivity extends AppCompatActivity implements GoogleApiClient
             try {
                 connectionResult.startResolutionForResult(this, REQUEST_CODE_RESOLVE_ERR);
             } catch (IntentSender.SendIntentException e) {
-                // Versuchen Sie erneut, die Verbindung herzustellen.
                 mApiClient.connect();
             }
         }
@@ -170,8 +165,9 @@ public class SignInActivity extends AppCompatActivity implements GoogleApiClient
 
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        // NOTE: delegate the permission handling to generated method
         SignInActivityPermissionsDispatcher.onRequestPermissionsResult(this, requestCode, grantResults);
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
+
+
 }
