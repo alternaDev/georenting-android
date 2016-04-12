@@ -20,6 +20,7 @@ import com.google.android.gms.location.Geofence;
 import com.google.android.gms.location.GeofencingRequest;
 import com.google.android.gms.location.LocationServices;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -73,7 +74,14 @@ public class UpdateGeofencesTask extends GcmTaskService {
 
         removeAllFences();
 
-        List<GeoFence> remoteFences = getRemoteGeoFences();
+        List<GeoFence> remoteFences;
+        try {
+            remoteFences = getRemoteGeoFences();
+        } catch (IOException e) {
+            e.printStackTrace();
+            mRealm.close();
+            return GcmNetworkManager.RESULT_FAILURE;
+        }
 
         if(remoteFences == null) {
             mRealm.close();
@@ -113,14 +121,14 @@ public class UpdateGeofencesTask extends GcmTaskService {
         return GcmNetworkManager.RESULT_SUCCESS;
     }
 
-    private List<GeoFence> getRemoteGeoFences() {
+    private List<GeoFence> getRemoteGeoFences() throws IOException {
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             return null;
         }
         Location mLastLocation = LocationServices.FusedLocationApi.getLastLocation(
                 mApiClient);
 
-        return mService.getFencesNear(mLastLocation.getLatitude(), mLastLocation.getLongitude(), 2000);
+        return mService.getFencesNear(mLastLocation.getLatitude(), mLastLocation.getLongitude(), 2000).execute().body();
     }
 
     private boolean addGeoFences(List<Geofence> fences) {

@@ -28,7 +28,7 @@ public interface GeoRentingService {
     Call<Void> registerGcmToken(@Body GcmToken token);
 
     @GET("fences")
-    List<GeoFence> getFencesNear(@Query("latitude") double latitude, @Query("longitude") double longitude, @Query("radius") int radius);
+    Call<List<GeoFence>> getFencesNear(@Query("latitude") double latitude, @Query("longitude") double longitude, @Query("radius") int radius);
 
     @GET("fences")
     Observable<List<GeoFence>> getFencesBy(@Query("user") String user);
