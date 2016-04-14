@@ -6,6 +6,7 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.content.SharedPreferences;
+import android.content.pm.PackageInstaller;
 import android.databinding.DataBindingUtil;
 import android.os.Build;
 import android.os.Bundle;
@@ -36,8 +37,11 @@ import com.google.android.gms.location.LocationSettingsRequest;
 import com.google.android.gms.location.LocationSettingsResult;
 import com.google.android.gms.location.LocationSettingsStates;
 import com.google.android.gms.location.LocationSettingsStatusCodes;
+import com.google.repacked.antlr.v4.codegen.model.ExceptionClause;
 
 import java.io.IOException;
+import java.security.Key;
+import java.util.Date;
 
 import javax.inject.Inject;
 
@@ -45,10 +49,20 @@ import de.alternadev.georenting.GeoRentingApplication;
 import de.alternadev.georenting.R;
 import de.alternadev.georenting.data.api.GeoRentingService;
 import de.alternadev.georenting.data.api.gcm.GcmRegistrationIntentService;
+import de.alternadev.georenting.data.api.model.SessionToken;
 import de.alternadev.georenting.data.api.model.User;
 import de.alternadev.georenting.databinding.ActivitySignInBinding;
 import de.alternadev.georenting.ui.main.MainActivity;
 import hugo.weaving.DebugLog;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Header;
+import io.jsonwebtoken.Jws;
+import io.jsonwebtoken.JwsHeader;
+import io.jsonwebtoken.Jwt;
+import io.jsonwebtoken.JwtHandler;
+import io.jsonwebtoken.JwtParser;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SigningKeyResolver;
 import permissions.dispatcher.NeedsPermission;
 import permissions.dispatcher.RuntimePermissions;
 import rx.android.schedulers.AndroidSchedulers;
@@ -61,7 +75,9 @@ public class SignInActivity extends AppCompatActivity implements GoogleApiClient
     private static final int REQUEST_CODE_RESOLVE_ERR = 42;
     private static final int REQUEST_CODE_SIGN_IN = 44;
     private static final int REQUEST_CODE_CHECK_SETTINGS = 45;
+
     public static final String PREF_SIGNED_IN_BEFORE = "signedIn";
+    public static final String PREF_TOKEN = "t";
 
     private GoogleApiClient mApiClient;
     private ProgressDialog mProgressDialog;
@@ -109,9 +125,15 @@ public class SignInActivity extends AppCompatActivity implements GoogleApiClient
     @Override
     protected void onStart() {
         super.onStart();
+        mProgressDialog.show();
+
+        if(((GeoRentingApplication) getApplication()).getSessionToken().token != null) {
+            askForLocationAccess();
+            return;
+        }
+
 
         OptionalPendingResult<GoogleSignInResult> opr = Auth.GoogleSignInApi.silentSignIn(mApiClient);
-        mProgressDialog.show();
 
         if(opr.isDone()) {
             GoogleSignInResult result = opr.get();
@@ -120,6 +142,8 @@ public class SignInActivity extends AppCompatActivity implements GoogleApiClient
             opr.setResultCallback(this::handleSignIn);
         }
     }
+
+
 
     public void onClickSignIn(View v) {
         SignInActivityPermissionsDispatcher.startSignInWithCheck(this);
@@ -142,13 +166,16 @@ public class SignInActivity extends AppCompatActivity implements GoogleApiClient
                     .subscribe((sessionToken) -> {
                         Timber.d("Test: " + sessionToken);
                         mProgressDialog.dismiss();
-                        mPreferences.edit().putBoolean(PREF_SIGNED_IN_BEFORE, true).apply();
+                        mPreferences.edit()
+                                .putBoolean(PREF_SIGNED_IN_BEFORE, true)
+                                .putString(PREF_TOKEN, sessionToken.token)
+                                .apply();
 
                         ((GeoRentingApplication) getApplication()).setSessionToken(sessionToken);
                         startService(new Intent(this, GcmRegistrationIntentService.class));
 
                         askForLocationAccess();
-                    });
+                    }, error -> Timber.e(error, "Could not handle Token."));
         } else {
             mProgressDialog.dismiss();
         }
@@ -171,6 +198,7 @@ public class SignInActivity extends AppCompatActivity implements GoogleApiClient
     }
 
     private void proceed() {
+        mProgressDialog.dismiss();
         startActivity(new Intent(this, MainActivity.class));
         finish();
     }

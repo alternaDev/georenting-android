@@ -24,6 +24,9 @@ public interface GeoRentingService {
     @DELETE("users/auth")
     Observable<SessionToken> deAuth();
 
+    @POST("users/refreshToken")
+    Observable<SessionToken> refreshToken(@Body SessionToken token);
+
     @POST("users/me/gcm")
     Call<Void> registerGcmToken(@Body GcmToken token);
 

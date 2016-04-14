@@ -170,6 +170,8 @@ dependencies {
 
     compile 'com.github.hotchemi:permissionsdispatcher:2.1.2'
     apt 'com.github.hotchemi:permissionsdispatcher-processor:2.1.2'
+
+    compile 'io.jsonwebtoken:jjwt:0.6.0'
 }
 
 def installAll = tasks.create('installAll')

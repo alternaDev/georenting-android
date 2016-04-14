@@ -3,6 +3,7 @@ package de.alternadev.georenting.ui.main;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
@@ -17,16 +18,29 @@ import android.view.ViewGroup;
 
 import com.squareup.picasso.Picasso;
 
+import java.security.Key;
+import java.util.Date;
+
 import javax.inject.Inject;
 
 import de.alternadev.georenting.GeoRentingApplication;
 import de.alternadev.georenting.R;
+import de.alternadev.georenting.data.api.GeoRentingService;
+import de.alternadev.georenting.data.api.model.SessionToken;
 import de.alternadev.georenting.data.api.model.User;
 import de.alternadev.georenting.data.tasks.UpdateGeofencesTask;
 import de.alternadev.georenting.databinding.ActivityMainBinding;
+import de.alternadev.georenting.ui.SignInActivity;
 import de.alternadev.georenting.ui.settings.SettingsActivity;
 import hugo.weaving.DebugLog;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.JwsHeader;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SigningKeyResolver;
 import rebus.header.view.HeaderView;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
+import timber.log.Timber;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -36,6 +50,12 @@ public class MainActivity extends AppCompatActivity {
 
     @Inject
     Picasso picasso;
+
+    @Inject
+    GeoRentingService mService;
+
+    @Inject
+    SharedPreferences mPreferences;
 
     private User mCurrentUser;
 
@@ -57,14 +77,15 @@ public class MainActivity extends AppCompatActivity {
         b.mainNavigationView.addHeaderView(mHeaderView);
         b.mainNavigationView.setNavigationItemSelectedListener(this::onNavigationItemSelected);
 
-        mCurrentUser = ((GeoRentingApplication) getApplication()).getSessionToken().user;
+        SessionToken savedToken = getSavedToken();
 
-        if(mCurrentUser == null) {
-            finish();
-            return;
+        if(savedToken != null) {
+            ((GeoRentingApplication) getApplication()).setSessionToken(savedToken);
+        } else {
+            reSignIn();
         }
 
-        showUserInHeader(mCurrentUser);
+        loadCurrentUser();
 
         mDrawerLayout = b.mainDrawerLayout;
 
@@ -83,6 +104,69 @@ public class MainActivity extends AppCompatActivity {
         UpdateGeofencesTask.initializeTasks(this);
     }
 
+    private SessionToken getSavedToken() {
+        String token = mPreferences.getString(SignInActivity.PREF_TOKEN, "");
+        if(token.equals("")) return null;
+
+        // EXTREMELY DIRTY HACK
+
+        final int[] exp = {-1};
+        try {
+            Jwts.parser().setSigningKeyResolver(new SigningKeyResolver() {
+                @Override
+                public Key resolveSigningKey(JwsHeader header, Claims claims) {
+                    exp[0] = (int) header.get("exp");
+                    return null;
+                }
+
+                @Override
+                public Key resolveSigningKey(JwsHeader header, String plaintext) {
+                    return null;
+                }
+            }).parse(token);
+
+        } catch(Exception e) {
+            if(exp[0] != -1) {
+                if(new Date((long) exp[0] * 1000).after(new Date())) {
+                    SessionToken t = new SessionToken();
+                    t.token = token;
+                    Timber.i("Using token %s", token);
+                    return t;
+                }
+            }
+            Timber.e(e, "Could not parse JWT.");
+        }
+
+        return null;
+    }
+
+    private void loadCurrentUser() {
+        mCurrentUser = ((GeoRentingApplication) getApplication()).getSessionToken().user;
+
+        if(mCurrentUser == null) {
+            mService.refreshToken(((GeoRentingApplication) getApplication()).getSessionToken())
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe((sessionToken) -> {
+                        ((GeoRentingApplication) getApplication()).setSessionToken(sessionToken);
+                        mCurrentUser = sessionToken.user;
+                        showUserInHeader(mCurrentUser);
+                    }, error -> {
+                        Timber.e(error, "Could not refresh Token.");
+                        reSignIn();
+                    });
+
+        } else {
+            showUserInHeader(mCurrentUser);
+        }
+    }
+
+    private void reSignIn() {
+        mPreferences.edit().remove(SignInActivity.PREF_TOKEN).commit();
+        ((GeoRentingApplication) getApplication()).setSessionToken(null);
+        startActivity(new Intent(this, SignInActivity.class));
+        finish();
+    }
 
 
     private void showFragment(Fragment fragment) {
