@@ -32,6 +32,7 @@ import de.alternadev.georenting.data.api.model.GeoFence;
 import de.alternadev.georenting.data.geofencing.GeofenceTransitionsIntentService;
 import de.alternadev.georenting.data.models.Fence;
 import io.realm.Realm;
+import timber.log.Timber;
 
 public class UpdateGeofencesTask extends GcmTaskService {
 
@@ -50,7 +51,7 @@ public class UpdateGeofencesTask extends GcmTaskService {
 
     @Override
     public int onRunTask(TaskParams taskParams) {
-        Log.i("Task", "Initializing Google");
+        Timber.i("Initializing Google");
         mApiClient = new GoogleApiClient.Builder(this)
                 .addApi(LocationServices.API)
                 .build();
@@ -63,11 +64,12 @@ public class UpdateGeofencesTask extends GcmTaskService {
          * 4. Put new Geofences into Google, save IDs
          * 5. Put new Geofences into Realm, with IDs
          */
-        Log.i("Task", "removing old Fences");
+        Timber.i("removing old Fences");
 
         mRealm = Realm.getDefaultInstance();
 
         if (!removeOldGeofences(getOldRequestIDs())) {
+            Timber.e("Could not remove old Geofences. Stopping.");
             mRealm.close();
             return GcmNetworkManager.RESULT_FAILURE;
         }
@@ -76,6 +78,7 @@ public class UpdateGeofencesTask extends GcmTaskService {
 
         Location lastLocation = getLocation();
         if(lastLocation == null) {
+            Timber.e("Could not get Location. Stopping.");
             mRealm.close();
             return GcmNetworkManager.RESULT_RESCHEDULE;
         }
@@ -85,16 +88,18 @@ public class UpdateGeofencesTask extends GcmTaskService {
             remoteFences = getRemoteGeoFences(lastLocation);
         } catch (IOException e) {
             e.printStackTrace();
+            Timber.e("Could not get Remote Geofences. Stopping.");
             mRealm.close();
             return GcmNetworkManager.RESULT_FAILURE;
         }
 
         if(remoteFences == null) {
+            Timber.w("Not remote Fences were returned. Stopping.");
             mRealm.close();
             return GcmNetworkManager.RESULT_FAILURE;
         }
 
-        Log.i("Task", "Adding new Fences");
+        Timber.i("Adding new Fences");
 
         List<Fence> fences = new ArrayList<>();
 
@@ -118,11 +123,12 @@ public class UpdateGeofencesTask extends GcmTaskService {
         mRealm.commitTransaction();
 
         if (geofences.size() > 0 && !addGeoFences(geofences)) {
+            Timber.e("Could not add new Fences to google. Stopping.");
             mRealm.close();
             return GcmNetworkManager.RESULT_FAILURE;
         }
 
-        Log.i("Task", "Done!");
+        Timber.i("Done!");
         mRealm.close();
         return GcmNetworkManager.RESULT_SUCCESS;
     }
@@ -154,7 +160,7 @@ public class UpdateGeofencesTask extends GcmTaskService {
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             return false;
         }
-        Log.i("Task", "Exec adding new Fences");
+        Timber.i("Exec adding new Fences");
 
         return LocationServices.GeofencingApi.addGeofences(mApiClient,
                 r, PendingIntent.getService(this, 0, new Intent(this, GeofenceTransitionsIntentService.class), PendingIntent.FLAG_UPDATE_CURRENT)).await().isSuccess();
