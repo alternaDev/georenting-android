@@ -15,8 +15,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.api.GoogleApiClient;
 import com.squareup.picasso.Picasso;
 
 import javax.inject.Inject;
@@ -84,6 +82,8 @@ public class MainActivity extends AppCompatActivity {
 
         UpdateGeofencesTask.initializeTasks(this);
     }
+
+
 
     private void showFragment(Fragment fragment) {
         FragmentTransaction transaction = getFragmentManager().beginTransaction();

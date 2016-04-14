@@ -1,6 +1,7 @@
 package de.alternadev.georenting.ui;
 
 import android.Manifest;
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.IntentSender;
@@ -26,6 +27,15 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.OptionalPendingResult;
+import com.google.android.gms.common.api.PendingResult;
+import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.common.api.Status;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.location.LocationSettingsRequest;
+import com.google.android.gms.location.LocationSettingsResult;
+import com.google.android.gms.location.LocationSettingsStates;
+import com.google.android.gms.location.LocationSettingsStatusCodes;
 
 import java.io.IOException;
 
@@ -50,6 +60,7 @@ public class SignInActivity extends AppCompatActivity implements GoogleApiClient
 
     private static final int REQUEST_CODE_RESOLVE_ERR = 42;
     private static final int REQUEST_CODE_SIGN_IN = 44;
+    private static final int REQUEST_CODE_CHECK_SETTINGS = 45;
     public static final String PREF_SIGNED_IN_BEFORE = "signedIn";
 
     private GoogleApiClient mApiClient;
@@ -85,6 +96,7 @@ public class SignInActivity extends AppCompatActivity implements GoogleApiClient
         mApiClient = new GoogleApiClient.Builder(this)
                 .enableAutoManage(this, this)
                 .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
+                .addApi(LocationServices.API)
                 .build();
 
         Window window = getWindow();
@@ -135,7 +147,7 @@ public class SignInActivity extends AppCompatActivity implements GoogleApiClient
                         ((GeoRentingApplication) getApplication()).setSessionToken(sessionToken);
                         startService(new Intent(this, GcmRegistrationIntentService.class));
 
-                        proceed();
+                        askForLocationAccess();
                     });
         } else {
             mProgressDialog.dismiss();
@@ -169,6 +181,19 @@ public class SignInActivity extends AppCompatActivity implements GoogleApiClient
         if (requestCode == REQUEST_CODE_SIGN_IN) {
             GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
             handleSignIn(result);
+        } else if(requestCode == REQUEST_CODE_CHECK_SETTINGS) {
+            switch (resultCode) {
+                case Activity.RESULT_OK:
+                    // All required changes were successfully made
+                    proceed();
+                    break;
+                case Activity.RESULT_CANCELED:
+                    // The user was asked to change settings, but chose not to
+                    askForLocationAccess();
+                    break;
+                default:
+                    break;
+            }
         }
     }
 
@@ -176,6 +201,40 @@ public class SignInActivity extends AppCompatActivity implements GoogleApiClient
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         SignInActivityPermissionsDispatcher.onRequestPermissionsResult(this, requestCode, grantResults);
+    }
+
+    private void askForLocationAccess() {
+        LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder()
+                .addLocationRequest(LocationRequest.create().setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY));
+
+        PendingResult<LocationSettingsResult> result = LocationServices.SettingsApi.checkLocationSettings(mApiClient, builder.build());
+        result.setResultCallback(result1 -> {
+            final Status status = result1.getStatus();
+            switch (status.getStatusCode()) {
+                case LocationSettingsStatusCodes.SUCCESS:
+                    // All location settings are satisfied. The client can initialize location
+                    // requests here.
+                    proceed();
+                    break;
+                case LocationSettingsStatusCodes.RESOLUTION_REQUIRED:
+                    // Location settings are not satisfied. But could be fixed by showing the user
+                    // a dialog.
+                    try {
+                        // Show the dialog by calling startResolutionForResult(),
+                        // and check the result in onActivityResult().
+                        status.startResolutionForResult(
+                                SignInActivity.this,
+                                REQUEST_CODE_CHECK_SETTINGS);
+                    } catch (IntentSender.SendIntentException e) {
+                        // Ignore the error.
+                    }
+                    break;
+                case LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE:
+                    // Location settings are not satisfied. However, we have no way to fix the
+                    // settings so we won't show the dialog.
+                    break;
+            }
+        });
     }
 
 
