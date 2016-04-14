@@ -74,9 +74,15 @@ public class UpdateGeofencesTask extends GcmTaskService {
 
         removeAllFences();
 
+        Location lastLocation = getLocation();
+        if(lastLocation == null) {
+            mRealm.close();
+            return GcmNetworkManager.RESULT_RESCHEDULE;
+        }
+
         List<GeoFence> remoteFences;
         try {
-            remoteFences = getRemoteGeoFences();
+            remoteFences = getRemoteGeoFences(lastLocation);
         } catch (IOException e) {
             e.printStackTrace();
             mRealm.close();
@@ -121,14 +127,23 @@ public class UpdateGeofencesTask extends GcmTaskService {
         return GcmNetworkManager.RESULT_SUCCESS;
     }
 
-    private List<GeoFence> getRemoteGeoFences() throws IOException {
+    private Location getLocation() {
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             return null;
         }
-        Location mLastLocation = LocationServices.FusedLocationApi.getLastLocation(
-                mApiClient);
 
-        return mService.getFencesNear(mLastLocation.getLatitude(), mLastLocation.getLongitude(), 2000).execute().body();
+        boolean locationAvailable = LocationServices.FusedLocationApi.getLocationAvailability(mApiClient).isLocationAvailable();
+        if(!locationAvailable)
+            return null;
+
+        return LocationServices.FusedLocationApi.getLastLocation(
+                mApiClient);
+    }
+
+    private List<GeoFence> getRemoteGeoFences(Location location) throws IOException {
+
+
+        return mService.getFencesNear(location.getLatitude(), location.getLongitude(), 2000).execute().body();
     }
 
     private boolean addGeoFences(List<Geofence> fences) {
