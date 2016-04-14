@@ -1,7 +1,10 @@
 package de.alternadev.georenting.ui.main;
 
+import android.Manifest;
 import android.app.Fragment;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -36,7 +39,7 @@ public class MapFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if(mMapView != null) {
+        if (mMapView != null) {
             mMapView.onCreate(savedInstanceState);
         }
     }
@@ -44,28 +47,28 @@ public class MapFragment extends Fragment {
     @Override
     public void onPause() {
         super.onPause();
-        if(mMapView != null)
+        if (mMapView != null)
             mMapView.onPause();
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        if(mMapView != null)
+        if (mMapView != null)
             mMapView.onResume();
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if(mMapView != null)
+        if (mMapView != null)
             mMapView.onDestroy();
     }
 
     @Override
     public void onLowMemory() {
         super.onLowMemory();
-        if(mMapView != null)
+        if (mMapView != null)
             mMapView.onLowMemory();
     }
 
@@ -80,6 +83,10 @@ public class MapFragment extends Fragment {
     }
 
     private void initMap(GoogleMap map) {
+        if (ActivityCompat.checkSelfPermission(this.getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this.getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            return;
+        }
+        map.setMyLocationEnabled(true);
         Realm.getDefaultInstance().where(Fence.class).findAllAsync().asObservable().observeOn(AndroidSchedulers.mainThread()).subscribe(fences -> {
             Log.i("Fence", fences + "");
             for(Fence f : fences) {

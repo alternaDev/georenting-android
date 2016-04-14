@@ -138,10 +138,6 @@ public class UpdateGeofencesTask extends GcmTaskService {
             return null;
         }
 
-        boolean locationAvailable = LocationServices.FusedLocationApi.getLocationAvailability(mApiClient).isLocationAvailable();
-        if(!locationAvailable)
-            return null;
-
         return LocationServices.FusedLocationApi.getLastLocation(
                 mApiClient);
     }
