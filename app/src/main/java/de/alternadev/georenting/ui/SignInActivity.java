@@ -174,8 +174,8 @@ public class SignInActivity extends AppCompatActivity implements GoogleApiClient
 
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-        SignInActivityPermissionsDispatcher.onRequestPermissionsResult(this, requestCode, grantResults);
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        SignInActivityPermissionsDispatcher.onRequestPermissionsResult(this, requestCode, grantResults);
     }
 
 
