@@ -241,4 +241,9 @@ public class MainActivity extends BaseActivity {
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
     }
+
+    @Override
+    protected void setStatusBarColor() {
+        // Do not set the statusbarcolor here because it does weird things.
+    }
 }
