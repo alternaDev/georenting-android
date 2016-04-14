@@ -64,7 +64,7 @@ public class MainActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        ((GeoRentingApplication) getApplication()).getComponent().inject(this);
+        getGeoRentingApplication().getComponent().inject(this);
 
         ActivityMainBinding b = DataBindingUtil.setContentView(this, R.layout.activity_main);
 
@@ -81,7 +81,7 @@ public class MainActivity extends BaseActivity {
         SessionToken savedToken = getSavedToken();
 
         if(savedToken != null) {
-            ((GeoRentingApplication) getApplication()).setSessionToken(savedToken);
+            getGeoRentingApplication().setSessionToken(savedToken);
         } else {
             reSignIn();
             return;
@@ -143,14 +143,14 @@ public class MainActivity extends BaseActivity {
     }
 
     private void loadCurrentUser() {
-        mCurrentUser = ((GeoRentingApplication) getApplication()).getSessionToken().user;
+        mCurrentUser = getGeoRentingApplication().getSessionToken().user;
 
         if(mCurrentUser == null) {
-            mService.refreshToken(((GeoRentingApplication) getApplication()).getSessionToken())
+            mService.refreshToken(getGeoRentingApplication().getSessionToken())
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe((sessionToken) -> {
-                        ((GeoRentingApplication) getApplication()).setSessionToken(sessionToken);
+                        getGeoRentingApplication().setSessionToken(sessionToken);
                         mCurrentUser = sessionToken.user;
                         showUserInHeader(mCurrentUser);
                     }, error -> {
@@ -165,7 +165,7 @@ public class MainActivity extends BaseActivity {
 
     private void reSignIn() {
         mPreferences.edit().remove(SignInActivity.PREF_TOKEN).commit();
-        ((GeoRentingApplication) getApplication()).setSessionToken(null);
+        getGeoRentingApplication().setSessionToken(null);
         startActivity(new Intent(this, SignInActivity.class));
         finish();
     }

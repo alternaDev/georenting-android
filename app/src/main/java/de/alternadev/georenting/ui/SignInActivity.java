@@ -92,7 +92,7 @@ public class SignInActivity extends BaseActivity implements GoogleApiClient.OnCo
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        ((GeoRentingApplication) getApplication()).getComponent().inject(this);
+        getGeoRentingApplication().getComponent().inject(this);
 
         ActivitySignInBinding b = DataBindingUtil.setContentView(this, R.layout.activity_sign_in);
         b.signInButton.setOnClickListener(this::onClickSignIn);
@@ -121,7 +121,7 @@ public class SignInActivity extends BaseActivity implements GoogleApiClient.OnCo
         super.onStart();
         mProgressDialog.show();
 
-        if(((GeoRentingApplication) getApplication()).getSessionToken() != null && ((GeoRentingApplication) getApplication()).getSessionToken().token != null) {
+        if(getGeoRentingApplication().getSessionToken() != null && getGeoRentingApplication().getSessionToken().token != null) {
             askForLocationAccess();
             return;
         }
@@ -165,7 +165,7 @@ public class SignInActivity extends BaseActivity implements GoogleApiClient.OnCo
                                 .putString(PREF_TOKEN, sessionToken.token)
                                 .apply();
 
-                        ((GeoRentingApplication) getApplication()).setSessionToken(sessionToken);
+                        getGeoRentingApplication().setSessionToken(sessionToken);
                         startService(new Intent(this, GcmRegistrationIntentService.class));
 
                         askForLocationAccess();

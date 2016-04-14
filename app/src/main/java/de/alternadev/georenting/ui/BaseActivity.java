@@ -7,6 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.Window;
 import android.view.WindowManager;
 
+import de.alternadev.georenting.GeoRentingApplication;
 import de.alternadev.georenting.R;
 
 /**
@@ -22,5 +23,9 @@ public class BaseActivity extends AppCompatActivity {
         window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
         if(Build.VERSION.SDK_INT >= 21)
             window.setStatusBarColor(getResources().getColor(R.color.dark_primary_color));
+    }
+
+    public GeoRentingApplication getGeoRentingApplication() {
+        return ((GeoRentingApplication) getApplication());
     }
 }
