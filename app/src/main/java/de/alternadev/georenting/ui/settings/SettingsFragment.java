@@ -74,7 +74,10 @@ public class SettingsFragment extends PreferenceFragment implements GoogleApiCli
                         Auth.GoogleSignInApi.signOut(mGoogleClient).setResultCallback(
                                 status -> {
                                     mGoogleClient.clearDefaultAccountAndReconnect();
-                                    mPreferences.edit().putBoolean(SignInActivity.PREF_SIGNED_IN_BEFORE, false).commit();
+                                    mPreferences.edit()
+                                            .putBoolean(SignInActivity.PREF_SIGNED_IN_BEFORE, false)
+                                            .remove(SignInActivity.PREF_TOKEN)
+                                            .commit();
                                     removeUpdateGeofenceTask();
 
                                     ProcessPhoenix.triggerRebirth(this.getActivity(), new Intent(this.getActivity(), SignInActivity.class));

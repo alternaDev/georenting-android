@@ -70,7 +70,7 @@ import rx.schedulers.Schedulers;
 import timber.log.Timber;
 
 @RuntimePermissions
-public class SignInActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener {
+public class SignInActivity extends BaseActivity implements GoogleApiClient.OnConnectionFailedListener {
 
     private static final int REQUEST_CODE_RESOLVE_ERR = 42;
     private static final int REQUEST_CODE_SIGN_IN = 44;
@@ -114,12 +114,6 @@ public class SignInActivity extends AppCompatActivity implements GoogleApiClient
                 .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
                 .addApi(LocationServices.API)
                 .build();
-
-        Window window = getWindow();
-        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-        window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-        if(Build.VERSION.SDK_INT >= 21)
-            window.setStatusBarColor(getResources().getColor(R.color.dark_primary_color));
     }
 
     @Override
@@ -127,7 +121,7 @@ public class SignInActivity extends AppCompatActivity implements GoogleApiClient
         super.onStart();
         mProgressDialog.show();
 
-        if(((GeoRentingApplication) getApplication()).getSessionToken().token != null) {
+        if(((GeoRentingApplication) getApplication()).getSessionToken() != null && ((GeoRentingApplication) getApplication()).getSessionToken().token != null) {
             askForLocationAccess();
             return;
         }

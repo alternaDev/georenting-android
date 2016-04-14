@@ -30,6 +30,7 @@ import de.alternadev.georenting.data.api.model.SessionToken;
 import de.alternadev.georenting.data.api.model.User;
 import de.alternadev.georenting.data.tasks.UpdateGeofencesTask;
 import de.alternadev.georenting.databinding.ActivityMainBinding;
+import de.alternadev.georenting.ui.BaseActivity;
 import de.alternadev.georenting.ui.SignInActivity;
 import de.alternadev.georenting.ui.settings.SettingsActivity;
 import hugo.weaving.DebugLog;
@@ -42,7 +43,7 @@ import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 import timber.log.Timber;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends BaseActivity {
 
     private ActionBarDrawerToggle mDrawerToggle;
     private HeaderView mHeaderView;
@@ -83,6 +84,7 @@ public class MainActivity extends AppCompatActivity {
             ((GeoRentingApplication) getApplication()).setSessionToken(savedToken);
         } else {
             reSignIn();
+            return;
         }
 
         loadCurrentUser();
