@@ -29,7 +29,7 @@ import timber.log.Timber;
 public class GeoRentingApplication extends Application {
 
     private GeoRentingComponent mComponent;
-    private SessionToken mSessionToken = new SessionToken();
+    private SessionToken mSessionToken = null;
 
     @Inject
     GeoRentingService mService;

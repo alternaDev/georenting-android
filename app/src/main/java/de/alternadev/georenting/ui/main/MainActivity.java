@@ -123,6 +123,7 @@ public class MainActivity extends BaseActivity {
 
                 @Override
                 public Key resolveSigningKey(JwsHeader header, String plaintext) {
+                    exp[0] = (int) header.get("exp");
                     return null;
                 }
             }).parse(token);

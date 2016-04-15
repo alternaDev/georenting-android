@@ -121,7 +121,7 @@ public class SignInActivity extends BaseActivity implements GoogleApiClient.OnCo
         super.onStart();
         mProgressDialog.show();
 
-        if(getGeoRentingApplication().getSessionToken() != null && getGeoRentingApplication().getSessionToken().token != null) {
+        if(getGeoRentingApplication().getSessionToken() != null && getGeoRentingApplication().getSessionToken().token != null && !getGeoRentingApplication().getSessionToken().token.equals("")) {
             askForLocationAccess();
             return;
         }
@@ -159,7 +159,7 @@ public class SignInActivity extends BaseActivity implements GoogleApiClient.OnCo
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe((sessionToken) -> {
-                        Timber.d("Test: " + sessionToken);
+                        Timber.d("Test: %s", sessionToken);
                         mProgressDialog.dismiss();
                         mPreferences.edit()
                                 .putBoolean(PREF_SIGNED_IN_BEFORE, true)
