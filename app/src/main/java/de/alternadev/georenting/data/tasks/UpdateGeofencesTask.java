@@ -18,6 +18,10 @@ import com.google.android.gms.gcm.Task;
 import com.google.android.gms.gcm.TaskParams;
 import com.google.android.gms.location.Geofence;
 import com.google.android.gms.location.GeofencingRequest;
+import com.google.android.gms.location.LocationCallback;
+import com.google.android.gms.location.LocationListener;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 
 import java.io.IOException;
@@ -135,13 +139,40 @@ public class UpdateGeofencesTask extends GcmTaskService {
         return GcmNetworkManager.RESULT_SUCCESS;
     }
 
+    @DebugLog
     private Location getLocation() {
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             return null;
         }
 
-        return LocationServices.FusedLocationApi.getLastLocation(
-                mApiClient);
+        final Location[] location = {null};
+
+        LocationRequest request = LocationRequest.create()
+                .setFastestInterval(1000)
+                .setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
+
+        LocationCallback listener = new LocationCallback() {
+            @Override
+            public void onLocationResult(LocationResult result) {
+                location[0] = result.getLastLocation();
+            }
+        };
+
+        boolean success = LocationServices.FusedLocationApi.requestLocationUpdates(mApiClient, request,
+                listener, getMainLooper()).await().isSuccess();
+        if(!success) return null;
+
+        while(location[0] == null) {
+            try {
+                Thread.sleep(250);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+
+        LocationServices.FusedLocationApi.removeLocationUpdates(mApiClient, listener);
+
+        return location[0];
     }
 
     private List<GeoFence> getRemoteGeoFences(Location location) throws IOException {
