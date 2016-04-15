@@ -86,11 +86,12 @@ public class GeofenceTransitionsIntentService extends IntentService {
     }
 
     private void notifyServer(Geofence f) {
-        Timber.d("Blocking Sign in: " + ((GeoRentingApplication) getApplication()).blockingSignIn());
+        Timber.d("Blocking Sign in: %s", ((GeoRentingApplication) getApplication()).blockingSignIn());
 
         Realm realm = Realm.getDefaultInstance();
         Fence fence = realm.where(Fence.class).equalTo("geofenceID", f.getRequestId()).findFirst();
 
+        Timber.d("Visiting fence: %s %s", fence.getId(), fence.getGeofenceID());
         mService.visitFence(fence.getId()).toBlocking().first(); // TODO: Use real ID.
     }
 }

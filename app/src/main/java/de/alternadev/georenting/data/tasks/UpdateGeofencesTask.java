@@ -31,6 +31,7 @@ import de.alternadev.georenting.data.api.GeoRentingService;
 import de.alternadev.georenting.data.api.model.GeoFence;
 import de.alternadev.georenting.data.geofencing.GeofenceTransitionsIntentService;
 import de.alternadev.georenting.data.models.Fence;
+import hugo.weaving.DebugLog;
 import io.realm.Realm;
 import timber.log.Timber;
 
@@ -99,12 +100,13 @@ public class UpdateGeofencesTask extends GcmTaskService {
             return GcmNetworkManager.RESULT_FAILURE;
         }
 
-        Timber.i("Adding new Fences");
+        Timber.i("Adding new Fences (%d)", remoteFences.size());
 
         List<Fence> fences = new ArrayList<>();
 
         mRealm.beginTransaction();
         for(GeoFence remoteFence : remoteFences) {
+            Timber.i("Adding fence: %s", remoteFence.id);
             Fence f = mRealm.createObject(Fence.class);
             f.setName(remoteFence.name);
             f.setLatitude(remoteFence.centerLat);

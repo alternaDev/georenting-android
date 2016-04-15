@@ -143,7 +143,8 @@ public class SignInActivity extends BaseActivity implements GoogleApiClient.OnCo
         SignInActivityPermissionsDispatcher.startSignInWithCheck(this);
     }
 
-    @NeedsPermission({Manifest.permission.GET_ACCOUNTS, Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION})
+    @NeedsPermission({Manifest.permission.GET_ACCOUNTS, Manifest.permission.ACCESS_FINE_LOCATION})
+    @DebugLog
     void startSignIn() {
         mProgressDialog.show();
 
@@ -220,6 +221,7 @@ public class SignInActivity extends BaseActivity implements GoogleApiClient.OnCo
     }
 
     @Override
+    @DebugLog
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         SignInActivityPermissionsDispatcher.onRequestPermissionsResult(this, requestCode, grantResults);
