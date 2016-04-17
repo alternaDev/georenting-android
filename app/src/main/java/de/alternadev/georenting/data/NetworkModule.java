@@ -14,7 +14,6 @@ import dagger.Provides;
 import okhttp3.Cache;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
-import timber.log.Timber;
 
 import static com.jakewharton.byteunits.DecimalByteUnit.MEGABYTES;
 import static java.util.concurrent.TimeUnit.SECONDS;

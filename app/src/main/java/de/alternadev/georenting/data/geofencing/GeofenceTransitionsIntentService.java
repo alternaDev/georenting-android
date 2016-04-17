@@ -1,14 +1,8 @@
 package de.alternadev.georenting.data.geofencing;
 
 import android.app.IntentService;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.support.v4.app.NotificationCompat;
-import android.support.v4.app.TaskStackBuilder;
-import android.util.Log;
 
 import com.google.android.gms.location.Geofence;
 import com.google.android.gms.location.GeofenceStatusCodes;
@@ -19,7 +13,6 @@ import java.util.List;
 import javax.inject.Inject;
 
 import de.alternadev.georenting.GeoRentingApplication;
-import de.alternadev.georenting.R;
 import de.alternadev.georenting.data.api.GeoRentingService;
 import de.alternadev.georenting.data.models.Fence;
 import io.realm.Realm;

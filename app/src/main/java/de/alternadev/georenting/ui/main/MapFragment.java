@@ -18,11 +18,7 @@ import com.google.android.gms.maps.model.LatLng;
 import de.alternadev.georenting.data.models.Fence;
 import de.alternadev.georenting.databinding.FragmentMapBinding;
 import io.realm.Realm;
-import io.realm.RealmChangeListener;
-import io.realm.RealmResults;
 import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action1;
-import rx.schedulers.Schedulers;
 
 public class MapFragment extends Fragment {
     public static MapFragment newInstance() {

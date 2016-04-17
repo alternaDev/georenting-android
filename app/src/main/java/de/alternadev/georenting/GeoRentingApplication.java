@@ -4,17 +4,11 @@ import android.app.Application;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 
-import com.bumptech.glide.Glide;
 import com.facebook.stetho.Stetho;
-import com.facebook.stetho.inspector.elements.ShadowDocument;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.gcm.GcmNetworkManager;
-import com.google.android.gms.gcm.OneoffTask;
-import com.google.android.gms.gcm.PeriodicTask;
-import com.google.android.gms.gcm.Task;
 import com.uphyca.stetho_realm.RealmInspectorModulesProvider;
 
 import javax.inject.Inject;
@@ -22,7 +16,6 @@ import javax.inject.Inject;
 import de.alternadev.georenting.data.api.GeoRentingService;
 import de.alternadev.georenting.data.api.model.SessionToken;
 import de.alternadev.georenting.data.api.model.User;
-import de.alternadev.georenting.data.tasks.UpdateGeofencesTask;
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
 import timber.log.Timber;
@@ -94,6 +87,7 @@ public class GeoRentingApplication extends Application {
         GoogleSignInResult r = Auth.GoogleSignInApi.silentSignIn(client).await();
 
         if(r.isSuccess()) {
+            if(r.getSignInAccount() == null) return false;
             String authCode = r.getSignInAccount().getServerAuthCode();
             if(authCode == null) return false;
 

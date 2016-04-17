@@ -4,8 +4,6 @@ import android.app.Application;
 
 import com.google.gson.Gson;
 
-import java.io.IOException;
-
 import javax.inject.Named;
 import javax.inject.Singleton;
 

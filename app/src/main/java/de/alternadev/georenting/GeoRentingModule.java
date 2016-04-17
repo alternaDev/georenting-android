@@ -14,7 +14,7 @@ import dagger.Provides;
 
 @Module
 public class GeoRentingModule {
-    private GeoRentingApplication mApp;
+    private final GeoRentingApplication mApp;
 
     public GeoRentingModule(GeoRentingApplication app) {
         this.mApp = app;

@@ -8,7 +8,7 @@ import de.alternadev.georenting.databinding.ItemGeofenceBinding;
  * Created by jhbruhn on 17.04.16.
  */
 public class GeofenceViewHolder extends RecyclerView.ViewHolder {
-    private ItemGeofenceBinding mLayoutBinding;
+    private final ItemGeofenceBinding mLayoutBinding;
 
     public GeofenceViewHolder(ItemGeofenceBinding b) {
         super(b.getRoot());

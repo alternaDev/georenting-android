@@ -17,7 +17,6 @@ import de.alternadev.georenting.R;
 import de.alternadev.georenting.data.tasks.UpdateGeofencesTask;
 import de.alternadev.georenting.ui.SignInActivity;
 import hugo.weaving.DebugLog;
-import timber.log.Timber;
 
 public class GcmListenerService extends com.google.android.gms.gcm.GcmListenerService {
     @Override

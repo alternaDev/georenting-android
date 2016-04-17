@@ -10,7 +10,6 @@ import android.os.Bundle;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
@@ -23,7 +22,6 @@ import java.util.Date;
 
 import javax.inject.Inject;
 
-import de.alternadev.georenting.GeoRentingApplication;
 import de.alternadev.georenting.R;
 import de.alternadev.georenting.data.api.GeoRentingService;
 import de.alternadev.georenting.data.api.model.SessionToken;
@@ -179,7 +177,6 @@ public class MainActivity extends BaseActivity {
         transaction.commit();
     }
 
-    @DebugLog
     private boolean onNavigationItemSelected(MenuItem menuItem) {
 
         switch (menuItem.getItemId()) {
@@ -232,11 +229,6 @@ public class MainActivity extends BaseActivity {
                     .into(mHeaderView.avatar());
         }
         mHeaderView.username(user.name);
-    }
-
-    @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
     }
 
     @Override
