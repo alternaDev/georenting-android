@@ -4,6 +4,7 @@ import android.app.Application;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 
+import com.bumptech.glide.Glide;
 import com.facebook.stetho.Stetho;
 import com.facebook.stetho.inspector.elements.ShadowDocument;
 import com.google.android.gms.auth.api.Auth;

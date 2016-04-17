@@ -7,13 +7,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.squareup.picasso.Picasso;
+import com.bumptech.glide.Glide;
 
 import org.parceler.Parcels;
 
 import javax.inject.Inject;
 
 import de.alternadev.georenting.GeoRentingApplication;
+import de.alternadev.georenting.R;
 import de.alternadev.georenting.data.api.model.User;
 import de.alternadev.georenting.databinding.FragmentProfileBinding;
 
@@ -30,9 +31,6 @@ public class ProfileFragment extends Fragment {
     }
 
     private User mCurrentUser;
-
-    @Inject
-    Picasso picasso;
 
 
     public ProfileFragment() {
@@ -58,13 +56,14 @@ public class ProfileFragment extends Fragment {
         FragmentProfileBinding b = FragmentProfileBinding.inflate(inflater, container, false);
 
         if(mCurrentUser.avatarUrl != null && !mCurrentUser.avatarUrl.isEmpty()) {
-            picasso.load(mCurrentUser.avatarUrl + "&sz=250")
+            Glide.with(this).load(mCurrentUser.avatarUrl + "&sz=250")
+                    .dontAnimate()
+                    .placeholder(R.drawable.default_avatar)
                     .into(b.profileImage);
         }
 
         if(mCurrentUser.coverUrl != null && !mCurrentUser.coverUrl.isEmpty()) {
-            picasso.load(mCurrentUser.coverUrl)
-                    .fit()
+            Glide.with(this).load(mCurrentUser.coverUrl)
                     .centerCrop()
                     .into(b.backgroundImage);
         }

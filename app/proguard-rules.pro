@@ -23,3 +23,5 @@
 -dontwarn io.realm.**
 
 -keepattributes EnclosingMethod
+
+-keep public class * implements com.bumptech.glide.module.GlideModule

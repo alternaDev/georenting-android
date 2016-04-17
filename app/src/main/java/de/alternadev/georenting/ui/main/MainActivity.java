@@ -16,7 +16,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.squareup.picasso.Picasso;
+import com.bumptech.glide.Glide;
 
 import java.security.Key;
 import java.util.Date;
@@ -49,8 +49,6 @@ public class MainActivity extends BaseActivity {
     private HeaderView mHeaderView;
     private DrawerLayout mDrawerLayout;
 
-    @Inject
-    Picasso picasso;
 
     @Inject
     GeoRentingService mService;
@@ -224,15 +222,15 @@ public class MainActivity extends BaseActivity {
 
     private void showUserInHeader(User user) {
         if(user.coverUrl != null && !user.coverUrl.isEmpty()) {
-            picasso.load(user.coverUrl)
+            Glide.with(this).load(user.coverUrl)
                     .into(mHeaderView.background());
         } else {
-            picasso.load(R.drawable.default_background)
-                    .fit()
+            Glide.with(this).load(R.drawable.default_background)
                     .into(mHeaderView.background());
         }
         if(user.avatarUrl != null && !user.avatarUrl.isEmpty()) {
-            picasso.load(user.avatarUrl + "&sz=250")
+            Glide.with(this).load(user.avatarUrl + "&sz=250")
+                    .asBitmap()
                     .into(mHeaderView.avatar());
         }
         mHeaderView.username(user.name);
