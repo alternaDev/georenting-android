@@ -62,8 +62,6 @@ public class MyGeofencesFragment extends Fragment {
 
         FragmentMyGeofencesBinding b = FragmentMyGeofencesBinding.inflate(inflater, container, false);
 
-        b.geofencesList.setHasFixedSize(true);
-
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
         b.geofencesList.setLayoutManager(layoutManager);
 
