@@ -19,4 +19,5 @@
     <string name="pref_account_title">Account</string>
     <string name="pref_key_account_logout">account_logout</string>
     <string name="pref_account_logout">Log Out</string>
+    <string name="my_geofences_no_geofences">You do not own any GeoFence yet. Add one by clicking the button down right!</string>
 </resources>

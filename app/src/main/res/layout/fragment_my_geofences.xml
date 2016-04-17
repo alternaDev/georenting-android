@@ -3,6 +3,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
+    <data>
+        <import type="android.view.View"/>
+        <variable
+            name="geoFences"
+            type="java.util.List"
+            />
+    </data>
+
     <android.support.design.widget.CoordinatorLayout
         android:id="@+id/main_content"
         android:layout_width="match_parent"
@@ -19,6 +27,21 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" />
         </android.support.v4.widget.SwipeRefreshLayout>
+
+        <TextView
+            android:text="@string/my_geofences_no_geofences"
+            android:visibility="@{geoFences != null &amp;&amp;geoFences.size() == 0 ? View.VISIBLE : View.GONE}"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:gravity="center"
+            android:layout_width="fill_parent" />
+
+        <ProgressBar
+            android:visibility="@{geoFences == null ? View.VISIBLE : View.GONE}"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:gravity="center"
+            android:layout_width="wrap_content" />
 
         <android.support.design.widget.FloatingActionButton
             android:layout_width="wrap_content"

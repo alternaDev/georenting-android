@@ -11,6 +11,8 @@ import android.view.ViewGroup;
 
 import org.parceler.Parcels;
 
+import java.util.ArrayList;
+
 import javax.inject.Inject;
 
 import de.alternadev.georenting.GeoRentingApplication;
@@ -64,25 +66,28 @@ public class MyGeofencesFragment extends Fragment {
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
         b.geofencesList.setLayoutManager(layoutManager);
 
-        b.geofencesRefresh.setOnRefreshListener(() -> loadFences(b.geofencesList, b.geofencesRefresh));
+        b.geofencesRefresh.setOnRefreshListener(() -> loadFences(b));
         b.geofencesRefresh.setRefreshing(true);
-        loadFences(b.geofencesList, b.geofencesRefresh);
+        loadFences(b);
 
         // Inflate the layout for this fragment
         return b.getRoot();
     }
 
-    private void loadFences(RecyclerView geofencesList, SwipeRefreshLayout swipeRefreshLayout) {
+    private void loadFences(FragmentMyGeofencesBinding b) {
         mService.getFencesBy("" + mCurrentUser.id)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(geoFences -> {
                     Timber.i(geoFences.toString());
-                    swipeRefreshLayout.setRefreshing(false);
+                    b.geofencesRefresh.setRefreshing(false);
 
                     if(geoFences != null) {
                         RecyclerView.Adapter adapter = new GeofenceAdapter(geoFences);
-                        geofencesList.setAdapter(adapter);
+                        b.geofencesList.setAdapter(adapter);
+                        b.setGeoFences(geoFences);
+                    } else {
+                        b.setGeoFences(new ArrayList());
                     }
                 });
     }
