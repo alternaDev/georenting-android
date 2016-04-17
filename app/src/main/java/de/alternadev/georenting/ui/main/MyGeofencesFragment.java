@@ -2,6 +2,7 @@ package de.alternadev.georenting.ui.main;
 
 import android.app.Fragment;
 import android.os.Bundle;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -61,23 +62,27 @@ public class MyGeofencesFragment extends Fragment {
 
         FragmentMyGeofencesBinding b = FragmentMyGeofencesBinding.inflate(inflater, container, false);
 
-        loadFences(b.geofencesList);
+        b.geofencesList.setHasFixedSize(true);
+
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
+        b.geofencesList.setLayoutManager(layoutManager);
+
+        b.geofencesRefresh.setOnRefreshListener(() -> loadFences(b.geofencesList, b.geofencesRefresh));
+        b.geofencesRefresh.setRefreshing(true);
+        loadFences(b.geofencesList, b.geofencesRefresh);
 
         // Inflate the layout for this fragment
         return b.getRoot();
     }
 
-    private void loadFences(RecyclerView geofencesList) {
-        geofencesList.setHasFixedSize(true);
-
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
-        geofencesList.setLayoutManager(layoutManager);
-
+    private void loadFences(RecyclerView geofencesList, SwipeRefreshLayout swipeRefreshLayout) {
         mService.getFencesBy("" + mCurrentUser.id)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(geoFences -> {
                     Timber.i(geoFences.toString());
+                    swipeRefreshLayout.setRefreshing(false);
+
                     if(geoFences != null) {
                         RecyclerView.Adapter adapter = new GeofenceAdapater(geoFences);
                         geofencesList.setAdapter(adapter);
