@@ -16,7 +16,7 @@ public class User {
     @SerializedName("cover_url")
     public String coverUrl;
 
-
+    @SerializedName("ID")
     public int id;
 
     public User(){}
