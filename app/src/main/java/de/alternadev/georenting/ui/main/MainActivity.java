@@ -76,7 +76,7 @@ public class MainActivity extends BaseActivity {
 
         SessionToken savedToken = getSavedToken();
 
-        if(savedToken != null) {
+        if(savedToken != null && savedToken.token != null && !savedToken.token.equals("")) {
             getGeoRentingApplication().setSessionToken(savedToken);
         } else {
             reSignIn();
