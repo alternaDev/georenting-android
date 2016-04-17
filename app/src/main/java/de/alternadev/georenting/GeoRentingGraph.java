@@ -6,6 +6,7 @@ import de.alternadev.georenting.data.glide.OkHttpGlideModule;
 import de.alternadev.georenting.data.tasks.UpdateGeofencesTask;
 import de.alternadev.georenting.ui.SignInActivity;
 import de.alternadev.georenting.ui.main.MainActivity;
+import de.alternadev.georenting.ui.main.MyGeofencesFragment;
 import de.alternadev.georenting.ui.main.ProfileFragment;
 import de.alternadev.georenting.ui.settings.SettingsFragment;
 
@@ -27,4 +28,6 @@ public interface GeoRentingGraph {
     void inject(UpdateGeofencesTask updateGeofencesTask);
 
     void inject(OkHttpGlideModule okHttpGlideModule);
+
+    void inject(MyGeofencesFragment myGeofencesFragment);
 }

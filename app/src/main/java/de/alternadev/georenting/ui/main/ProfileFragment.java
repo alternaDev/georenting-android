@@ -15,6 +15,7 @@ import javax.inject.Inject;
 
 import de.alternadev.georenting.GeoRentingApplication;
 import de.alternadev.georenting.R;
+import de.alternadev.georenting.data.api.GeoRentingService;
 import de.alternadev.georenting.data.api.model.User;
 import de.alternadev.georenting.databinding.FragmentProfileBinding;
 
@@ -31,6 +32,9 @@ public class ProfileFragment extends Fragment {
     }
 
     private User mCurrentUser;
+
+    @Inject
+    GeoRentingService mService;
 
 
     public ProfileFragment() {
@@ -74,6 +78,7 @@ public class ProfileFragment extends Fragment {
             b.profileUserCard.setClipToOutline(false);
             b.profileImage.setClipToOutline(false);
         }
+
         return b.getRoot();
     }
 

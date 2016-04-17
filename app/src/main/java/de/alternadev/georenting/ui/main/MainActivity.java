@@ -89,8 +89,6 @@ public class MainActivity extends BaseActivity {
 
         mDrawerLayout = b.mainDrawerLayout;
 
-        showFragment(MyGeofencesFragment.newInstance());
-
         /* Workaround for bug in AppCompat v23.0.0: https://code.google.com/p/android/issues/detail?id=183166 */
         ViewGroup appBarLayout = b.appbar;
         for (int i = 0; i < appBarLayout.getChildCount(); i++) {
@@ -152,6 +150,7 @@ public class MainActivity extends BaseActivity {
                         getGeoRentingApplication().setSessionToken(sessionToken);
                         mCurrentUser = sessionToken.user;
                         showUserInHeader(mCurrentUser);
+                        showFragment(MyGeofencesFragment.newInstance(mCurrentUser));
                     }, error -> {
                         Timber.e(error, "Could not refresh Token.");
                         reSignIn();
@@ -159,6 +158,7 @@ public class MainActivity extends BaseActivity {
 
         } else {
             showUserInHeader(mCurrentUser);
+            showFragment(MyGeofencesFragment.newInstance(mCurrentUser));
         }
     }
 
@@ -185,13 +185,11 @@ public class MainActivity extends BaseActivity {
         switch (menuItem.getItemId()) {
             case R.id.nav_my_geofences:
                 menuItem.setChecked(true);
-                showFragment(MyGeofencesFragment.newInstance());
-
+                showFragment(MyGeofencesFragment.newInstance(mCurrentUser));
                 break;
             case R.id.nav_map:
                 menuItem.setChecked(true);
                 showFragment(MapFragment.newInstance());
-
                 break;
             case R.id.nav_profile:
                 menuItem.setChecked(true);
