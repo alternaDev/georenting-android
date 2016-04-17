@@ -89,11 +89,13 @@ public class SignInActivity extends BaseActivity implements GoogleApiClient.OnCo
     }
 
     @Override
+    @DebugLog
     protected void onStart() {
         super.onStart();
         mProgressDialog.show();
 
         if(getGeoRentingApplication().getSessionToken() != null && getGeoRentingApplication().getSessionToken().token != null && !getGeoRentingApplication().getSessionToken().token.equals("")) {
+            Timber.i("We seem to have a token. Asking for Location.");
             askForLocationAccess();
             return;
         }
@@ -131,6 +133,10 @@ public class SignInActivity extends BaseActivity implements GoogleApiClient.OnCo
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe((sessionToken) -> {
                         Timber.d("Test: %s", sessionToken);
+                        if(sessionToken.token == null) {
+                            mProgressDialog.dismiss();
+                            return;
+                        }
                         mProgressDialog.dismiss();
                         mPreferences.edit()
                                 .putBoolean(PREF_SIGNED_IN_BEFORE, true)
@@ -198,6 +204,7 @@ public class SignInActivity extends BaseActivity implements GoogleApiClient.OnCo
         SignInActivityPermissionsDispatcher.onRequestPermissionsResult(this, requestCode, grantResults);
     }
 
+    @DebugLog
     private void askForLocationAccess() {
         LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder()
                 .addLocationRequest(LocationRequest.create().setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY));

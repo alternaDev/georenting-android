@@ -141,6 +141,7 @@ public class MainActivity extends BaseActivity {
         mCurrentUser = getGeoRentingApplication().getSessionToken().user;
 
         if(mCurrentUser == null) {
+            Timber.i("Refreshing Token.");
             mService.refreshToken(getGeoRentingApplication().getSessionToken())
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
