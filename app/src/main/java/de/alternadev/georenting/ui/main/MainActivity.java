@@ -70,7 +70,7 @@ public class MainActivity extends BaseActivity {
         mDrawerToggle = new ActionBarDrawerToggle(this, b.mainDrawerLayout, toolbar, R.string.drawer_open, R.string.drawer_close);
         mDrawerToggle.syncState();
 
-        mHeaderView = new HeaderView(this);
+        mHeaderView = new HeaderView(this, false);
         b.mainNavigationView.addHeaderView(mHeaderView);
         b.mainNavigationView.setNavigationItemSelectedListener(this::onNavigationItemSelected);
 
