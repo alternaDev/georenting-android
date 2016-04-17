@@ -4,8 +4,13 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.model.CircleOptions;
+import com.google.android.gms.maps.model.LatLng;
+
 import java.util.List;
 
+import de.alternadev.georenting.R;
 import de.alternadev.georenting.data.api.model.GeoFence;
 import de.alternadev.georenting.databinding.ItemGeofenceBinding;
 
@@ -30,7 +35,14 @@ public class GeofenceAdapater extends RecyclerView.Adapter<GeofenceViewHolder> {
     @Override
     public void onBindViewHolder(GeofenceViewHolder holder, int position) {
         ItemGeofenceBinding b = holder.getBinding();
-        b.setGeoFence(mGeoFences.get(position));
+        GeoFence f = mGeoFences.get(position);
+        b.setGeoFence(f);
+        b.geofenceMap.onCreate(null);
+        b.geofenceMap.setClickable(false);
+        b.geofenceMap.getMapAsync((googleMap -> {
+            googleMap.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(f.centerLat, f.centerLon)));
+            googleMap.addCircle(new CircleOptions().center(new LatLng(f.centerLat, f.centerLon)).radius(f.radius));
+        }));
     }
 
 
