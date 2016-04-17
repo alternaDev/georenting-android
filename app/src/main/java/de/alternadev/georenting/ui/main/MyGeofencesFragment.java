@@ -14,11 +14,10 @@ import org.parceler.Parcels;
 import javax.inject.Inject;
 
 import de.alternadev.georenting.GeoRentingApplication;
-import de.alternadev.georenting.R;
 import de.alternadev.georenting.data.api.GeoRentingService;
 import de.alternadev.georenting.data.api.model.User;
 import de.alternadev.georenting.databinding.FragmentMyGeofencesBinding;
-import de.alternadev.georenting.ui.main.mygeofences.GeofenceAdapater;
+import de.alternadev.georenting.ui.main.mygeofences.GeofenceAdapter;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 import timber.log.Timber;
@@ -82,7 +81,7 @@ public class MyGeofencesFragment extends Fragment {
                     swipeRefreshLayout.setRefreshing(false);
 
                     if(geoFences != null) {
-                        RecyclerView.Adapter adapter = new GeofenceAdapater(geoFences);
+                        RecyclerView.Adapter adapter = new GeofenceAdapter(geoFences);
                         geofencesList.setAdapter(adapter);
                     }
                 });

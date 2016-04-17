@@ -18,11 +18,11 @@ import de.alternadev.georenting.databinding.ItemGeofenceBinding;
  * Created by jhbruhn on 17.04.16.
  */
 
-public class GeofenceAdapater extends RecyclerView.Adapter<GeofenceViewHolder> {
+public class GeofenceAdapter extends RecyclerView.Adapter<GeofenceViewHolder> {
 
     private List<GeoFence> mGeoFences;
 
-    public GeofenceAdapater(List<GeoFence> geoFences) {
+    public GeofenceAdapter(List<GeoFence> geoFences) {
         mGeoFences = geoFences;
     }
 
