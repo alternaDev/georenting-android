@@ -35,6 +35,7 @@ import de.alternadev.georenting.data.geofencing.GeofenceTransitionsIntentService
 import de.alternadev.georenting.data.models.Fence;
 import hugo.weaving.DebugLog;
 import io.realm.Realm;
+import io.realm.RealmConfiguration;
 import timber.log.Timber;
 
 public class UpdateGeofencesTask extends GcmTaskService {
