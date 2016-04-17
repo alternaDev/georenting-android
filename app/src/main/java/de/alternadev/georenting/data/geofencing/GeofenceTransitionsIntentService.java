@@ -51,7 +51,7 @@ public class GeofenceTransitionsIntentService extends IntentService {
         if (geofencingEvent.hasError()) {
             String errorMessage = GeofenceStatusCodes.getStatusCodeString(
                     geofencingEvent.getErrorCode());
-            Log.e("Geofence", errorMessage);
+            Timber.e(errorMessage);
             return;
         }
 
@@ -81,7 +81,7 @@ public class GeofenceTransitionsIntentService extends IntentService {
             }
         } else {
             // Log the error.
-            Log.e("Geofence", "Invalid Type");
+            Timber.e("Invalid Type");
         }
     }
 
@@ -92,6 +92,7 @@ public class GeofenceTransitionsIntentService extends IntentService {
         Fence fence = realm.where(Fence.class).equalTo("geofenceID", f.getRequestId()).findFirst();
 
         Timber.d("Visiting fence: %s %s", fence.getId(), fence.getGeofenceID());
-        mService.visitFence(fence.getId()).toBlocking().first(); // TODO: Use real ID.
+        mService.visitFence(fence.getId()).toBlocking().first();
+        Timber.d("Visited Fence!");
     }
 }

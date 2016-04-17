@@ -37,7 +37,6 @@ android {
     buildToolsVersion '23.0.3'
 
     retrolambda {
-        jvmArgs '-noverify'
     }
 
     dexOptions {
