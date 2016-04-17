@@ -13,6 +13,7 @@ import java.util.List;
 import de.alternadev.georenting.R;
 import de.alternadev.georenting.data.api.model.GeoFence;
 import de.alternadev.georenting.databinding.ItemGeofenceBinding;
+import hugo.weaving.DebugLog;
 
 /**
  * Created by jhbruhn on 17.04.16.
