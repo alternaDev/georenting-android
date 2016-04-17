@@ -50,6 +50,7 @@ public class GcmRegistrationIntentService extends IntentService {
             try {
                 mGeoRentingService.registerGcmToken(new GcmToken(gcmTokenString)).execute();
                 mPreferences.edit().putString(CURRENT_GCM_TOKEN, gcmTokenString).apply();
+                Timber.i("GCM Token submitted.");
             } catch (IOException  e ) {
                 e.printStackTrace();
                 Timber.e(e, "Sending GCM token failed. ");
