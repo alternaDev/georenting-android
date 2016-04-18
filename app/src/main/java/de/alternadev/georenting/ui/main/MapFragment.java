@@ -2,31 +2,65 @@ package de.alternadev.georenting.ui.main;
 
 import android.Manifest;
 import android.app.Fragment;
+import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.location.Location;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationCallback;
+import com.google.android.gms.location.LocationListener;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationResult;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 
+import org.parceler.Parcels;
+
+import javax.inject.Inject;
+
+import de.alternadev.georenting.GeoRentingApplication;
+import de.alternadev.georenting.R;
+import de.alternadev.georenting.data.api.GeoRentingService;
+import de.alternadev.georenting.data.api.model.GeoFence;
+import de.alternadev.georenting.data.api.model.User;
 import de.alternadev.georenting.data.models.Fence;
 import de.alternadev.georenting.databinding.FragmentMapBinding;
+import de.alternadev.georenting.ui.GeofenceDetailActivity;
 import io.realm.Realm;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
+import timber.log.Timber;
 
-public class MapFragment extends Fragment {
+public class MapFragment extends Fragment implements GoogleApiClient.OnConnectionFailedListener, GoogleApiClient.ConnectionCallbacks {
     public static MapFragment newInstance() {
         MapFragment fragment = new MapFragment();
         return fragment;
     }
 
+    @Inject
+    GeoRentingService mService;
+
+    private GoogleApiClient mApiClient;
+
     private MapView mMapView;
+
+    private User mCurrentUser;
+
+    private boolean mMapInited;
 
     public MapFragment() {
         // Required empty public constructor
@@ -35,6 +69,16 @@ public class MapFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ((GeoRentingApplication) getActivity().getApplication()).getComponent().inject(this);
+
+        mCurrentUser = ((GeoRentingApplication) getActivity().getApplication()).getSessionToken().user;
+
+        mApiClient = new GoogleApiClient.Builder(this.getActivity())
+                .addConnectionCallbacks(this)
+                .addApi(LocationServices.API)
+                .build();
+        mApiClient.connect();
+
         if (mMapView != null) {
             mMapView.onCreate(savedInstanceState);
         }
@@ -74,7 +118,6 @@ public class MapFragment extends Fragment {
         FragmentMapBinding b = FragmentMapBinding.inflate(inflater, container, false);
         mMapView = b.fragmentMapMapView;
         mMapView.onCreate(savedInstanceState);
-        mMapView.getMapAsync(this::initMap);
         return b.getRoot();
     }
 
@@ -83,13 +126,67 @@ public class MapFragment extends Fragment {
             return;
         }
         map.setMyLocationEnabled(true);
-        Realm.getDefaultInstance().where(Fence.class).findAllAsync().asObservable().observeOn(AndroidSchedulers.mainThread()).subscribe(fences -> {
-            Log.i("Fence", fences + "");
-            for(Fence f : fences) {
-                Log.i("Fence", f.getId());
-                map.addCircle(new CircleOptions().center(new LatLng(f.getLatitude(), f.getLongitude())).radius(f.getRadius()));
+
+
+        LocationRequest request = LocationRequest.create()
+                .setFastestInterval(5000)
+                .setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
+
+        LocationListener listener = l -> {
+            Timber.d(l.toString());
+
+            if(!mMapInited) {
+                map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(l.getLatitude(), l.getLongitude()), 15));
+                mMapInited = true;
             }
-        });
+
+            mService.getFencesNearObservable(l.getLatitude(), l.getLongitude(), 500)
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe((fences) -> {
+                        map.clear();
+                        map.addCircle(new CircleOptions().center(new LatLng(l.getLatitude(), l.getLongitude())).radius(500));
+                        for(GeoFence f : fences) {
+                            CircleOptions circle = new CircleOptions().center(new LatLng(f.centerLat, f.centerLon)).radius(f.radius);
+                            circle.fillColor(f.ownerId == mCurrentUser.id ? R.color.blue : R.color.red);
+                            circle.strokeColor(f.ownerId == mCurrentUser.id ? R.color.blue : R.color.red);
+                            map.addCircle(circle);
+                        }
+                        map.setOnMapClickListener(latLng -> {
+                            for(GeoFence f : fences) {
+                                double radius = f.radius;
+                                float[] distance = new float[1];
+                                Location.distanceBetween(latLng.latitude, latLng.longitude, f.centerLat, f.centerLon, distance);
+                                if(distance[0] < radius) {
+                                    onGeoFenceClick(f);
+                                    break;
+                                }
+                            }
+                        });
+                    });
+        };
+
+        LocationServices.FusedLocationApi.requestLocationUpdates(mApiClient, request, listener);
     }
 
+    private void onGeoFenceClick(GeoFence f) {
+        Intent intent = new Intent(getActivity(), GeofenceDetailActivity.class);
+        intent.putExtra(GeofenceDetailActivity.EXTRA_GEOFENCE, Parcels.wrap(f));
+        startActivity(intent);
+    }
+
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+
+    }
+
+    @Override
+    public void onConnected(@Nullable Bundle bundle) {
+        mMapView.getMapAsync(this::initMap);
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+
+    }
 }

@@ -34,6 +34,9 @@ public interface GeoRentingService {
     Call<List<GeoFence>> getFencesNear(@Query("latitude") double latitude, @Query("longitude") double longitude, @Query("radius") int radius);
 
     @GET("fences")
+    Observable<List<GeoFence>> getFencesNearObservable(@Query("latitude") double latitude, @Query("longitude") double longitude, @Query("radius") int radius);
+
+    @GET("fences")
     Observable<List<GeoFence>> getFencesBy(@Query("user") String user);
 
     @POST("fences/{fenceId}/visit")

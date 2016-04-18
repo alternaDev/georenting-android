@@ -7,4 +7,5 @@ public class GeoFence {
     public double centerLon;
     public int radius;
     public String name;
+    public int ownerId;
 }
