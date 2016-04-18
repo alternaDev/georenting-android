@@ -149,6 +149,7 @@ public class MainActivity extends BaseActivity {
     }
 
     private void loadCurrentUser() {
+        showFragment(LoadingFragment.newInstance());
         mCurrentUser = getGeoRentingApplication().getSessionToken().user;
 
         if(mCurrentUser == null) {
