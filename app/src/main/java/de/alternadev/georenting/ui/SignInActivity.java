@@ -94,7 +94,7 @@ public class SignInActivity extends BaseActivity implements GoogleApiClient.OnCo
     @DebugLog
     protected void onStart() {
         super.onStart();
-        //mProgressDialog.show();
+        mProgressDialog.show();
 
         if(getGeoRentingApplication().getSessionToken() != null && getGeoRentingApplication().getSessionToken().token != null && !getGeoRentingApplication().getSessionToken().token.equals("")) {
             Timber.i("We seem to have a token. Asking for Location.");
@@ -103,14 +103,14 @@ public class SignInActivity extends BaseActivity implements GoogleApiClient.OnCo
         }
 
 
-        /*OptionalPendingResult<GoogleSignInResult> opr = Auth.GoogleSignInApi.silentSignIn(mApiClient);
+        OptionalPendingResult<GoogleSignInResult> opr = Auth.GoogleSignInApi.silentSignIn(mApiClient);
 
         if(opr.isDone()) {
             GoogleSignInResult result = opr.get();
             handleSignIn(result);
         } else {
             opr.setResultCallback(this::handleSignIn);
-        }*/
+        }
     }
 
 
