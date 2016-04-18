@@ -65,6 +65,8 @@ android {
 
         versionCode vCode + 1000
         versionName "${vName}"
+
+        resConfigs "en", "de"
     }
 
 
@@ -72,6 +74,8 @@ android {
         release {
             signingConfig signingConfigs.georenting
             minifyEnabled true
+            shrinkResources true
+
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
 
