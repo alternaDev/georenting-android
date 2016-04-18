@@ -39,6 +39,10 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="de.alternadev.georenting.ui.main.MainActivity" />
         </activity>
+        <activity
+            android:name=".ui.GeofenceDetailActivity"
+            android:label="@string/app_name" >
+        </activity>
 
         <receiver
             android:name="com.google.android.gms.gcm.GcmReceiver"

@@ -19,6 +19,10 @@ public class BaseActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         setStatusBarColor();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            getWindow().setSharedElementsUseOverlay(false);
+        }
+
     }
 
     public GeoRentingApplication getGeoRentingApplication() {

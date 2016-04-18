@@ -82,7 +82,7 @@ public class MyGeofencesFragment extends Fragment {
                     b.geofencesRefresh.setRefreshing(false);
 
                     if(geoFences != null) {
-                        RecyclerView.Adapter adapter = new GeofenceAdapter(geoFences);
+                        RecyclerView.Adapter adapter = new GeofenceAdapter(geoFences, getActivity());
                         b.geofencesList.setAdapter(adapter);
                         b.setGeoFences(geoFences);
                     } else {
