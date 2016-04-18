@@ -7,10 +7,12 @@ import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
+import android.support.v4.text.TextUtilsCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -79,8 +81,10 @@ public class MainActivity extends BaseActivity {
         SessionToken savedToken = getSavedToken();
 
         if(savedToken != null && savedToken.token != null && !savedToken.token.equals("")) {
+            Timber.i("Using Token.");
             getGeoRentingApplication().setSessionToken(savedToken);
         } else {
+            Timber.i("Resigning in.");
             reSignIn();
             return;
         }
@@ -102,7 +106,12 @@ public class MainActivity extends BaseActivity {
         UpdateGeofencesTask.initializeTasks(this);
     }
 
+    @DebugLog
     private SessionToken getSavedToken() {
+        if(getGeoRentingApplication().getSessionToken() != null && !TextUtils.isEmpty(getGeoRentingApplication().getSessionToken().token)) {
+            Timber.i("Using token from App");
+            return getGeoRentingApplication().getSessionToken();
+        }
         String token = mPreferences.getString(SignInActivity.PREF_TOKEN, "");
         if(token.equals("")) return null;
 
@@ -129,7 +138,7 @@ public class MainActivity extends BaseActivity {
                 if(new Date((long) exp[0] * 1000).after(new Date())) {
                     SessionToken t = new SessionToken();
                     t.token = token;
-                    Timber.i("Using token %s", token);
+                    Timber.i("Using token from Prefs %s", token);
                     return t;
                 }
             }

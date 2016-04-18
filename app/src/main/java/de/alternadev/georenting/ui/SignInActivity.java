@@ -81,6 +81,8 @@ public class SignInActivity extends BaseActivity implements GoogleApiClient.OnCo
                 .requestServerAuthCode(getString(R.string.google_server_id), false)
                 .build();
 
+        b.signInButton.setScopes(gso.getScopeArray());
+
         mApiClient = new GoogleApiClient.Builder(this)
                 .enableAutoManage(this, this)
                 .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
@@ -92,7 +94,7 @@ public class SignInActivity extends BaseActivity implements GoogleApiClient.OnCo
     @DebugLog
     protected void onStart() {
         super.onStart();
-        mProgressDialog.show();
+        //mProgressDialog.show();
 
         if(getGeoRentingApplication().getSessionToken() != null && getGeoRentingApplication().getSessionToken().token != null && !getGeoRentingApplication().getSessionToken().token.equals("")) {
             Timber.i("We seem to have a token. Asking for Location.");
@@ -101,14 +103,14 @@ public class SignInActivity extends BaseActivity implements GoogleApiClient.OnCo
         }
 
 
-        OptionalPendingResult<GoogleSignInResult> opr = Auth.GoogleSignInApi.silentSignIn(mApiClient);
+        /*OptionalPendingResult<GoogleSignInResult> opr = Auth.GoogleSignInApi.silentSignIn(mApiClient);
 
         if(opr.isDone()) {
             GoogleSignInResult result = opr.get();
             handleSignIn(result);
         } else {
             opr.setResultCallback(this::handleSignIn);
-        }
+        }*/
     }
 
 
@@ -128,6 +130,8 @@ public class SignInActivity extends BaseActivity implements GoogleApiClient.OnCo
     @DebugLog
     private void handleSignIn(GoogleSignInResult result) {
         if(result.isSuccess() && result.getSignInAccount() != null) {
+            Timber.d(result.getSignInAccount().toString());
+
             mGeoRentingService.auth(new User(result.getSignInAccount().getServerAuthCode()))
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
@@ -177,6 +181,7 @@ public class SignInActivity extends BaseActivity implements GoogleApiClient.OnCo
     }
 
     @Override
+    @DebugLog
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_CODE_SIGN_IN) {
