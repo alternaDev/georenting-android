@@ -133,11 +133,12 @@ public class SignInActivity extends BaseActivity implements GoogleApiClient.OnCo
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe((sessionToken) -> {
                         Timber.d("Test: %s", sessionToken);
-                        if(sessionToken.token == null) {
-                            mProgressDialog.dismiss();
+                        mProgressDialog.dismiss();
+
+                        if(sessionToken.token == null || sessionToken.token.equals("")) {
                             return;
                         }
-                        mProgressDialog.dismiss();
+
                         mPreferences.edit()
                                 .putBoolean(PREF_SIGNED_IN_BEFORE, true)
                                 .putString(PREF_TOKEN, sessionToken.token)
