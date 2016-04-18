@@ -3,6 +3,7 @@ package de.alternadev.georenting;
 import android.app.Application;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 
 import com.facebook.stetho.Stetho;
 import com.google.android.gms.auth.api.Auth;
@@ -62,6 +63,8 @@ public class GeoRentingApplication extends Application {
     }
 
     public boolean blockingSignIn() {
+        if(getSessionToken() != null && !TextUtils.isEmpty(getSessionToken().token) && getSessionToken().user != null) return true;
+
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestEmail()
                 .requestProfile()

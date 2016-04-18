@@ -95,7 +95,7 @@ public class GeofenceTransitionsIntentService extends IntentService {
         OneoffTask task = new OneoffTask.Builder()
                 .setService(VisitGeofenceTask.class)
                 .setTag("VisitGeofence")
-                .setExecutionWindow(0L, 3600L)
+                .setExecutionWindow(0L, 60L)
                 .setRequiredNetwork(Task.NETWORK_STATE_CONNECTED)
                 .setExtras(taskData)
                 .setPersisted(true)

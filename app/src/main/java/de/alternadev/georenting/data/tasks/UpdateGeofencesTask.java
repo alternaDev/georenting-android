@@ -182,6 +182,7 @@ public class UpdateGeofencesTask extends GcmTaskService {
         GeofencingRequest r = new GeofencingRequest.Builder()
                 .addGeofences(fences)
                 .setInitialTrigger(GeofencingRequest.INITIAL_TRIGGER_ENTER)
+
                 .build();
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             return false;
@@ -216,7 +217,7 @@ public class UpdateGeofencesTask extends GcmTaskService {
                 .setRequestId(id + "")
                 .setExpirationDuration(Geofence.NEVER_EXPIRE)
                 .setNotificationResponsiveness(60 * 1000) // Notify every minute.
-                .setTransitionTypes(Geofence.GEOFENCE_TRANSITION_ENTER)
+                .setTransitionTypes(Geofence.GEOFENCE_TRANSITION_ENTER | Geofence.GEOFENCE_TRANSITION_EXIT)
                 .build();
     }
 
