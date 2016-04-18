@@ -15,6 +15,7 @@
         android:id="@+id/main_content"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@color/gray"
         tools:context="de.alternadev.georenting.ui.main.MyGeofencesFragment">
 
         <android.support.v4.widget.SwipeRefreshLayout
@@ -31,6 +32,7 @@
         <TextView
             android:text="@string/my_geofences_no_geofences"
             android:visibility="@{geoFences != null &amp;&amp;geoFences.size() == 0 ? View.VISIBLE : View.GONE}"
+            android:padding="48dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:gravity="center"
