@@ -175,7 +175,7 @@ public class UpdateGeofencesTask extends GcmTaskService {
     }
 
     private List<GeoFence> getRemoteGeoFences(Location location) throws IOException {
-        return mService.getFencesNear(location.getLatitude(), location.getLongitude(), 2000).execute().body();
+        return mService.getFencesNear(location.getLatitude(), location.getLongitude(), 20000).execute().body();
     }
 
     private boolean addGeoFences(List<Geofence> fences) {

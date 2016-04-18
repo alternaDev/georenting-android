@@ -84,6 +84,11 @@ public class GeofenceTransitionsIntentService extends IntentService {
         Realm realm = Realm.getDefaultInstance();
         Fence fence = realm.where(Fence.class).equalTo("geofenceID", f.getRequestId()).findFirst();
 
+        if(fence == null) {
+            Timber.e("Can not visit fence.");
+            return;
+        }
+
         Timber.d("Visiting fence: %s %s", fence.getId(), fence.getGeofenceID());
         mService.visitFence(fence.getId()).toBlocking().first();
         Timber.d("Visited Fence!");
