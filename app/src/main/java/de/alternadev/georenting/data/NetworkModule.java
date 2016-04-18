@@ -33,7 +33,7 @@ public class NetworkModule {
                     .readTimeout(20, SECONDS)
                     .writeTimeout(20, SECONDS)
                     .addNetworkInterceptor(new StethoInterceptor())
-                    .addNetworkInterceptor(tokenInterceptor)
+                    .addInterceptor(tokenInterceptor)
                     .cache(cache)
                     .build();
     }
