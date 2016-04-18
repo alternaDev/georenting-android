@@ -52,6 +52,7 @@
             android:layout_margin="16dp"
             app:layout_behavior="de.alternadev.georenting.ui.main.mygeofences.ScrollAwareFABBehaviour"
             android:src="@drawable/ic_pin_drop_white_24dp"
+            app:fabSize="normal"
             app:layout_anchor="@id/geofences_list"
             app:layout_anchorGravity="bottom|right|end" />
 
