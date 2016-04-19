@@ -133,3 +133,8 @@
   public void set*(***);
   public *** get*();
 }
+
+#TestFairy
+-keep class com.testfairy.** { *; }
+-dontwarn com.testfairy.**
+-keepattributes Exceptions, Signature, LineNumberTable

@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.databinding.DataBindingUtil;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.text.TextUtilsCompat;
 import android.support.v4.view.GravityCompat;
@@ -18,12 +19,16 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.bumptech.glide.Glide;
+import com.testfairy.TestFairy;
 
 import java.security.Key;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.inject.Inject;
 
+import de.alternadev.georenting.BuildConfig;
 import de.alternadev.georenting.R;
 import de.alternadev.georenting.data.api.GeoRentingService;
 import de.alternadev.georenting.data.api.model.SessionToken;
@@ -60,9 +65,13 @@ public class MainActivity extends BaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        if(!BuildConfig.FLAVOR.equals("internal") || BuildConfig.DEBUG)
+            TestFairy.begin(this, getString(R.string.testfairy_id));
+
         setTheme(R.style.AppTheme);
 
         super.onCreate(savedInstanceState);
+
 
         getGeoRentingApplication().getComponent().inject(this);
 
@@ -161,6 +170,7 @@ public class MainActivity extends BaseActivity {
                         getGeoRentingApplication().setSessionToken(sessionToken);
                         mCurrentUser = sessionToken.user;
                         showUserInHeader(mCurrentUser);
+                        testfairyIdentifyUser(mCurrentUser);
                         showFragment(MyGeofencesFragment.newInstance(mCurrentUser));
                     }, error -> {
                         Timber.e(error, "Could not refresh Token.");
@@ -171,6 +181,14 @@ public class MainActivity extends BaseActivity {
             showUserInHeader(mCurrentUser);
             showFragment(MyGeofencesFragment.newInstance(mCurrentUser));
         }
+    }
+
+    private void testfairyIdentifyUser(User mCurrentUser) {
+        if(!BuildConfig.FLAVOR.equals("internal") || BuildConfig.DEBUG) return;
+        Map<String, Object> traits = new HashMap<>();
+
+        traits.put(TestFairy.IDENTITY_TRAIT_NAME, mCurrentUser.name);
+        TestFairy.identify(mCurrentUser.id + "", traits);
     }
 
     private void reSignIn() {
