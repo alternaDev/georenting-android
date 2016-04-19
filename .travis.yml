@@ -29,6 +29,10 @@ script:
 - if [ "$BUILD_TYPE" == "assembleAll" ]; then ./gradlew assemble; fi;
 - if [ "$BUILD_TYPE" == "testfairyRelease" ]; then ./gradlew testfairyInternalRelease; fi;
 - if [ "$TRAVIS_TAG" ] && [ "$BUILD_TYPE" == "productionRelease" ]; then ./gradlew publishProductionRelease; fi;
+notifications:
+  slack:
+    rooms:
+      - alternadev:DV4HmorAz8nFcc4rxBdy92ke#android
 deploy:
   provider: releases
   api-key: $GITHUB_TOKEN
