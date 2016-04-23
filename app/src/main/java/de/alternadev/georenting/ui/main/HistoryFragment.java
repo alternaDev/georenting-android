@@ -64,7 +64,7 @@ public class HistoryFragment extends Fragment {
     }
 
     private void loadHistory(FragmentHistoryBinding b) {
-        mService.getHistory(new Date().getTime(), 0)
+        mService.getHistory(new Date().getTime() / 1000, (new Date().getTime() - 7 * 24 * 60 * 60 * 1000) / 1000) // TODO: Implement infinite Scroll.
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(history -> {
@@ -74,7 +74,6 @@ public class HistoryFragment extends Fragment {
                     if(history != null) {
                         RecyclerView.Adapter adapter = new ActivityItemAdapter(history, getActivity());
                         b.historyList.setAdapter(adapter);
-                    } else {
                     }
                 });
     }
