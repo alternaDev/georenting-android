@@ -50,6 +50,8 @@ import timber.log.Timber;
 
 public class MainActivity extends BaseActivity {
 
+    public static String EXTRA_FRAGMENT = "fragment";
+
     private ActionBarDrawerToggle mDrawerToggle;
     private HeaderView mHeaderView;
     private DrawerLayout mDrawerLayout;
@@ -171,7 +173,7 @@ public class MainActivity extends BaseActivity {
                         mCurrentUser = sessionToken.user;
                         showUserInHeader(mCurrentUser);
                         testfairyIdentifyUser(mCurrentUser);
-                        showFragment(MyGeofencesFragment.newInstance(mCurrentUser));
+                        showStartFragment();
                     }, error -> {
                         Timber.e(error, "Could not refresh Token.");
                         reSignIn();
@@ -181,6 +183,28 @@ public class MainActivity extends BaseActivity {
             showUserInHeader(mCurrentUser);
             showFragment(MyGeofencesFragment.newInstance(mCurrentUser));
         }
+    }
+
+    private void showStartFragment() {
+        if(getIntent() == null || getIntent().getStringExtra(EXTRA_FRAGMENT) == null) {
+            showFragment(MyGeofencesFragment.newInstance(mCurrentUser));
+            return;
+        }
+        String extraFragment = getIntent().getStringExtra(EXTRA_FRAGMENT);
+
+        switch(extraFragment) {
+            case "myFences":
+                showFragment(MyGeofencesFragment.newInstance(mCurrentUser));
+                break;
+            case "history":
+                showFragment(HistoryFragment.newInstance());
+                break;
+        }
+    }
+
+    public void onNewIntent(Intent intent){
+        setIntent(intent);
+        showStartFragment();
     }
 
     private void testfairyIdentifyUser(User mCurrentUser) {

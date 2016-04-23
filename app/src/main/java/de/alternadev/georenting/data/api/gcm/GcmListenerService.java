@@ -16,6 +16,8 @@ import com.google.android.gms.gcm.Task;
 import de.alternadev.georenting.R;
 import de.alternadev.georenting.data.tasks.UpdateGeofencesTask;
 import de.alternadev.georenting.ui.SignInActivity;
+import de.alternadev.georenting.ui.main.HistoryFragment;
+import de.alternadev.georenting.ui.main.MainActivity;
 import hugo.weaving.DebugLog;
 
 public class GcmListenerService extends com.google.android.gms.gcm.GcmListenerService {
@@ -49,17 +51,15 @@ public class GcmListenerService extends com.google.android.gms.gcm.GcmListenerSe
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(this)
                         .setSmallIcon(R.drawable.ic_person_black_24dp)
+                        .setAutoCancel(true)
                         .setContentTitle("Fence Visited!")
                         .setContentText(visitorName + " visited your fence " + fenceName + "!");
-        Intent resultIntent = new Intent(this, SignInActivity.class);
+        Intent resultIntent = new Intent(this, MainActivity.class);
+        resultIntent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        resultIntent.putExtra(MainActivity.EXTRA_FRAGMENT, "history");
 
-        TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
-        stackBuilder.addParentStack(SignInActivity.class);
-        stackBuilder.addNextIntent(resultIntent);
         PendingIntent resultPendingIntent =
-                stackBuilder.getPendingIntent(0,
-                        PendingIntent.FLAG_UPDATE_CURRENT
-                );
+                PendingIntent.getActivity(this, (int) (System.currentTimeMillis() & 0xfffffff), resultIntent, PendingIntent.FLAG_UPDATE_CURRENT);
         mBuilder.setContentIntent(resultPendingIntent);
         NotificationManager mNotificationManager =
                 (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
@@ -77,17 +77,15 @@ public class GcmListenerService extends com.google.android.gms.gcm.GcmListenerSe
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(this)
                         .setSmallIcon(R.drawable.ic_person_black_24dp)
+                        .setAutoCancel(true)
                         .setContentTitle("Fence Visited!")
                         .setContentText("You visited fence '" + fenceName + "' by " + ownerName + "!");
-        Intent resultIntent = new Intent(this, SignInActivity.class);
+        Intent resultIntent = new Intent(this, MainActivity.class);
+        resultIntent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        resultIntent.putExtra(MainActivity.EXTRA_FRAGMENT, "history");
 
-        TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
-                stackBuilder.addParentStack(SignInActivity.class);
-        stackBuilder.addNextIntent(resultIntent);
         PendingIntent resultPendingIntent =
-            stackBuilder.getPendingIntent(0,
-                                PendingIntent.FLAG_UPDATE_CURRENT
-                        );
+            PendingIntent.getActivity(this, (int) (System.currentTimeMillis() & 0xfffffff), resultIntent, PendingIntent.FLAG_UPDATE_CURRENT);
         mBuilder.setContentIntent(resultPendingIntent);
         NotificationManager mNotificationManager =
                 (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
