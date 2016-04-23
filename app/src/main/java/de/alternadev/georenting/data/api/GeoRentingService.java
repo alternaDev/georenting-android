@@ -4,6 +4,7 @@ package de.alternadev.georenting.data.api;
 
 import java.util.List;
 
+import de.alternadev.georenting.data.api.model.ActivityItem;
 import de.alternadev.georenting.data.api.model.GcmToken;
 import de.alternadev.georenting.data.api.model.GeoFence;
 import de.alternadev.georenting.data.api.model.SessionToken;
@@ -29,6 +30,9 @@ public interface GeoRentingService {
 
     @POST("users/me/gcm")
     Call<Void> registerGcmToken(@Body GcmToken token);
+
+    @GET("users/me/history")
+    Observable<List<ActivityItem>> getHistory(@Query("from") long from, @Query("to") long to);
 
     @GET("fences")
     Call<List<GeoFence>> getFencesNear(@Query("latitude") double latitude, @Query("longitude") double longitude, @Query("radius") int radius);

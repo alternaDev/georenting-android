@@ -65,7 +65,7 @@ public class MainActivity extends BaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        if(!BuildConfig.FLAVOR.equals("internal") || BuildConfig.DEBUG)
+        if(BuildConfig.FLAVOR.equals("internal") && !BuildConfig.DEBUG)
             TestFairy.begin(this, getString(R.string.testfairy_id));
 
         setTheme(R.style.AppTheme);
@@ -222,6 +222,10 @@ public class MainActivity extends BaseActivity {
             case R.id.nav_profile:
                 menuItem.setChecked(true);
                 showFragment(ProfileFragment.newInstance(mCurrentUser));
+                break;
+            case R.id.nav_history:
+                menuItem.setChecked(true);
+                showFragment(HistoryFragment.newInstance());
                 break;
             case R.id.nav_settings:
                 menuItem.setChecked(false);
