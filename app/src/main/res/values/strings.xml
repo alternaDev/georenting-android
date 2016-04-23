@@ -14,6 +14,8 @@
     <string name="main_drawer_map">Map</string>
     <string name="main_drawer_profile">Profile</string>
     <string name="main_drawer_history">History</string>
+    <string name="activity_own_fence_visited"><b>%2$s</b> visited you GeoFence &lt;b&gt;%1$s&lt;/b&gt; and paid &lt;b&gt;%3$.2f&lt;/b&gt; GC in rent.</string>
+    <string name="activity_foreign_fence_visited">You visited &lt;b&gt;%2$s&lt;/b&gt;s GeoFence &lt;b&gt;%1$s&lt;/b&gt; and paid &lt;b&gt;%3$.2f&lt;/b&gt; GC in rent.</string>
 
 
     <!-- TODO: Remove or change this placeholder text -->

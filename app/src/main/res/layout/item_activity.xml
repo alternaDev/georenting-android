@@ -3,6 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
+        <import type="android.view.View" />
+        <import type="android.text.Html" />
         <variable
             name="item"
             type="de.alternadev.georenting.data.api.model.ActivityItem" />
@@ -10,10 +12,20 @@
 
     <LinearLayout
         android:orientation="vertical" android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:padding="8dp">
         <TextView
-            android:text="@{item.verb + ':' + item.fenceName}"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:textSize="16sp"
+            android:visibility='@{item.verb.equals("foreignFenceVisited") ? View.VISIBLE : View.GONE}'
+            android:text="@{Html.fromHtml(@string/activity_foreign_fence_visited(item.fenceName, item.ownerName, item.rent))}"
+            android:layout_width="match_parent"
+            android:layout_height="72dp" />
+        <TextView
+            android:textSize="16sp"
+            android:visibility='@{item.verb.equals("ownFenceVisited") ? View.VISIBLE : View.GONE}'
+            android:text="@{Html.fromHtml(@string/activity_own_fence_visited(item.fenceName, item.visitorName, item.rent))}"
+            android:layout_width="match_parent"
+            android:layout_height="72dp" />
+
     </LinearLayout>
 </layout>
