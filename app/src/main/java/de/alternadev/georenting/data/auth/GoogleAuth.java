@@ -93,11 +93,7 @@ public class GoogleAuth {
     public boolean blockingSignIn() {
         if(mApp.getSessionToken() != null && !TextUtils.isEmpty(mApp.getSessionToken().token) && mApp.getSessionToken().user != null) return true;
 
-        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestEmail()
-                .requestProfile()
-                .requestServerAuthCode(mApp.getApplicationContext().getString(R.string.google_server_id), false)
-                .build();
+        GoogleSignInOptions gso = getGoogleSignInOptions();
 
         GoogleApiClient client = new GoogleApiClient.Builder(mApp)
                 .addConnectionCallbacks(new GoogleApiClient.ConnectionCallbacks() {
@@ -115,7 +111,7 @@ public class GoogleAuth {
                 .build();
         client.blockingConnect();
 
-        GoogleSignInResult r = Auth.GoogleSignInApi.silentSignIn(client).await();
+        GoogleSignInResult r = getAuthTokenSilent(client).await();
 
         if(r.isSuccess()) {
             if(r.getSignInAccount() == null) return false;
