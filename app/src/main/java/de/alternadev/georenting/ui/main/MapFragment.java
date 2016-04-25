@@ -149,8 +149,9 @@ public class MapFragment extends Fragment implements GoogleApiClient.OnConnectio
                         map.addCircle(new CircleOptions().center(new LatLng(l.getLatitude(), l.getLongitude())).radius(500));
                         for(GeoFence f : fences) {
                             CircleOptions circle = new CircleOptions().center(new LatLng(f.centerLat, f.centerLon)).radius(f.radius);
-                            circle.fillColor(f.owner == mCurrentUser.id ? R.color.blue : R.color.red);
-                            circle.strokeColor(f.owner == mCurrentUser.id ? R.color.blue : R.color.red);
+                            if(getActivity() == null) continue;
+                            circle.fillColor(getActivity().getResources().getColor(f.owner == mCurrentUser.id ? R.color.blue : R.color.red));
+                            circle.strokeColor(getActivity().getResources().getColor(f.owner == mCurrentUser.id ? R.color.blue : R.color.red));
                             map.addCircle(circle);
                         }
                         map.setOnMapClickListener(latLng -> {
