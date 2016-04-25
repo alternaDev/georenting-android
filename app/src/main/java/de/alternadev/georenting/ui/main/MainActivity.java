@@ -8,6 +8,7 @@ import android.content.res.Configuration;
 import android.databinding.DataBindingUtil;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.text.TextUtilsCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -19,6 +20,12 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.bumptech.glide.Glide;
+import com.google.android.gms.auth.api.Auth;
+import com.google.android.gms.auth.api.signin.GoogleSignInResult;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.OptionalPendingResult;
+import com.google.android.gms.location.LocationServices;
 import com.testfairy.TestFairy;
 
 import java.security.Key;
@@ -31,6 +38,7 @@ import javax.inject.Inject;
 import de.alternadev.georenting.BuildConfig;
 import de.alternadev.georenting.R;
 import de.alternadev.georenting.data.api.GeoRentingService;
+import de.alternadev.georenting.data.api.gcm.GcmRegistrationIntentService;
 import de.alternadev.georenting.data.api.model.SessionToken;
 import de.alternadev.georenting.data.api.model.User;
 import de.alternadev.georenting.data.auth.GoogleAuth;
@@ -49,7 +57,7 @@ import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 import timber.log.Timber;
 
-public class MainActivity extends BaseActivity {
+public class MainActivity extends BaseActivity implements GoogleApiClient.OnConnectionFailedListener {
 
     public static String EXTRA_FRAGMENT = "fragment";
 
@@ -68,6 +76,7 @@ public class MainActivity extends BaseActivity {
     GoogleAuth mGoogleAuth;
 
     private User mCurrentUser;
+    private GoogleApiClient mApiClient;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,6 +95,12 @@ public class MainActivity extends BaseActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        mApiClient = new GoogleApiClient.Builder(this)
+                .enableAutoManage(this, this)
+                .addApi(Auth.GOOGLE_SIGN_IN_API, mGoogleAuth.getGoogleSignInOptions())
+                .addApi(LocationServices.API)
+                .build();
+
         mDrawerToggle = new ActionBarDrawerToggle(this, b.mainDrawerLayout, toolbar, R.string.drawer_open, R.string.drawer_close);
         mDrawerToggle.syncState();
 
@@ -93,7 +108,7 @@ public class MainActivity extends BaseActivity {
         b.mainNavigationView.addHeaderView(mHeaderView);
         b.mainNavigationView.setNavigationItemSelectedListener(this::onNavigationItemSelected);
 
-        SessionToken savedToken = getSavedToken();
+        SessionToken savedToken = mGoogleAuth.getSavedToken();
 
         if(savedToken != null && savedToken.token != null && !savedToken.token.equals("")) {
             Timber.i("Using Token.");
@@ -121,48 +136,6 @@ public class MainActivity extends BaseActivity {
         UpdateGeofencesTask.initializeTasks(this);
     }
 
-    @DebugLog
-    private SessionToken getSavedToken() {
-        if(getGeoRentingApplication().getSessionToken() != null && !TextUtils.isEmpty(getGeoRentingApplication().getSessionToken().token)) {
-            Timber.i("Using token from App");
-            return getGeoRentingApplication().getSessionToken();
-        }
-        String token = mPreferences.getString(GoogleAuth.PREF_TOKEN, "");
-        if(token.equals("")) return null;
-
-        // EXTREMELY DIRTY HACK
-
-        final int[] exp = {-1};
-        try {
-            Jwts.parser().setSigningKeyResolver(new SigningKeyResolver() {
-                @Override
-                public Key resolveSigningKey(JwsHeader header, Claims claims) {
-                    exp[0] = (int) header.get("exp");
-                    return null;
-                }
-
-                @Override
-                public Key resolveSigningKey(JwsHeader header, String plaintext) {
-                    exp[0] = (int) header.get("exp");
-                    return null;
-                }
-            }).parse(token);
-
-        } catch(Exception e) {
-            if(exp[0] != -1) {
-                if(new Date((long) exp[0] * 1000).after(new Date())) {
-                    SessionToken t = new SessionToken();
-                    t.token = token;
-                    Timber.i("Using token from Prefs %s", token);
-                    return t;
-                }
-            }
-            Timber.e(e, "Could not parse JWT.");
-        }
-
-        return null;
-    }
-
     private void loadCurrentUser() {
         showFragment(LoadingFragment.newInstance());
         mCurrentUser = getGeoRentingApplication().getSessionToken().user;
@@ -174,10 +147,7 @@ public class MainActivity extends BaseActivity {
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe((sessionToken) -> {
                         getGeoRentingApplication().setSessionToken(sessionToken);
-                        mCurrentUser = sessionToken.user;
-                        showUserInHeader(mCurrentUser);
-                        testfairyIdentifyUser(mCurrentUser);
-                        showStartFragment();
+                        setCurrentUser(sessionToken.user);
                     }, error -> {
                         Timber.e(error, "Could not refresh Token.");
                         reSignIn();
@@ -187,6 +157,13 @@ public class MainActivity extends BaseActivity {
             showUserInHeader(mCurrentUser);
             showFragment(MyGeofencesFragment.newInstance(mCurrentUser));
         }
+    }
+
+    private void setCurrentUser(User user) {
+        mCurrentUser = user;
+        showUserInHeader(user);
+        testfairyIdentifyUser(user);
+        showStartFragment();
     }
 
     private void showStartFragment() {
@@ -221,8 +198,26 @@ public class MainActivity extends BaseActivity {
 
     private void reSignIn() {
         mGoogleAuth.removeToken();
-        startActivity(new Intent(this, SignInActivity.class));
-        finish();
+        OptionalPendingResult<GoogleSignInResult> opr = mGoogleAuth.getAuthTokenSilent(mApiClient);
+
+        if(opr.isDone()) {
+            GoogleSignInResult result = opr.get();
+            handleSignIn(result);
+        } else {
+            opr.setResultCallback(this::handleSignIn);
+        }
+    }
+
+    @DebugLog
+    private void handleSignIn(GoogleSignInResult result) {
+        mGoogleAuth.handleSignIn(result)
+                .subscribe((sessionToken) -> {
+                    setCurrentUser(sessionToken.user);
+                }, error -> {
+                    Timber.e(error, "Could not handle Token.");
+                    startActivity(new Intent(this, SignInActivity.class));
+                    finish();
+                });
     }
 
 
@@ -296,5 +291,10 @@ public class MainActivity extends BaseActivity {
     @Override
     protected void setStatusBarColor() {
         // Do not set the statusbarcolor here because it does weird things.
+    }
+
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+
     }
 }

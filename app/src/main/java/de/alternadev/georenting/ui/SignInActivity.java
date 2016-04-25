@@ -77,11 +77,7 @@ public class SignInActivity extends BaseActivity implements GoogleApiClient.OnCo
         mProgressDialog.setIndeterminate(true);
         mProgressDialog.setMessage(getString(R.string.message_signing_in));
 
-        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestEmail()
-                .requestProfile()
-                .requestServerAuthCode(getString(R.string.google_server_id), false)
-                .build();
+        GoogleSignInOptions gso = mGoogleAuth.getGoogleSignInOptions();
 
         b.signInButton.setScopes(gso.getScopeArray());
 
@@ -104,7 +100,7 @@ public class SignInActivity extends BaseActivity implements GoogleApiClient.OnCo
             return;
         }
 
-        OptionalPendingResult<GoogleSignInResult> opr = mGoogleAuth.getAuthToken(mApiClient);
+        OptionalPendingResult<GoogleSignInResult> opr = mGoogleAuth.getAuthTokenSilent(mApiClient);
 
         if(opr.isDone()) {
             GoogleSignInResult result = opr.get();

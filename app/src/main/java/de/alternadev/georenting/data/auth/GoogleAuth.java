@@ -13,6 +13,9 @@ import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.OptionalPendingResult;
 
+import java.security.Key;
+import java.util.Date;
+
 import javax.inject.Inject;
 
 import de.alternadev.georenting.GeoRentingApplication;
@@ -21,6 +24,10 @@ import de.alternadev.georenting.data.api.GeoRentingService;
 import de.alternadev.georenting.data.api.gcm.GcmRegistrationIntentService;
 import de.alternadev.georenting.data.api.model.SessionToken;
 import de.alternadev.georenting.data.api.model.User;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.JwsHeader;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SigningKeyResolver;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
@@ -46,7 +53,7 @@ public class GoogleAuth {
         ((GeoRentingApplication) application).getComponent().inject(this);
     }
 
-    public OptionalPendingResult<GoogleSignInResult> getAuthToken(GoogleApiClient apiClient) {
+    public OptionalPendingResult<GoogleSignInResult> getAuthTokenSilent(GoogleApiClient apiClient) {
         return Auth.GoogleSignInApi.silentSignIn(apiClient);
     }
 
@@ -137,5 +144,64 @@ public class GoogleAuth {
                 .remove(GoogleAuth.PREF_TOKEN)
                 .commit();
         mApp.setSessionToken(null);
+    }
+
+    public boolean getTokenExpired(String token) {
+        // EXTREMELY DIRTY HACK
+
+        final int[] exp = {-1};
+        try {
+            Jwts.parser().setSigningKeyResolver(new SigningKeyResolver() {
+                @Override
+                public Key resolveSigningKey(JwsHeader header, Claims claims) {
+                    exp[0] = (int) header.get("exp");
+                    return null;
+                }
+
+                @Override
+                public Key resolveSigningKey(JwsHeader header, String plaintext) {
+                    exp[0] = (int) header.get("exp");
+                    return null;
+                }
+            }).parse(token);
+
+        } catch(Exception e) {
+            if(exp[0] != -1) {
+                if(new Date((long) exp[0] * 1000).after(new Date())) {
+                    return false;
+                }
+            }
+            Timber.e(e, "Could not parse JWT.");
+        }
+
+        return true;
+    }
+
+    public SessionToken getSavedToken() {
+        if(mApp.getSessionToken() != null && !TextUtils.isEmpty(mApp.getSessionToken().token)) {
+            Timber.i("Using token from App");
+            return mApp.getSessionToken();
+        }
+        String token = mPreferences.getString(GoogleAuth.PREF_TOKEN, "");
+        if(token.equals("")) return null;
+
+        if(getTokenExpired(token)) {
+            Timber.e("Token is expired.");
+            return null;
+        }
+
+        SessionToken t = new SessionToken();
+        t.token = token;
+        Timber.i("Using token from Prefs %s", token);
+        return t;
+    }
+
+    public GoogleSignInOptions getGoogleSignInOptions() {
+        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestEmail()
+                .requestProfile()
+                .requestServerAuthCode(mApp.getString(R.string.google_server_id), false)
+                .build();
+        return gso;
     }
 }

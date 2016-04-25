@@ -71,7 +71,8 @@ public class MapFragment extends Fragment implements GoogleApiClient.OnConnectio
         super.onCreate(savedInstanceState);
         ((GeoRentingApplication) getActivity().getApplication()).getComponent().inject(this);
 
-        mCurrentUser = ((GeoRentingApplication) getActivity().getApplication()).getSessionToken().user;
+        if(((GeoRentingApplication) getActivity().getApplication()).getSessionToken() != null)
+            mCurrentUser = ((GeoRentingApplication) getActivity().getApplication()).getSessionToken().user;
 
         mApiClient = new GoogleApiClient.Builder(this.getActivity())
                 .addConnectionCallbacks(this)
@@ -148,8 +149,8 @@ public class MapFragment extends Fragment implements GoogleApiClient.OnConnectio
                         map.addCircle(new CircleOptions().center(new LatLng(l.getLatitude(), l.getLongitude())).radius(500));
                         for(GeoFence f : fences) {
                             CircleOptions circle = new CircleOptions().center(new LatLng(f.centerLat, f.centerLon)).radius(f.radius);
-                            circle.fillColor(f.ownerId == mCurrentUser.id ? R.color.blue : R.color.red);
-                            circle.strokeColor(f.ownerId == mCurrentUser.id ? R.color.blue : R.color.red);
+                            circle.fillColor(f.owner == mCurrentUser.id ? R.color.blue : R.color.red);
+                            circle.strokeColor(f.owner == mCurrentUser.id ? R.color.blue : R.color.red);
                             map.addCircle(circle);
                         }
                         map.setOnMapClickListener(latLng -> {
