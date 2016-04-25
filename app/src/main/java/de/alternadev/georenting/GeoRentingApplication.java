@@ -62,46 +62,6 @@ public class GeoRentingApplication extends Application {
         Realm.setDefaultConfiguration(new RealmConfiguration.Builder(this).build());
     }
 
-    public boolean blockingSignIn() {
-        if(getSessionToken() != null && !TextUtils.isEmpty(getSessionToken().token) && getSessionToken().user != null) return true;
-
-        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestEmail()
-                .requestProfile()
-                .requestServerAuthCode(getString(R.string.google_server_id), false)
-                .build();
-
-        GoogleApiClient client = new GoogleApiClient.Builder(this)
-                .addConnectionCallbacks(new GoogleApiClient.ConnectionCallbacks() {
-                    @Override
-                    public void onConnected(@Nullable Bundle bundle) {
-
-                    }
-
-                    @Override
-                    public void onConnectionSuspended(int i) {
-
-                    }
-                })
-                .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
-                .build();
-        client.blockingConnect();
-
-        GoogleSignInResult r = Auth.GoogleSignInApi.silentSignIn(client).await();
-
-        if(r.isSuccess()) {
-            if(r.getSignInAccount() == null) return false;
-            String authCode = r.getSignInAccount().getServerAuthCode();
-            if(authCode == null) return false;
-
-            SessionToken sessionToken = mService.auth(new User(authCode)).toBlocking().first();
-            setSessionToken(sessionToken);
-
-            return true;
-        }
-
-        return false;
-    }
 
     public GeoRentingComponent getComponent() {
         return mComponent;

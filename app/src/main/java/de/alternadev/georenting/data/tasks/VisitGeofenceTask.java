@@ -11,6 +11,7 @@ import javax.inject.Inject;
 
 import de.alternadev.georenting.GeoRentingApplication;
 import de.alternadev.georenting.data.api.GeoRentingService;
+import de.alternadev.georenting.data.auth.GoogleAuth;
 import timber.log.Timber;
 
 /**
@@ -22,6 +23,9 @@ public class VisitGeofenceTask extends GcmTaskService {
     @Inject
     GeoRentingService mService;
 
+    @Inject
+    GoogleAuth mAuth;
+
     @Override
     public void onCreate() {
         super.onCreate();
@@ -31,7 +35,7 @@ public class VisitGeofenceTask extends GcmTaskService {
 
     @Override
     public int onRunTask(TaskParams taskParams) {
-        if(!((GeoRentingApplication) getApplication()).blockingSignIn()) {
+        if(!mAuth.blockingSignIn()) {
             return GcmNetworkManager.RESULT_RESCHEDULE;
         }
 

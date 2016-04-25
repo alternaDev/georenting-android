@@ -16,6 +16,7 @@ import javax.inject.Inject;
 import de.alternadev.georenting.GeoRentingApplication;
 import de.alternadev.georenting.R;
 import de.alternadev.georenting.data.api.GeoRentingService;
+import de.alternadev.georenting.data.auth.GoogleAuth;
 import de.alternadev.georenting.data.tasks.UpdateGeofencesTask;
 import de.alternadev.georenting.ui.SignInActivity;
 import rx.android.schedulers.AndroidSchedulers;
@@ -32,6 +33,9 @@ public class SettingsFragment extends PreferenceFragment implements GoogleApiCli
 
     @Inject
     GeoRentingService mApi;
+
+    @Inject
+    GoogleAuth mGoogleAuth;
 
     private GoogleApiClient mGoogleClient;
 
@@ -70,11 +74,7 @@ public class SettingsFragment extends PreferenceFragment implements GoogleApiCli
                     .subscribe(sessionToken -> {
                         Auth.GoogleSignInApi.signOut(mGoogleClient).setResultCallback(
                                 status -> {
-                                    mGoogleClient.clearDefaultAccountAndReconnect();
-                                    mPreferences.edit()
-                                            .putBoolean(SignInActivity.PREF_SIGNED_IN_BEFORE, false)
-                                            .remove(SignInActivity.PREF_TOKEN)
-                                            .commit();
+                                    mGoogleAuth.signOut(mGoogleClient);
                                     removeUpdateGeofenceTask();
 
                                     ProcessPhoenix.triggerRebirth(this.getActivity(), new Intent(this.getActivity(), SignInActivity.class));

@@ -33,6 +33,7 @@ import de.alternadev.georenting.R;
 import de.alternadev.georenting.data.api.GeoRentingService;
 import de.alternadev.georenting.data.api.model.SessionToken;
 import de.alternadev.georenting.data.api.model.User;
+import de.alternadev.georenting.data.auth.GoogleAuth;
 import de.alternadev.georenting.data.tasks.UpdateGeofencesTask;
 import de.alternadev.georenting.databinding.ActivityMainBinding;
 import de.alternadev.georenting.ui.BaseActivity;
@@ -62,6 +63,9 @@ public class MainActivity extends BaseActivity {
 
     @Inject
     SharedPreferences mPreferences;
+
+    @Inject
+    GoogleAuth mGoogleAuth;
 
     private User mCurrentUser;
 
@@ -123,7 +127,7 @@ public class MainActivity extends BaseActivity {
             Timber.i("Using token from App");
             return getGeoRentingApplication().getSessionToken();
         }
-        String token = mPreferences.getString(SignInActivity.PREF_TOKEN, "");
+        String token = mPreferences.getString(GoogleAuth.PREF_TOKEN, "");
         if(token.equals("")) return null;
 
         // EXTREMELY DIRTY HACK
@@ -216,8 +220,7 @@ public class MainActivity extends BaseActivity {
     }
 
     private void reSignIn() {
-        mPreferences.edit().remove(SignInActivity.PREF_TOKEN).commit();
-        getGeoRentingApplication().setSessionToken(null);
+        mGoogleAuth.removeToken();
         startActivity(new Intent(this, SignInActivity.class));
         finish();
     }

@@ -32,6 +32,7 @@ import de.alternadev.georenting.R;
 import de.alternadev.georenting.data.api.GeoRentingService;
 import de.alternadev.georenting.data.api.gcm.GcmRegistrationIntentService;
 import de.alternadev.georenting.data.api.model.User;
+import de.alternadev.georenting.data.auth.GoogleAuth;
 import de.alternadev.georenting.databinding.ActivitySignInBinding;
 import de.alternadev.georenting.ui.main.MainActivity;
 import hugo.weaving.DebugLog;
@@ -48,8 +49,6 @@ public class SignInActivity extends BaseActivity implements GoogleApiClient.OnCo
     private static final int REQUEST_CODE_SIGN_IN = 44;
     private static final int REQUEST_CODE_CHECK_SETTINGS = 45;
 
-    public static final String PREF_SIGNED_IN_BEFORE = "signedIn";
-    public static final String PREF_TOKEN = "t";
 
     private GoogleApiClient mApiClient;
     private ProgressDialog mProgressDialog;
@@ -59,6 +58,9 @@ public class SignInActivity extends BaseActivity implements GoogleApiClient.OnCo
 
     @Inject
     GeoRentingService mGeoRentingService;
+
+    @Inject
+    GoogleAuth mGoogleAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -102,8 +104,7 @@ public class SignInActivity extends BaseActivity implements GoogleApiClient.OnCo
             return;
         }
 
-
-        OptionalPendingResult<GoogleSignInResult> opr = Auth.GoogleSignInApi.silentSignIn(mApiClient);
+        OptionalPendingResult<GoogleSignInResult> opr = mGoogleAuth.getAuthToken(mApiClient);
 
         if(opr.isDone()) {
             GoogleSignInResult result = opr.get();
@@ -129,33 +130,16 @@ public class SignInActivity extends BaseActivity implements GoogleApiClient.OnCo
 
     @DebugLog
     private void handleSignIn(GoogleSignInResult result) {
-        if(result.isSuccess() && result.getSignInAccount() != null) {
-            Timber.d(result.getSignInAccount().toString());
-
-            mGeoRentingService.auth(new User(result.getSignInAccount().getServerAuthCode()))
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe((sessionToken) -> {
-                        Timber.d("Test: %s", sessionToken);
-                        mProgressDialog.dismiss();
-
-                        if(sessionToken.token == null || sessionToken.token.equals("")) {
-                            return;
-                        }
-
-                        mPreferences.edit()
-                                .putBoolean(PREF_SIGNED_IN_BEFORE, true)
-                                .putString(PREF_TOKEN, sessionToken.token)
-                                .apply();
-
-                        getGeoRentingApplication().setSessionToken(sessionToken);
-                        startService(new Intent(this, GcmRegistrationIntentService.class));
-
-                        askForLocationAccess();
-                    }, error -> Timber.e(error, "Could not handle Token."));
-        } else {
-            mProgressDialog.dismiss();
-        }
+        mGoogleAuth.handleSignIn(result)
+                .subscribe((sessionToken) -> {
+                    Timber.d("Test: %s", sessionToken);
+                    mProgressDialog.dismiss();
+                    startService(new Intent(this, GcmRegistrationIntentService.class));
+                    askForLocationAccess();
+                }, error -> {
+                    Timber.e(error, "Could not handle Token.");
+                    mProgressDialog.dismiss();
+                });
     }
 
     @Override

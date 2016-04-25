@@ -35,4 +35,8 @@ public class GeoRentingModule {
     @Provides @Singleton Application provideApplication() {
         return mApp;
     }
+
+    @Provides @Singleton GeoRentingApplication provideGeoRentingApplication() {
+        return mApp;
+    }
 }
