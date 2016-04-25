@@ -4,6 +4,7 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
@@ -13,6 +14,9 @@ import com.google.android.gms.gcm.OneoffTask;
 import com.google.android.gms.gcm.PeriodicTask;
 import com.google.android.gms.gcm.Task;
 
+import javax.inject.Inject;
+
+import de.alternadev.georenting.GeoRentingApplication;
 import de.alternadev.georenting.R;
 import de.alternadev.georenting.data.tasks.UpdateGeofencesTask;
 import de.alternadev.georenting.ui.SignInActivity;
@@ -21,6 +25,16 @@ import de.alternadev.georenting.ui.main.MainActivity;
 import hugo.weaving.DebugLog;
 
 public class GcmListenerService extends com.google.android.gms.gcm.GcmListenerService {
+
+    @Inject
+    SharedPreferences mPrefs;
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        ((GeoRentingApplication) getApplicationContext()).getComponent().inject(this);
+    }
+
     @Override
     @DebugLog
     public void onMessageReceived(String from, Bundle data) {
@@ -33,10 +47,12 @@ public class GcmListenerService extends com.google.android.gms.gcm.GcmListenerSe
                 startSync();
                 break;
             case "onForeignFenceEntered":
-                notifyUserVisitedFence(data);
+                if(mPrefs.getBoolean(getString(R.string.pref_key_notify_visit), true))
+                    notifyUserVisitedFence(data);
                 break;
             case "onOwnFenceEntered":
-                notifyUserForeignerEnteredFence(data);
+                if(mPrefs.getBoolean(getString(R.string.pref_key_notify_visited), true))
+                    notifyUserForeignerEnteredFence(data);
                 break;
         }
     }

@@ -1,5 +1,6 @@
 package de.alternadev.georenting;
 
+import de.alternadev.georenting.data.api.gcm.GcmListenerService;
 import de.alternadev.georenting.data.api.gcm.GcmRegistrationIntentService;
 import de.alternadev.georenting.data.auth.GoogleAuth;
 import de.alternadev.georenting.data.geofencing.GeofenceTransitionsIntentService;
@@ -42,4 +43,6 @@ public interface GeoRentingGraph {
     void inject(HistoryFragment historyFragment);
 
     void inject(GoogleAuth googleAuth);
+
+    void inject(GcmListenerService gcmListenerService);
 }
