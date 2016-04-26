@@ -189,7 +189,7 @@ public class MainActivity extends BaseActivity implements GoogleApiClient.OnConn
     }
 
     private void testfairyIdentifyUser(User mCurrentUser) {
-        if(!BuildConfig.FLAVOR.equals("internal") || BuildConfig.DEBUG) return;
+        if(!(BuildConfig.FLAVOR.equals("internal") && !BuildConfig.DEBUG)) return;
         Map<String, Object> traits = new HashMap<>();
 
         traits.put(TestFairy.IDENTITY_TRAIT_NAME, mCurrentUser.name);
