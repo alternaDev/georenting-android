@@ -1,4 +1,4 @@
-# georenting-android
+# georenting-android [![Build Status](https://travis-ci.org/alternaDev/georenting-android.svg?branch=master)](https://travis-ci.org/alternaDev/georenting-android)
 Hello my dear friends
 ## FAQ (seriously, no one ever asked anything about georenting...)
 ### What is georenting
