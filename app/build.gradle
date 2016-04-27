@@ -61,6 +61,8 @@ android {
         versionName "${vName}"
 
         resConfigs "en", "de"
+
+        multiDexEnabled true
     }
 
 

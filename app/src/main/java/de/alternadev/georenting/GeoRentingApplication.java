@@ -1,8 +1,10 @@
 package de.alternadev.georenting;
 
 import android.app.Application;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.multidex.MultiDex;
 import android.text.TextUtils;
 
 import com.facebook.stetho.Stetho;
@@ -62,6 +64,11 @@ public class GeoRentingApplication extends Application {
         Realm.setDefaultConfiguration(new RealmConfiguration.Builder(this).build());
     }
 
+    @Override
+    protected void attachBaseContext(Context base) {
+        MultiDex.install(base);
+        super.attachBaseContext(base);
+    }
 
     public GeoRentingComponent getComponent() {
         return mComponent;
