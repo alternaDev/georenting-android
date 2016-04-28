@@ -24,10 +24,6 @@ import de.alternadev.georenting.data.api.GeoRentingService;
 import de.alternadev.georenting.data.api.gcm.GcmRegistrationIntentService;
 import de.alternadev.georenting.data.api.model.SessionToken;
 import de.alternadev.georenting.data.api.model.User;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.JwsHeader;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SigningKeyResolver;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
@@ -143,34 +139,8 @@ public class GoogleAuth {
     }
 
     public boolean getTokenExpired(String token) {
-        // EXTREMELY DIRTY HACK
-
-        final int[] exp = {-1};
-        try {
-            Jwts.parser().setSigningKeyResolver(new SigningKeyResolver() {
-                @Override
-                public Key resolveSigningKey(JwsHeader header, Claims claims) {
-                    exp[0] = (int) header.get("exp");
-                    return null;
-                }
-
-                @Override
-                public Key resolveSigningKey(JwsHeader header, String plaintext) {
-                    exp[0] = (int) header.get("exp");
-                    return null;
-                }
-            }).parse(token);
-
-        } catch(Exception e) {
-            if(exp[0] != -1) {
-                if(new Date((long) exp[0] * 1000).after(new Date())) {
-                    return false;
-                }
-            }
-            Timber.e(e, "Could not parse JWT.");
-        }
-
-        return true;
+        long expiration = JWTTool.getExpiration(token);
+        return !new Date(expiration* 1000).after(new Date());
     }
 
     public SessionToken getSavedToken() {
