@@ -26,7 +26,6 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.OptionalPendingResult;
 import com.google.android.gms.location.LocationServices;
-import com.testfairy.TestFairy;
 
 import java.security.Key;
 import java.util.Date;
@@ -76,8 +75,6 @@ public class MainActivity extends BaseActivity implements GoogleApiClient.OnConn
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        if(BuildConfig.FLAVOR.equals("internal") && !BuildConfig.DEBUG)
-            TestFairy.begin(this, getString(R.string.testfairy_id));
 
         setTheme(R.style.AppTheme);
 
@@ -158,7 +155,6 @@ public class MainActivity extends BaseActivity implements GoogleApiClient.OnConn
     private void setCurrentUser(User user) {
         mCurrentUser = user;
         showUserInHeader(user);
-        testfairyIdentifyUser(user);
         showStartFragment();
     }
 
@@ -182,14 +178,6 @@ public class MainActivity extends BaseActivity implements GoogleApiClient.OnConn
     public void onNewIntent(Intent intent){
         setIntent(intent);
         showStartFragment();
-    }
-
-    private void testfairyIdentifyUser(User mCurrentUser) {
-        if(!(BuildConfig.FLAVOR.equals("internal") && !BuildConfig.DEBUG)) return;
-        Map<String, Object> traits = new HashMap<>();
-
-        traits.put(TestFairy.IDENTITY_TRAIT_NAME, mCurrentUser.name);
-        TestFairy.identify(mCurrentUser.id + "", traits);
     }
 
     private void reSignIn() {
