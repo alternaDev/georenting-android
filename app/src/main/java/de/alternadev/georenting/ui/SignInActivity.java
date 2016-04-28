@@ -184,7 +184,6 @@ public class SignInActivity extends BaseActivity implements GoogleApiClient.OnCo
     }
 
     @Override
-    @DebugLog
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         SignInActivityPermissionsDispatcher.onRequestPermissionsResult(this, requestCode, grantResults);

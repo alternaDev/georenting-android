@@ -61,9 +61,8 @@ android {
         versionName "${vName}"
 
         resConfigs "en", "de"
-
-        multiDexEnabled true
     }
+
 
 
     buildTypes {
@@ -177,6 +176,8 @@ dependencies {
     compile 'io.jsonwebtoken:jjwt:0.6.0'
 
     compile 'testfairy:testfairy-android-sdk:1.1.0'
+
+    retrolambdaConfig 'com.jakewharton.retrolambda:retrolambda:2.1.0-jake2'
 }
 
 def installAll = tasks.create('installAll')

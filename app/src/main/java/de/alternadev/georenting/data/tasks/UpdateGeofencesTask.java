@@ -195,7 +195,7 @@ public class UpdateGeofencesTask extends GcmTaskService {
 
     private void removeAllFences() {
         mRealm.beginTransaction();
-        mRealm.where(Fence.class).findAll().clear();
+        mRealm.where(Fence.class).findAll().deleteAllFromRealm();
         mRealm.commitTransaction();
     }
 
