@@ -8,10 +8,12 @@ cache:
   directories:
     - $HOME/.gradle/caches/
     - $HOME/.gradle/wrapper/
+
 env:
   - BUILD_TYPE=assembleAll
   - BUILD_TYPE=testfairyRelease
   - BUILD_TYPE=productionRelease
+  
 android:
   components:
   - tools
@@ -19,6 +21,7 @@ android:
   - android-23
   - extra-google-m2repository
   - extra-android-m2repository
+
 before_install:
 - openssl aes-256-cbc -K $encrypted_6ca2067ed10f_key -iv $encrypted_6ca2067ed10f_iv
   -in secrets.tar.enc -out secrets.tar -d
@@ -26,14 +29,17 @@ before_install:
 - mkdir -p ~/.gradle
 - echo "georentingKeystorePassword=$KEYSTORE_PASSWORD" >> ~/.gradle/gradle.properties
 - echo "testfairyKey=$TESTFAIRY_KEY" >> ~/.gradle/gradle.properties
+
 script:
 - if [ "$BUILD_TYPE" == "assembleAll" ]; then ./gradlew assemble; fi;
 - if [ "$BUILD_TYPE" == "testfairyRelease" ]; then ./gradlew testfairyInternalRelease; fi;
 - if [ "$TRAVIS_TAG" ] && [ "$BUILD_TYPE" == "productionRelease" ]; then ./gradlew publishProductionRelease; fi;
+
 notifications:
   slack:
     rooms:
       - alternadev:DV4HmorAz8nFcc4rxBdy92ke#android
+
 deploy:
   provider: releases
   api-key: $GITHUB_TOKEN
