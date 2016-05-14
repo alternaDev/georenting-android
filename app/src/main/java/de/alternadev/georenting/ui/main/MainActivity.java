@@ -239,7 +239,8 @@ public class MainActivity extends BaseActivity implements GoogleApiClient.OnConn
                 break;
         }
 
-        mDrawerLayout.closeDrawer(GravityCompat.START);
+        if(mDrawerLayout != null)
+            mDrawerLayout.closeDrawer(GravityCompat.START);
 
         return true;
     }
