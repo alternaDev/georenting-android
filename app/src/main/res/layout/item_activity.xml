@@ -34,6 +34,8 @@
             android:layout_height="wrap_content"
             android:textAlignment="textEnd"
             android:gravity="end"
+            android:drawableStart="@drawable/ic_watch_later_black_24dp"
+            android:drawableLeft="@drawable/ic_watch_later_black_24dp"
             android:text="@{DateUtils.getRelativeTimeSpanString(item.time * 1000)}"/>
         <View
             android:layout_width="fill_parent"
