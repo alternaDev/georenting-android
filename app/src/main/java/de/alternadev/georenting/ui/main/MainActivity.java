@@ -19,13 +19,13 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.bumptech.glide.Glide;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.OptionalPendingResult;
 import com.google.android.gms.location.LocationServices;
+import com.squareup.picasso.Picasso;
 
 import java.security.Key;
 import java.util.Date;
@@ -69,6 +69,9 @@ public class MainActivity extends BaseActivity implements GoogleApiClient.OnConn
 
     @Inject
     GoogleAuth mGoogleAuth;
+
+    @Inject
+    Picasso mPicasso;
 
     private User mCurrentUser;
     private GoogleApiClient mApiClient;
@@ -259,15 +262,14 @@ public class MainActivity extends BaseActivity implements GoogleApiClient.OnConn
 
     private void showUserInHeader(User user) {
         if(user.coverUrl != null && !user.coverUrl.isEmpty()) {
-            Glide.with(this).load(user.coverUrl)
+            mPicasso.load(user.coverUrl)
                     .into(mHeaderView.background());
         } else {
-            Glide.with(this).load(R.drawable.default_background)
+            mPicasso.load(R.drawable.default_background)
                     .into(mHeaderView.background());
         }
         if(user.avatarUrl != null && !user.avatarUrl.isEmpty()) {
-            Glide.with(this).load(user.avatarUrl + "&sz=250")
-                    .asBitmap()
+            mPicasso.load(user.avatarUrl)
                     .into(mHeaderView.avatar());
         }
         mHeaderView.username(user.name);

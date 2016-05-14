@@ -7,7 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.bumptech.glide.Glide;
+import com.squareup.picasso.Picasso;
 
 import org.parceler.Parcels;
 
@@ -36,6 +36,9 @@ public class ProfileFragment extends Fragment {
     @Inject
     GeoRentingService mService;
 
+    @Inject
+    Picasso mPicasso;
+
 
     public ProfileFragment() {
     }
@@ -60,14 +63,13 @@ public class ProfileFragment extends Fragment {
         FragmentProfileBinding b = FragmentProfileBinding.inflate(inflater, container, false);
 
         if(mCurrentUser.avatarUrl != null && !mCurrentUser.avatarUrl.isEmpty()) {
-            Glide.with(this).load(mCurrentUser.avatarUrl + "&sz=250")
-                    .dontAnimate()
+            mPicasso.load(mCurrentUser.avatarUrl + "&sz=250")
                     .placeholder(R.drawable.default_avatar)
                     .into(b.profileImage);
         }
 
         if(mCurrentUser.coverUrl != null && !mCurrentUser.coverUrl.isEmpty()) {
-            Glide.with(this).load(mCurrentUser.coverUrl)
+            mPicasso.load(mCurrentUser.coverUrl)
                     .centerCrop()
                     .into(b.backgroundImage);
         }

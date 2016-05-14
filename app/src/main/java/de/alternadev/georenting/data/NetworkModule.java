@@ -4,10 +4,13 @@ import android.app.Application;
 
 import com.facebook.stetho.okhttp3.StethoInterceptor;
 import com.google.gson.Gson;
+import com.jakewharton.picasso.OkHttp3Downloader;
+import com.squareup.picasso.Picasso;
 
 import java.io.File;
 
 import javax.inject.Named;
+import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
@@ -41,5 +44,11 @@ public class NetworkModule {
     @Provides
     Gson provideGson() {
         return new Gson();
+    }
+
+    @Provides
+    @Singleton
+    Picasso providePicasso(Application app, OkHttpClient client) {
+        return new Picasso.Builder(app).downloader(new OkHttp3Downloader(client)).build();
     }
 }
