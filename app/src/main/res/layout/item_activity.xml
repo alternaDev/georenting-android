@@ -28,15 +28,29 @@
             android:text="@{Html.fromHtml(@string/activity_own_fence_visited(item.fenceName, item.visitorName, item.rent))}"
             android:layout_width="match_parent"
             android:layout_height="50dp" />
-        <TextView
-            android:textSize="14sp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textAlignment="textEnd"
-            android:gravity="end"
-            android:drawableStart="@drawable/ic_watch_later_black_24dp"
-            android:drawableLeft="@drawable/ic_watch_later_black_24dp"
-            android:text="@{DateUtils.getRelativeTimeSpanString(item.time * 1000)}"/>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:layout_gravity="end"
+            android:orientation="horizontal" >
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_marginTop="0dp"
+                android:clickable="false"
+                android:background="#0000"
+                android:tint="@android:color/darker_gray"
+                android:src="@drawable/ic_watch_later_black_24dp"/>
+            <TextView
+                android:textSize="14sp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:layout_marginLeft="4dp"
+                android:gravity="end"
+                android:text="@{DateUtils.getRelativeTimeSpanString(item.time * 1000)}"/>
+        </LinearLayout>
         <View
             android:layout_width="fill_parent"
             android:layout_height="1dp"
