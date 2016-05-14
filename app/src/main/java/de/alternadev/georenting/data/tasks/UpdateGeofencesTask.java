@@ -5,6 +5,8 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
+import android.database.SQLException;
 import android.location.Location;
 import android.support.v4.app.ActivityCompat;
 
@@ -21,6 +23,7 @@ import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
+import com.squareup.sqlbrite.BriteDatabase;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -33,18 +36,19 @@ import de.alternadev.georenting.data.api.GeoRentingService;
 import de.alternadev.georenting.data.api.model.GeoFence;
 import de.alternadev.georenting.data.geofencing.GeofenceTransitionsIntentService;
 import de.alternadev.georenting.data.models.Fence;
+import de.alternadev.georenting.data.models.FenceModel;
 import hugo.weaving.DebugLog;
-import io.realm.Realm;
-import io.realm.RealmConfiguration;
 import timber.log.Timber;
 
 public class UpdateGeofencesTask extends GcmTaskService {
 
-    private Realm mRealm;
     private GoogleApiClient mApiClient;
 
     @Inject
     GeoRentingService mService;
+
+    @Inject
+    BriteDatabase mDatabase;
 
     @Override
     public void onCreate() {
@@ -70,11 +74,10 @@ public class UpdateGeofencesTask extends GcmTaskService {
          */
         Timber.i("removing old Fences");
 
-        mRealm = Realm.getDefaultInstance();
 
         if (!removeOldGeofences(getOldRequestIDs())) {
             Timber.e("Could not remove old Geofences. Stopping.");
-            mRealm.close();
+            mDatabase.close();
             return GcmNetworkManager.RESULT_FAILURE;
         }
 
@@ -83,7 +86,7 @@ public class UpdateGeofencesTask extends GcmTaskService {
         Location lastLocation = getLocation();
         if(lastLocation == null) {
             Timber.e("Could not get Location. Stopping.");
-            mRealm.close();
+            mDatabase.close();
             return GcmNetworkManager.RESULT_RESCHEDULE;
         }
 
@@ -93,48 +96,48 @@ public class UpdateGeofencesTask extends GcmTaskService {
         } catch (IOException e) {
             e.printStackTrace();
             Timber.e("Could not get Remote Geofences. Stopping.");
-            mRealm.close();
+            mDatabase.close();
             return GcmNetworkManager.RESULT_FAILURE;
         }
 
         if(remoteFences == null) {
             Timber.w("Not remote Fences were returned. Stopping.");
-            mRealm.close();
+            mDatabase.close();
             return GcmNetworkManager.RESULT_FAILURE;
         }
 
         Timber.i("Adding new Fences (%d)", remoteFences.size());
 
-        List<Fence> fences = new ArrayList<>();
-
-        mRealm.beginTransaction();
-        for(GeoFence remoteFence : remoteFences) {
-            Timber.i("Adding fence: %s", remoteFence.id);
-            Fence f = mRealm.createObject(Fence.class);
-            f.setName(remoteFence.name);
-            f.setLatitude(remoteFence.centerLat);
-            f.setLongitude(remoteFence.centerLon);
-            f.setRadius(remoteFence.radius);
-            f.setId(remoteFence.id);
-            fences.add(f);
-        }
+        BriteDatabase.Transaction t = mDatabase.newTransaction();
 
         List<Geofence> geofences = new ArrayList<>();
-        for (int i = 0; i < fences.size(); i++) {
-            Fence f = fences.get(i);
-            geofences.add(createGeoFence(f, i));
-            f.setGeofenceID(i + "");
+        try {
+            int i = 0;
+            for (GeoFence remoteFence : remoteFences) {
+                Timber.i("Adding fence: %s", remoteFence.id);
+                Fence f = Fence.builder()
+                        .name(remoteFence.name)
+                        .latitude(remoteFence.centerLat)
+                        .longitude(remoteFence.centerLon)
+                        .radius(remoteFence.radius)
+                        ._id(remoteFence.id)
+                        .geofenceId(createGeoFence(remoteFence.centerLat, remoteFence.centerLon, remoteFence.radius, i++) + "")
+                        .build();
+                Fence.insert(mDatabase, f);
+            }
+            t.markSuccessful();
+        } finally {
+            t.end();
         }
-        mRealm.commitTransaction();
 
         if (geofences.size() > 0 && !addGeoFences(geofences)) {
             Timber.e("Could not add new Fences to google. Stopping.");
-            mRealm.close();
+            mDatabase.close();
             return GcmNetworkManager.RESULT_FAILURE;
         }
 
         Timber.i("Done!");
-        mRealm.close();
+        mDatabase.close();
         return GcmNetworkManager.RESULT_SUCCESS;
     }
 
@@ -193,10 +196,8 @@ public class UpdateGeofencesTask extends GcmTaskService {
                 r, PendingIntent.getService(this, 0, new Intent(this, GeofenceTransitionsIntentService.class), PendingIntent.FLAG_UPDATE_CURRENT)).await().isSuccess();
     }
 
-    private void removeAllFences() {
-        mRealm.beginTransaction();
-        mRealm.where(Fence.class).findAll().deleteAllFromRealm();
-        mRealm.commitTransaction();
+    private void removeAllFences() throws SQLException {
+        Fence.deleteAll(mDatabase);
     }
 
     private boolean removeOldGeofences(List<String> ids) {
@@ -205,15 +206,16 @@ public class UpdateGeofencesTask extends GcmTaskService {
 
     private List<String> getOldRequestIDs() {
         List<String> reqIDs = new ArrayList<>();
-        for (Fence fence : mRealm.where(Fence.class).findAll()) {
-            reqIDs.add(fence.getGeofenceID());
+        List<Fence> fences = Fence.getAll(mDatabase);
+        for(Fence f : fences) {
+            reqIDs.add(f.geofenceId());
         }
         return reqIDs;
     }
 
-    private Geofence createGeoFence(Fence f, int id) {
+    private Geofence createGeoFence(double latitude, double longitude, int radius, int id) {
         return new Geofence.Builder()
-                .setCircularRegion(f.getLatitude(), f.getLongitude(), (int) f.getRadius())
+                .setCircularRegion(latitude, longitude, radius)
                 .setRequestId(id + "")
                 .setExpirationDuration(Geofence.NEVER_EXPIRE)
                 .setNotificationResponsiveness(60 * 1000) // Notify every minute.

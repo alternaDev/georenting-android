@@ -3,6 +3,7 @@ package de.alternadev.georenting.data.geofencing;
 import android.app.IntentService;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.os.Bundle;
 
 import com.google.android.gms.gcm.GcmNetworkManager;
@@ -11,7 +12,9 @@ import com.google.android.gms.gcm.Task;
 import com.google.android.gms.location.Geofence;
 import com.google.android.gms.location.GeofenceStatusCodes;
 import com.google.android.gms.location.GeofencingEvent;
+import com.squareup.sqlbrite.BriteDatabase;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -20,7 +23,6 @@ import de.alternadev.georenting.GeoRentingApplication;
 import de.alternadev.georenting.data.api.GeoRentingService;
 import de.alternadev.georenting.data.models.Fence;
 import de.alternadev.georenting.data.tasks.VisitGeofenceTask;
-import io.realm.Realm;
 import timber.log.Timber;
 
 public class GeofenceTransitionsIntentService extends IntentService {
@@ -32,6 +34,9 @@ public class GeofenceTransitionsIntentService extends IntentService {
 
     @Inject
     SharedPreferences mPreferences;
+
+    @Inject
+    BriteDatabase mDatabase;
 
     @Override
     public void onCreate() {
@@ -81,8 +86,17 @@ public class GeofenceTransitionsIntentService extends IntentService {
     }
 
     private void notifyServer(Geofence f) {
-        Realm realm = Realm.getDefaultInstance();
-        Fence fence = realm.where(Fence.class).equalTo("geofenceID", f.getRequestId()).findFirst();
+        List<Fence> result = new ArrayList<>();
+        try (Cursor cursor = mDatabase.query(Fence.SELECT_ONE_BY_GEOFENCE_ID, f.getRequestId())) {
+            while (cursor.moveToNext()) {
+                result.add(Fence.MAPPER.map(cursor));
+            }
+        }
+        if(result.size() == 0) {
+            Timber.e("Can not visit fence.");
+            return;
+        }
+        Fence fence = result.get(0);
 
         if(fence == null) {
             Timber.e("Can not visit fence.");
@@ -90,7 +104,7 @@ public class GeofenceTransitionsIntentService extends IntentService {
         }
 
         Bundle taskData = new Bundle();
-        taskData.putString(VisitGeofenceTask.EXTRAS_FENCE_ID, fence.getId());
+        taskData.putString(VisitGeofenceTask.EXTRAS_FENCE_ID, fence.geofenceId());
 
         OneoffTask task = new OneoffTask.Builder()
                 .setService(VisitGeofenceTask.class)
@@ -102,6 +116,6 @@ public class GeofenceTransitionsIntentService extends IntentService {
                 .build();
         GcmNetworkManager.getInstance(this).schedule(task);
 
-        Timber.d("Starting visit Task for fence %s", fence.getId());
+        Timber.d("Starting visit Task for fence %s", fence.geofenceId());
     }
 }

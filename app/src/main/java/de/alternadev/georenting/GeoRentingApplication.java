@@ -12,15 +12,12 @@ import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.uphyca.stetho_realm.RealmInspectorModulesProvider;
 
 import javax.inject.Inject;
 
 import de.alternadev.georenting.data.api.GeoRentingService;
 import de.alternadev.georenting.data.api.model.SessionToken;
 import de.alternadev.georenting.data.api.model.User;
-import io.realm.Realm;
-import io.realm.RealmConfiguration;
 import timber.log.Timber;
 
 public class GeoRentingApplication extends Application {
@@ -50,18 +47,10 @@ public class GeoRentingApplication extends Application {
                     Stetho.newInitializerBuilder(this)
                             .enableDumpapp(
                                     Stetho.defaultDumperPluginsProvider(this))
-                            .enableWebKitInspector(RealmInspectorModulesProvider.builder(this).build())
-
                             .build());
         }
 
-        initRealm();
-
-        //Timber.d("GeoRenting started.");
-    }
-
-    private void initRealm() {
-        Realm.setDefaultConfiguration(new RealmConfiguration.Builder(this).build());
+        Timber.d("GeoRenting started.");
     }
 
     @Override

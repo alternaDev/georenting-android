@@ -5,6 +5,7 @@ import javax.inject.Singleton;
 import dagger.Component;
 import de.alternadev.georenting.GeoRentingGraph;
 import de.alternadev.georenting.data.NetworkModule;
+import de.alternadev.georenting.data.DataModule;
 import de.alternadev.georenting.data.api.ApiModule;
 import de.alternadev.georenting.data.api.ProductionApiModule;
 import de.alternadev.georenting.data.api.gcm.GcmRegistrationIntentService;
@@ -19,7 +20,8 @@ import de.alternadev.georenting.ui.main.ProfileFragment;
         GeoRentingModule.class,
         NetworkModule.class,
         ProductionApiModule.class,
-        AuthModule.class
+        AuthModule.class,
+        DataModule.class
     }
 )
 public interface GeoRentingComponent extends GeoRentingGraph {

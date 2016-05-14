@@ -40,7 +40,6 @@ import de.alternadev.georenting.data.api.model.User;
 import de.alternadev.georenting.data.models.Fence;
 import de.alternadev.georenting.databinding.FragmentMapBinding;
 import de.alternadev.georenting.ui.GeofenceDetailActivity;
-import io.realm.Realm;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 import timber.log.Timber;

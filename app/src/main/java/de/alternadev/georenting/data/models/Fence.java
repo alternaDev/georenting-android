@@ -1,73 +1,53 @@
 package de.alternadev.georenting.data.models;
 
-import io.realm.RealmObject;
 
-public class Fence extends RealmObject {
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 
+import com.google.auto.value.AutoValue;
+import com.squareup.sqlbrite.BriteDatabase;
 
-    private String id;
-    private double latitude;
-    private double longitude;
-    private double radius;
-    private String name;
-    private String owner;
-    private String geofenceID;
+import java.util.ArrayList;
+import java.util.List;
 
-    public String getId() {
-        return id;
+@AutoValue public abstract class Fence implements FenceModel {
+    public static final Mapper<Fence> MAPPER = new Mapper<>(AutoValue_Fence::new);
+
+    public static final class Marshal extends FenceMarshal<Marshal> { }
+
+    public static Builder builder() {
+        return new AutoValue_Fence.Builder();
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public abstract Builder toBuilder();
+
+    @AutoValue.Builder
+    public abstract static class Builder {
+        public abstract Builder name(String value);
+        public abstract Builder owner(String value);
+        public abstract Builder geofenceId(String value);
+        public abstract Builder _id(String value);
+        public abstract Builder latitude(double value);
+        public abstract Builder longitude(double value);
+        public abstract Builder radius(double value);
+        public abstract Fence build();
     }
 
-    public double getLatitude() {
-        return latitude;
+    public static void insert(BriteDatabase db, Fence fence) {
+        db.insert(Fence.TABLE_NAME, new FenceModel.FenceMarshal<>(fence).asContentValues());
     }
 
-    public void setLatitude(double latitude) {
-        this.latitude = latitude;
+    public static List<Fence> getAll(BriteDatabase db) {
+        List<Fence> result = new ArrayList<>();
+        try (Cursor cursor = db.query(Fence.SELECT_ALL)) {
+            while (cursor.moveToNext()) {
+                result.add(Fence.MAPPER.map(cursor));
+            }
+        }
+        return result;
     }
 
-    public String getOwner() {
-        return owner;
-    }
-
-    public void setOwner(String owner) {
-        this.owner = owner;
-    }
-
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public double getLongitude() {
-        return longitude;
-    }
-
-    public void setLongitude(double longitude) {
-        this.longitude = longitude;
-    }
-
-
-    public String getGeofenceID() {
-        return geofenceID;
-    }
-
-    public void setGeofenceID(String geofenceID) {
-        this.geofenceID = geofenceID;
-    }
-
-    public double getRadius() {
-        return radius;
-    }
-
-    public void setRadius(double radius) {
-        this.radius = radius;
+    public static void deleteAll(BriteDatabase db) {
+        db.execute(Fence.DELETE_ALL);
     }
 }
