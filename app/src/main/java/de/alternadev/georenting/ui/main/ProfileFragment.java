@@ -70,6 +70,7 @@ public class ProfileFragment extends Fragment {
 
         if(mCurrentUser.coverUrl != null && !mCurrentUser.coverUrl.isEmpty()) {
             mPicasso.load(mCurrentUser.coverUrl)
+                    .fit()
                     .centerCrop()
                     .into(b.backgroundImage);
         }

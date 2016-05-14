@@ -60,4 +60,10 @@ public class ApiModule {
     GeoRentingService provideGeoRentingService(Retrofit restAdapter) {
         return restAdapter.create(GeoRentingService.class);
     }
+
+    @Provides
+    @Singleton
+    AvatarService provideAvatarService(HttpUrl baseUrl) {
+        return new AvatarService(baseUrl);
+    }
 }
