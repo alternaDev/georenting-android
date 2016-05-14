@@ -27,13 +27,8 @@
 -keepattributes EnclosingMethod
 
 
-#Glide
--keep public class * implements com.bumptech.glide.module.GlideModule
-
--keep public enum com.bumptech.glide.load.resource.bitmap.ImageHeaderParser$** {
-    **[] $VALUES;
-    public *;
-}
+#Picasso
+-dontwarn com.squareup.okhttp.**
 
 # RXJava
 -dontwarn sun.misc.Unsafe
