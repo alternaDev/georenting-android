@@ -32,7 +32,7 @@ before_install:
 
 script:
 - if [ "$BUILD_TYPE" == "assembleAll" ]; then ./gradlew assemble; fi;
-- if [ "$BUILD_TYPE" == "testfairyRelease" ]; then ./gradlew testfairyInternalRelease; fi;
+- if [ "$TRAVIS_BRANCH" == "master"] && [ ! "$TRAVIS_PULL_REQUEST" ] && [ "$BUILD_TYPE" == "testfairyRelease" ]; then ./gradlew testfairyInternalRelease; fi;
 - if [ "$TRAVIS_TAG" ] && [ "$BUILD_TYPE" == "productionRelease" ]; then ./gradlew publishProductionRelease; fi;
 
 notifications:
