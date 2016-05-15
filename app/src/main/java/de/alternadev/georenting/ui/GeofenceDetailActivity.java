@@ -18,12 +18,16 @@ import com.google.android.gms.maps.GoogleMapOptions;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
+import com.squareup.picasso.Picasso;
 
 import org.parceler.Parcels;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
 import de.alternadev.georenting.R;
+import de.alternadev.georenting.data.api.GoogleMapsStatic;
 import de.alternadev.georenting.data.api.model.GeoFence;
 import de.alternadev.georenting.databinding.ActivityGeofenceDetailBinding;
 
@@ -33,10 +37,20 @@ import de.alternadev.georenting.databinding.ActivityGeofenceDetailBinding;
 public class GeofenceDetailActivity extends BaseActivity {
 
     public static final String EXTRA_GEOFENCE = "geofence";
+
+    @Inject
+    Picasso mPicasso;
+
+    @Inject
+    GoogleMapsStatic mStaticMap;
+
     private GeoFence mGeofence;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
+
+        getGeoRentingApplication().getComponent().inject(this);
+
         super.onCreate(savedInstanceState);
 
         ActivityGeofenceDetailBinding b = DataBindingUtil.setContentView(this, R.layout.activity_geofence_detail);
@@ -46,14 +60,18 @@ public class GeofenceDetailActivity extends BaseActivity {
             mGeofence = Parcels.unwrap(getIntent().getParcelableExtra(EXTRA_GEOFENCE));
 
         b.setGeoFence(mGeofence);
-        b.geofenceMap.onCreate(null);
-
-        b.geofenceMap.getMapAsync((googleMap -> {
-            GeoFence f = mGeofence;
-
-            googleMap.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(f.centerLat, f.centerLon)));
-            googleMap.addCircle(new CircleOptions().center(new LatLng(f.centerLat, f.centerLon)).radius(f.radius));
-        }));
+        final boolean[] imageLoaded = {false};
+        b.geofenceMap.getViewTreeObserver().addOnPreDrawListener(() -> {
+            if(imageLoaded[0]) return true;
+            mPicasso.load(mStaticMap.getFenceThumbnailMapUrl(mGeofence,
+                    getResources().getDimensionPixelSize(R.dimen.image_map_width) / 2,
+                    getResources().getDimensionPixelSize(R.dimen.image_map_height) / 2))
+                    .fit()
+                    .centerCrop()
+                    .into(b.geofenceMap);
+            imageLoaded[0] = true;
+            return true;
+        });
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);

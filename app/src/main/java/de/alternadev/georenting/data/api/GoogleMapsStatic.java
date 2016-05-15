@@ -11,6 +11,7 @@ public class GoogleMapsStatic {
 
     private static final String BASE_URL = "http://maps.google.com/maps/api/staticmap";
 
+    @DebugLog
     public String getFenceThumbnailMapUrl(GeoFence fence, int width, int height) {
         String path = "&path=color:0x0000ff|weight:5";
         int r = 6371;
@@ -28,6 +29,6 @@ public class GoogleMapsStatic {
 
 
         return BASE_URL + "?center=" + fence.centerLat + "," + fence.centerLon +
-                "&zoom=15&size=" + width + "x" + height + path + "&sensor=false";
+                "&zoom=16&size=" + width + "x" + height + path + "&sensor=false";
     }
 }

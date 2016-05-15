@@ -80,6 +80,7 @@ public class MainActivity extends BaseActivity implements GoogleApiClient.OnConn
 
     private User mCurrentUser;
     private GoogleApiClient mApiClient;
+    private Toolbar mToolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,8 +92,8 @@ public class MainActivity extends BaseActivity implements GoogleApiClient.OnConn
 
         ActivityMainBinding b = DataBindingUtil.setContentView(this, R.layout.activity_main);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(mToolbar);
 
         mApiClient = new GoogleApiClient.Builder(this)
                 .enableAutoManage(this, this)
@@ -102,7 +103,7 @@ public class MainActivity extends BaseActivity implements GoogleApiClient.OnConn
 
         mDrawerLayout = b.mainDrawerLayout;
 
-        mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, toolbar, R.string.drawer_open, R.string.drawer_close);
+        mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, mToolbar, R.string.drawer_open, R.string.drawer_close);
         mDrawerToggle.syncState();
 
         mHeaderView = new HeaderView(this, false);
@@ -345,5 +346,9 @@ public class MainActivity extends BaseActivity implements GoogleApiClient.OnConn
                     break;
             }
         }
+    }
+
+    public Toolbar getToolbar() {
+        return mToolbar;
     }
 }

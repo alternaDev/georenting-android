@@ -81,7 +81,7 @@ public class MyGeofencesFragment extends Fragment {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(geoFences -> {
                     if(geoFences != null) {
-                        RecyclerView.Adapter adapter = new GeofenceAdapter(geoFences, getActivity());
+                        RecyclerView.Adapter adapter = new GeofenceAdapter(geoFences, getActivity(), ((MainActivity) getActivity()).getToolbar());
                         b.geofencesList.setAdapter(adapter);
                         b.setGeoFences(geoFences);
                     } else {
