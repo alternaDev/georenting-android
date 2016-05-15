@@ -1,31 +1,29 @@
 <resources>
     <string name="app_name">GeoRenting</string>
-    <string name="title_activity_sign_in">SignInActivity</string>
 
-    <string name="hello_world">Hello world!</string>
-    <string name="action_settings">Settings</string>
+    <string name="title_activity_sign_in">Sign In</string>
     <string name="message_signing_in">Connecting to Google+…</string>
+
     <string name="title_activity_main">MainActivity</string>
     <string name="drawer_open">Open Drawer</string>
     <string name="drawer_close">Close Drawer</string>
+    <string name="action_settings">Settings</string>
     <string name="main_drawer_my_geofences">My Geofences</string>
+    <string name="my_geofences_no_geofences">You do not own any GeoFence yet. Add one by clicking the button down right!</string>
     <string name="main_drawer_settings">Settings</string>
     <string name="main_drawer_support">Support</string>
     <string name="main_drawer_map">Map</string>
-    <string name="main_drawer_profile">Profile</string>
+    <string name="main_drawer_profile">Cash</string>
     <string name="main_drawer_history">History</string>
     <string name="activity_own_fence_visited"><b>%2$s</b> visited your GeoFence &lt;b&gt;%1$s&lt;/b&gt; and paid &lt;b&gt;%3$.2f&lt;/b&gt; GC in rent.</string>
     <string name="activity_foreign_fence_visited">You visited &lt;b&gt;%2$s&lt;/b&gt;s GeoFence &lt;b&gt;%1$s&lt;/b&gt; and paid &lt;b&gt;%3$.2f&lt;/b&gt; GC in rent.</string>
 
+    <string name="title_activity_geofence_detail">GeoFence</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+
     <string name="pref_account_title">Account</string>
     <string name="pref_key_account_logout">account_logout</string>
     <string name="pref_account_logout">Log Out</string>
-    <string name="my_geofences_no_geofences">You do not own any GeoFence yet. Add one by clicking the button down right!</string>
-    <string name="title_activity_geofence_detail">GeoFence</string>
-    <string name="testfairy_id">4de72bd9aa3dd11a4734806dd4ce238e6c420ac0</string>
     <string name="pref_notify_title">Notifications</string>
     <string name="pref_key_notify_visit">notifyVisits</string>
     <string name="pref_notify_visit">Visit Notification</string>
