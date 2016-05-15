@@ -119,16 +119,6 @@ public class MainActivity extends BaseActivity implements GoogleApiClient.OnConn
 
         loadCurrentUser();
 
-        /* Workaround for bug in AppCompat v23.0.0: https://code.google.com/p/android/issues/detail?id=183166 */
-        ViewGroup appBarLayout = b.appbar;
-        for (int i = 0; i < appBarLayout.getChildCount(); i++) {
-            View childView = appBarLayout.getChildAt(i);
-            if (!childView.isClickable()) {
-                childView.setOnTouchListener((view, motionEvent) -> true);
-            }
-        }
-        /* End workaround */
-
         UpdateGeofencesTask.initializeTasks(this);
     }
 
