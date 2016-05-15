@@ -12,6 +12,7 @@ import de.alternadev.georenting.ui.main.MainActivity;
 import de.alternadev.georenting.ui.main.MapFragment;
 import de.alternadev.georenting.ui.main.MyGeofencesFragment;
 import de.alternadev.georenting.ui.main.ProfileFragment;
+import de.alternadev.georenting.ui.main.mygeofences.GeofenceAdapter;
 import de.alternadev.georenting.ui.settings.SettingsFragment;
 
 public interface GeoRentingGraph {
@@ -42,4 +43,6 @@ public interface GeoRentingGraph {
     void inject(GoogleAuth googleAuth);
 
     void inject(GcmListenerService gcmListenerService);
+
+    void inject(GeofenceAdapter geofenceAdapter);
 }

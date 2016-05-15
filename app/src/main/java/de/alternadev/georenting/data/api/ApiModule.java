@@ -66,4 +66,10 @@ public class ApiModule {
     AvatarService provideAvatarService(HttpUrl baseUrl) {
         return new AvatarService(baseUrl);
     }
+
+    @Provides
+    @Singleton
+    GoogleMapsStatic provideGoogleMapsStatic() {
+        return new GoogleMapsStatic();
+    }
 }

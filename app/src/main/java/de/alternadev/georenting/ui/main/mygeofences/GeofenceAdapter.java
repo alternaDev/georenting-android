@@ -12,11 +12,16 @@ import android.view.ViewGroup;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
+import com.squareup.picasso.Picasso;
 
 import org.parceler.Parcels;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
+import de.alternadev.georenting.GeoRentingApplication;
+import de.alternadev.georenting.data.api.GoogleMapsStatic;
 import de.alternadev.georenting.data.api.model.GeoFence;
 import de.alternadev.georenting.databinding.ItemGeofenceBinding;
 import de.alternadev.georenting.ui.GeofenceDetailActivity;
@@ -27,12 +32,19 @@ import de.alternadev.georenting.ui.GeofenceDetailActivity;
 
 public class GeofenceAdapter extends RecyclerView.Adapter<GeofenceViewHolder> {
 
+    @Inject
+    GoogleMapsStatic mStaticMap;
+
+    @Inject
+    Picasso mPicasso;
+
     private final List<GeoFence> mGeoFences;
     private final Activity mActivity;
 
     public GeofenceAdapter(List<GeoFence> geoFences, Activity activity) {
         mGeoFences = geoFences;
         mActivity = activity;
+        ((GeoRentingApplication) activity.getApplication()).getComponent().inject(this);
     }
 
     @Override
@@ -46,12 +58,11 @@ public class GeofenceAdapter extends RecyclerView.Adapter<GeofenceViewHolder> {
         ItemGeofenceBinding b = holder.getBinding();
         GeoFence f = mGeoFences.get(position);
         b.setGeoFence(f);
-        b.geofenceMap.onCreate(null);
-        b.geofenceMap.setClickable(false);
-        b.geofenceMap.getMapAsync((googleMap -> {
-            googleMap.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(f.centerLat, f.centerLon)));
-            googleMap.addCircle(new CircleOptions().center(new LatLng(f.centerLat, f.centerLon)).radius(f.radius));
-        }));
+
+        mPicasso.load(mStaticMap.getFenceThumbnailMapUrl(f, 400, 300))
+                .fit()
+                .centerCrop()
+                .into(b.geofenceMap);
 
         b.getRoot().setClickable(true);
         b.getRoot().setOnClickListener(v -> {
