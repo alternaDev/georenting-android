@@ -31,4 +31,7 @@
     <string name="pref_notify_visited">Visited Notification</string>
     <string name="pref_notify_visited_desc">Show Notification if someone visits your GeoFence.</string>
     <string name="pref_notify_visit_desc">Show Notification if you visit a GeoFence.</string>
+
+    <string name="error_network">Network error.</string>
+    <string name="error_network_action_retry">Retry</string>
 </resources>

@@ -2,6 +2,7 @@ package de.alternadev.georenting.ui.main;
 
 import android.app.Fragment;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -14,6 +15,7 @@ import java.util.Date;
 import javax.inject.Inject;
 
 import de.alternadev.georenting.GeoRentingApplication;
+import de.alternadev.georenting.R;
 import de.alternadev.georenting.data.api.GeoRentingService;
 import de.alternadev.georenting.data.api.model.User;
 import de.alternadev.georenting.databinding.FragmentHistoryBinding;
@@ -68,13 +70,18 @@ public class HistoryFragment extends Fragment {
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(history -> {
-                    Timber.i(history.toString());
-                    b.historyRefresh.setRefreshing(false);
-
+                    b.setItems(history);
                     if(history != null) {
                         RecyclerView.Adapter adapter = new ActivityItemAdapter(history, getActivity());
                         b.historyList.setAdapter(adapter);
                     }
+                }, t -> {
+                    t.printStackTrace();
+                    Snackbar.make(b.getRoot(), R.string.error_network, Snackbar.LENGTH_LONG).setAction(R.string.error_network_action_retry, v -> {
+                        this.loadHistory(b);
+                    }).show();
+                }, () -> {
+                    b.historyRefresh.setRefreshing(false);
                 });
     }
 }
