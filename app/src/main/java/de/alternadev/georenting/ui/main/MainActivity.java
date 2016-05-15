@@ -97,7 +97,9 @@ public class MainActivity extends BaseActivity implements GoogleApiClient.OnConn
                 .addApi(LocationServices.API)
                 .build();
 
-        mDrawerToggle = new ActionBarDrawerToggle(this, b.mainDrawerLayout, toolbar, R.string.drawer_open, R.string.drawer_close);
+        mDrawerLayout = b.mainDrawerLayout;
+
+        mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, toolbar, R.string.drawer_open, R.string.drawer_close);
         mDrawerToggle.syncState();
 
         mHeaderView = new HeaderView(this, false);
@@ -116,8 +118,6 @@ public class MainActivity extends BaseActivity implements GoogleApiClient.OnConn
         }
 
         loadCurrentUser();
-
-        mDrawerLayout = b.mainDrawerLayout;
 
         /* Workaround for bug in AppCompat v23.0.0: https://code.google.com/p/android/issues/detail?id=183166 */
         ViewGroup appBarLayout = b.appbar;
