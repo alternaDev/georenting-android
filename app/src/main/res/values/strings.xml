@@ -34,4 +34,7 @@
 
     <string name="error_network">Network error.</string>
     <string name="error_network_action_retry">Retry</string>
+    <string name="permission_location_rationale">We need access to your devices Location to deliver the core functionality of the Game.</string>
+    <string name="button_allow">Allow</string>
+    <string name="button_deny">Deny</string>
 </resources>
