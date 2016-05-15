@@ -6,18 +6,13 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.databinding.DataBindingUtil;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v4.text.TextUtilsCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
-import android.text.TextUtils;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
 
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
@@ -27,17 +22,10 @@ import com.google.android.gms.common.api.OptionalPendingResult;
 import com.google.android.gms.location.LocationServices;
 import com.squareup.picasso.Picasso;
 
-import java.security.Key;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-
 import javax.inject.Inject;
 
-import de.alternadev.georenting.BuildConfig;
 import de.alternadev.georenting.R;
 import de.alternadev.georenting.data.api.GeoRentingService;
-import de.alternadev.georenting.data.api.gcm.GcmRegistrationIntentService;
 import de.alternadev.georenting.data.api.model.SessionToken;
 import de.alternadev.georenting.data.api.model.User;
 import de.alternadev.georenting.data.auth.GoogleAuth;
@@ -78,11 +66,9 @@ public class MainActivity extends BaseActivity implements GoogleApiClient.OnConn
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
         setTheme(R.style.AppTheme);
 
         super.onCreate(savedInstanceState);
-
 
         getGeoRentingApplication().getComponent().inject(this);
 
