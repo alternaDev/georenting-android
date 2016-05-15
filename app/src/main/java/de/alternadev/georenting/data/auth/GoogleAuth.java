@@ -74,15 +74,8 @@ public class GoogleAuth {
 
                         return sessionToken;
                     });
-                    /*.subscribe((sessionToken) -> {
-
-
-
-
-                    }, error -> Timber.e(error, "Could not handle Token."));*/
         } else {
             return Observable.error(new Exception());
-           // mProgressDialog.dismiss();
         }
     }
 
