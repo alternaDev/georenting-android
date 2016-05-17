@@ -46,6 +46,8 @@ import rx.schedulers.Schedulers;
 import timber.log.Timber;
 
 public class MapFragment extends Fragment implements GoogleApiClient.OnConnectionFailedListener, GoogleApiClient.ConnectionCallbacks {
+    private LocationListener mListener;
+
     public static MapFragment newInstance() {
         MapFragment fragment = new MapFragment();
         return fragment;
@@ -88,6 +90,8 @@ public class MapFragment extends Fragment implements GoogleApiClient.OnConnectio
     @Override
     public void onPause() {
         super.onPause();
+        LocationServices.FusedLocationApi.removeLocationUpdates(mApiClient, mListener);
+
         if (mMapView != null)
             mMapView.onPause();
     }
@@ -97,6 +101,8 @@ public class MapFragment extends Fragment implements GoogleApiClient.OnConnectio
         super.onResume();
         if (mMapView != null)
             mMapView.onResume();
+        if(mApiClient.isConnected())
+            mMapView.getMapAsync(this::initMap);
     }
 
     @Override
@@ -126,15 +132,22 @@ public class MapFragment extends Fragment implements GoogleApiClient.OnConnectio
         if (ActivityCompat.checkSelfPermission(this.getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this.getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             return;
         }
+        if(map == null) return;
         map.setMyLocationEnabled(true);
 
+        startLocationUpdates(map);
+    }
 
+    private void startLocationUpdates(GoogleMap map) {
+        if (ActivityCompat.checkSelfPermission(this.getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this.getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            return;
+        }
         LocationRequest request = LocationRequest.create()
                 .setFastestInterval(5000)
                 .setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
 
-        LocationListener listener = l -> {
-            Timber.d(l.toString());
+        mListener = l -> {
+            if(map == null) return;
 
             if(!mMapInited) {
                 map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(l.getLatitude(), l.getLongitude()), 15));
@@ -145,6 +158,7 @@ public class MapFragment extends Fragment implements GoogleApiClient.OnConnectio
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe((fences) -> {
+                        if(map == null) return;
                         map.clear();
                         map.addCircle(new CircleOptions().center(new LatLng(l.getLatitude(), l.getLongitude())).radius(500));
                         for(GeoFence f : fences) {
@@ -168,7 +182,7 @@ public class MapFragment extends Fragment implements GoogleApiClient.OnConnectio
                     });
         };
 
-        LocationServices.FusedLocationApi.requestLocationUpdates(mApiClient, request, listener);
+        LocationServices.FusedLocationApi.requestLocationUpdates(mApiClient, request, mListener);
     }
 
     private void onGeoFenceClick(GeoFence f) {
