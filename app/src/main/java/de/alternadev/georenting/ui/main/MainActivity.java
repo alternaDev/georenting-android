@@ -174,7 +174,7 @@ public class MainActivity extends BaseActivity implements GoogleApiClient.OnConn
                 showFragment(MyGeofencesFragment.newInstance(mCurrentUser));
                 break;
             case "history":
-                mNavigationView.getMenu().getItem(4).setChecked(true);
+                mNavigationView.getMenu().getItem(3).setChecked(true);
                 showFragment(HistoryFragment.newInstance());
                 break;
         }
