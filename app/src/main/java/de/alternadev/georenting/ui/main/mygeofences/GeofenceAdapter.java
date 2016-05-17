@@ -72,11 +72,11 @@ public class GeofenceAdapter extends RecyclerView.Adapter<GeofenceViewHolder> {
         b.geofenceMap.getViewTreeObserver().addOnPreDrawListener(() -> {
             if(imageLoaded[0]) return true;
             mPicasso.load(mStaticMap.getFenceThumbnailMapUrl(f,
-                    mActivity.getResources().getDimensionPixelSize(R.dimen.image_map_width) / 2,
-                    mActivity.getResources().getDimensionPixelSize(R.dimen.image_map_height) / 2))
-                    .fit()
-                    .centerCrop()
-                    .into(b.geofenceMap);
+                          b.geofenceMap.getWidth() / 2,
+                          b.geofenceMap.getHeight() / 2))
+                          .fit()
+                          .centerCrop()
+                          .into(b.geofenceMap);
             imageLoaded[0] = true;
             return true;
         });

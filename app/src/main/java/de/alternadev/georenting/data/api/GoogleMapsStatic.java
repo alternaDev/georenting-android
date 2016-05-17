@@ -29,6 +29,6 @@ public class GoogleMapsStatic {
 
 
         return BASE_URL + "?center=" + fence.centerLat + "," + fence.centerLon +
-                "&zoom=16&size=" + width + "x" + height + path + "&sensor=false";
+                "&zoom=15&size=" + width + "x" + height + path + "&sensor=false";
     }
 }
