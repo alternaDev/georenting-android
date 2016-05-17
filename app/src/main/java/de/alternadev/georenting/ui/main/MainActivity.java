@@ -49,6 +49,7 @@ import permissions.dispatcher.NeedsPermission;
 import permissions.dispatcher.OnShowRationale;
 import permissions.dispatcher.PermissionRequest;
 import permissions.dispatcher.RuntimePermissions;
+import rebus.header.view.HeaderCompactView;
 import rebus.header.view.HeaderView;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
@@ -61,7 +62,7 @@ public class MainActivity extends BaseActivity implements GoogleApiClient.OnConn
     public static String EXTRA_FRAGMENT = "fragment";
 
     private ActionBarDrawerToggle mDrawerToggle;
-    private HeaderView mHeaderView;
+    private HeaderCompactView mHeaderView;
     private DrawerLayout mDrawerLayout;
 
 
@@ -105,7 +106,7 @@ public class MainActivity extends BaseActivity implements GoogleApiClient.OnConn
         mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, mToolbar, R.string.drawer_open, R.string.drawer_close);
         mDrawerToggle.syncState();
 
-        mHeaderView = new HeaderView(this, false);
+        mHeaderView = new HeaderCompactView(this, false);
         b.mainNavigationView.addHeaderView(mHeaderView);
         b.mainNavigationView.setNavigationItemSelectedListener(this::onNavigationItemSelected);
 
@@ -256,18 +257,13 @@ public class MainActivity extends BaseActivity implements GoogleApiClient.OnConn
 
 
     private void showUserInHeader(User user) {
-        if(user.coverUrl != null && !user.coverUrl.isEmpty()) {
-            mPicasso.load(user.coverUrl)
-                    .into(mHeaderView.background());
-        } else {
-            mPicasso.load(R.drawable.default_background)
-                    .into(mHeaderView.background());
-        }
+        mHeaderView.background().setBackgroundColor(getResources().getColor(R.color.dark_primary_color));
         if(user.avatarUrl != null && !user.avatarUrl.isEmpty()) {
             mPicasso.load(user.avatarUrl)
                     .into(mHeaderView.avatar());
         }
         mHeaderView.username(user.name);
+        mHeaderView.email(getString(R.string.n_money_units, user.balance));
     }
 
     @Override

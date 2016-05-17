@@ -158,7 +158,6 @@ public class GoogleAuth {
     public GoogleSignInOptions getGoogleSignInOptions() {
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestEmail()
-                .requestProfile()
                 .requestServerAuthCode(mApp.getString(R.string.google_server_id), false)
                 .build();
         return gso;

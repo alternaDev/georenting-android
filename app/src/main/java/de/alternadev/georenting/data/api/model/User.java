@@ -16,6 +16,8 @@ public class User {
     @SerializedName("cover_url")
     public String coverUrl;
 
+    public double balance;
+
     @SerializedName("ID")
     public int id;
 
