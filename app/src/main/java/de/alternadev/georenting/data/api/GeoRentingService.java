@@ -5,10 +5,12 @@ package de.alternadev.georenting.data.api;
 import java.util.List;
 
 import de.alternadev.georenting.data.api.model.ActivityItem;
+import de.alternadev.georenting.data.api.model.CostEstimate;
 import de.alternadev.georenting.data.api.model.GcmToken;
 import de.alternadev.georenting.data.api.model.GeoFence;
 import de.alternadev.georenting.data.api.model.SessionToken;
 import de.alternadev.georenting.data.api.model.User;
+import de.alternadev.georenting.data.models.Fence;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.DELETE;
@@ -45,4 +47,7 @@ public interface GeoRentingService {
 
     @POST("fences/{fenceId}/visit")
     Observable<Object> visitFence(@Path("fenceId") String fenceId);
+
+    @POST("fences/estimateCost")
+    Observable<CostEstimate> estimateCost(@Body GeoFence f);
 }

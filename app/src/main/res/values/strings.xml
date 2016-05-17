@@ -38,4 +38,6 @@
     <string name="permission_location_rationale">We need access to your devices Location to deliver the core functionality of the Game.</string>
     <string name="button_allow">Allow</string>
     <string name="button_deny">Deny</string>
+    <string name="title_activity_geofence_create">Create GeoFence</string>
+    <string name="create_geofence_cost_estimate">&lt;b&gt;Cost:&lt;/b&gt; %1$.2f</string>
 </resources>

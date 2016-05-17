@@ -1,6 +1,7 @@
 package de.alternadev.georenting.ui.main;
 
 import android.app.Fragment;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.LinearLayoutManager;
@@ -20,6 +21,7 @@ import de.alternadev.georenting.R;
 import de.alternadev.georenting.data.api.GeoRentingService;
 import de.alternadev.georenting.data.api.model.User;
 import de.alternadev.georenting.databinding.FragmentMyGeofencesBinding;
+import de.alternadev.georenting.ui.CreateGeofenceActivity;
 import de.alternadev.georenting.ui.main.mygeofences.GeofenceAdapter;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
@@ -66,6 +68,10 @@ public class MyGeofencesFragment extends Fragment {
 
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
         b.geofencesList.setLayoutManager(layoutManager);
+
+        b.buttonAddGeofence.setOnClickListener(view -> {
+            startActivity(new Intent(this.getActivity(), CreateGeofenceActivity.class));
+        });
 
         b.geofencesRefresh.setOnRefreshListener(() -> loadFences(b));
         b.geofencesRefresh.setRefreshing(true);
