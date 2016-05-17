@@ -11,6 +11,7 @@ import android.content.res.Configuration;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -81,6 +82,7 @@ public class MainActivity extends BaseActivity implements GoogleApiClient.OnConn
     private User mCurrentUser;
     private GoogleApiClient mApiClient;
     private Toolbar mToolbar;
+    private NavigationView mNavigationView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -107,6 +109,8 @@ public class MainActivity extends BaseActivity implements GoogleApiClient.OnConn
         mDrawerToggle.syncState();
 
         mHeaderView = new HeaderCompactView(this, false);
+
+        mNavigationView = b.mainNavigationView;
         b.mainNavigationView.addHeaderView(mHeaderView);
         b.mainNavigationView.setNavigationItemSelectedListener(this::onNavigationItemSelected);
 
@@ -166,9 +170,11 @@ public class MainActivity extends BaseActivity implements GoogleApiClient.OnConn
 
         switch(extraFragment) {
             case "myFences":
+                mNavigationView.getMenu().getItem(0).setChecked(true);
                 showFragment(MyGeofencesFragment.newInstance(mCurrentUser));
                 break;
             case "history":
+                mNavigationView.getMenu().getItem(4).setChecked(true);
                 showFragment(HistoryFragment.newInstance());
                 break;
         }
@@ -214,7 +220,6 @@ public class MainActivity extends BaseActivity implements GoogleApiClient.OnConn
     }
 
     private boolean onNavigationItemSelected(MenuItem menuItem) {
-
         switch (menuItem.getItemId()) {
             case R.id.nav_my_geofences:
                 menuItem.setChecked(true);
