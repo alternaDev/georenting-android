@@ -1,7 +1,5 @@
 package de.alternadev.georenting.ui;
 
-import android.Manifest;
-import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.IntentSender;
@@ -18,28 +16,17 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.OptionalPendingResult;
-import com.google.android.gms.common.api.PendingResult;
-import com.google.android.gms.common.api.Status;
-import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.location.LocationSettingsRequest;
-import com.google.android.gms.location.LocationSettingsResult;
-import com.google.android.gms.location.LocationSettingsStatusCodes;
 
 import javax.inject.Inject;
 
 import de.alternadev.georenting.R;
 import de.alternadev.georenting.data.api.GeoRentingService;
-import de.alternadev.georenting.data.api.gcm.GcmRegistrationIntentService;
-import de.alternadev.georenting.data.api.model.User;
+import de.alternadev.georenting.data.api.fcm.FcmRegistrationIntentService;
 import de.alternadev.georenting.data.auth.GoogleAuth;
 import de.alternadev.georenting.databinding.ActivitySignInBinding;
 import de.alternadev.georenting.ui.main.MainActivity;
 import hugo.weaving.DebugLog;
-import permissions.dispatcher.NeedsPermission;
-import permissions.dispatcher.RuntimePermissions;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
 import timber.log.Timber;
 
 public class SignInActivity extends BaseActivity implements GoogleApiClient.OnConnectionFailedListener {
@@ -127,7 +114,7 @@ public class SignInActivity extends BaseActivity implements GoogleApiClient.OnCo
                 .subscribe((sessionToken) -> {
                     Timber.d("Test: %s", sessionToken);
                     mProgressDialog.dismiss();
-                    startService(new Intent(this, GcmRegistrationIntentService.class));
+                    startService(new Intent(this, FcmRegistrationIntentService.class));
                     startMainActivity();
                 }, error -> {
                     Timber.e(error, "Could not handle Token.");

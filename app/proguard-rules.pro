@@ -133,3 +133,7 @@
 -keep class com.testfairy.** { *; }
 -dontwarn com.testfairy.**
 -keepattributes Exceptions, Signature, LineNumberTable
+
+#AutoValue
+-dontwarn autovalue.shaded.com.**
+-dontwarn com.google.auto.value.**

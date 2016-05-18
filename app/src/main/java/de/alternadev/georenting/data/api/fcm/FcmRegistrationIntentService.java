@@ -1,24 +1,22 @@
-package de.alternadev.georenting.data.api.gcm;
+package de.alternadev.georenting.data.api.fcm;
 
 import android.app.IntentService;
 import android.content.Intent;
 import android.content.SharedPreferences;
 
-import com.google.android.gms.gcm.GoogleCloudMessaging;
-import com.google.android.gms.iid.InstanceID;
+import com.google.firebase.iid.FirebaseInstanceId;
 
 import java.io.IOException;
 
 import javax.inject.Inject;
 
 import de.alternadev.georenting.GeoRentingApplication;
-import de.alternadev.georenting.R;
 import de.alternadev.georenting.data.api.GeoRentingService;
 import de.alternadev.georenting.data.api.model.GcmToken;
 import hugo.weaving.DebugLog;
 import timber.log.Timber;
 
-public class GcmRegistrationIntentService extends IntentService {
+public class FcmRegistrationIntentService extends IntentService {
 
     private static final String CURRENT_GCM_TOKEN = "current_gcm_token";
     @Inject
@@ -27,7 +25,7 @@ public class GcmRegistrationIntentService extends IntentService {
     @Inject
     SharedPreferences mPreferences;
 
-    public GcmRegistrationIntentService() {
+    public FcmRegistrationIntentService() {
         super("Register GCM");
     }
 
@@ -65,8 +63,6 @@ public class GcmRegistrationIntentService extends IntentService {
 
     @DebugLog
     private String getToken() throws IOException {
-        InstanceID instanceID = InstanceID.getInstance(this);
-        return instanceID.getToken(getString(R.string.gcm_default_sender_id),
-                GoogleCloudMessaging.INSTANCE_ID_SCOPE, null);
+        return FirebaseInstanceId.getInstance().getToken();
     }
 }

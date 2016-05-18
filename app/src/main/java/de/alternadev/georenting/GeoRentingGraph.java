@@ -1,7 +1,7 @@
 package de.alternadev.georenting;
 
-import de.alternadev.georenting.data.api.gcm.GcmListenerService;
-import de.alternadev.georenting.data.api.gcm.GcmRegistrationIntentService;
+import de.alternadev.georenting.data.api.fcm.FcmListenerService;
+import de.alternadev.georenting.data.api.fcm.FcmRegistrationIntentService;
 import de.alternadev.georenting.data.auth.GoogleAuth;
 import de.alternadev.georenting.data.geofencing.GeofenceTransitionsIntentService;
 import de.alternadev.georenting.data.tasks.UpdateGeofencesTask;
@@ -22,7 +22,7 @@ public interface GeoRentingGraph {
 
     void inject(SignInActivity signInActivity);
 
-    void inject(GcmRegistrationIntentService gcmRegistrationIntentService);
+    void inject(FcmRegistrationIntentService gcmRegistrationIntentService);
 
     void inject(MainActivity mainActivity);
 
@@ -44,7 +44,7 @@ public interface GeoRentingGraph {
 
     void inject(GoogleAuth googleAuth);
 
-    void inject(GcmListenerService gcmListenerService);
+    void inject(FcmListenerService gcmListenerService);
 
     void inject(GeofenceAdapter geofenceAdapter);
 

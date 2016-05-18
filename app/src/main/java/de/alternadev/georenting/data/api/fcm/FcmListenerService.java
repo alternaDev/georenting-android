@@ -1,4 +1,4 @@
-package de.alternadev.georenting.data.api.gcm;
+package de.alternadev.georenting.data.api.fcm;
 
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -6,18 +6,18 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
-import android.os.Bundle;
 import android.support.v4.app.NotificationCompat;
-import android.support.v4.app.TaskStackBuilder;
-import android.util.Log;
 
 import com.google.android.gms.gcm.GcmNetworkManager;
 import com.google.android.gms.gcm.OneoffTask;
 import com.google.android.gms.gcm.PeriodicTask;
 import com.google.android.gms.gcm.Task;
+import com.google.firebase.messaging.FirebaseMessagingService;
+import com.google.firebase.messaging.RemoteMessage;
 import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
+import java.util.Map;
 
 import javax.inject.Inject;
 
@@ -25,13 +25,11 @@ import de.alternadev.georenting.GeoRentingApplication;
 import de.alternadev.georenting.R;
 import de.alternadev.georenting.data.api.AvatarService;
 import de.alternadev.georenting.data.tasks.UpdateGeofencesTask;
-import de.alternadev.georenting.ui.SignInActivity;
-import de.alternadev.georenting.ui.main.HistoryFragment;
 import de.alternadev.georenting.ui.main.MainActivity;
 import hugo.weaving.DebugLog;
 import timber.log.Timber;
 
-public class GcmListenerService extends com.google.android.gms.gcm.GcmListenerService {
+public class FcmListenerService extends FirebaseMessagingService {
 
     @Inject
     SharedPreferences mPrefs;
@@ -50,9 +48,11 @@ public class GcmListenerService extends com.google.android.gms.gcm.GcmListenerSe
 
     @Override
     @DebugLog
-    public void onMessageReceived(String from, Bundle data) {
-        super.onMessageReceived(from, data);
-        String type = data.getString("type");
+    public void onMessageReceived(RemoteMessage message) {
+        String from = message.getFrom();
+        Map data = message.getData();
+
+        String type = (String) data.get("type");
         if(type == null) return;
 
         switch (type) {
@@ -70,11 +70,11 @@ public class GcmListenerService extends com.google.android.gms.gcm.GcmListenerSe
         }
     }
 
-    private void notifyUserForeignerEnteredFence(Bundle data) {
+    private void notifyUserForeignerEnteredFence(Map data) {
         // Someone entered your fence!
-        int fenceId = Integer.valueOf(data.getString("fenceId"));
-        String fenceName = data.getString("fenceName", "Unnamed Fence");
-        String visitorName = data.getString("visitorName", "Unknown User");
+        int fenceId = Integer.valueOf((String) data.get("fenceId"));
+        String fenceName = (String) data.get("fenceName");
+        String visitorName = (String) data.get("visitorName");
 
         String avatarUrl = mAvatarService.getAvatarUrl(visitorName);
         Timber.d("AvatarURL: %s", avatarUrl);
@@ -107,11 +107,11 @@ public class GcmListenerService extends com.google.android.gms.gcm.GcmListenerSe
         mNotificationManager.notify(-1 * fenceId, mBuilder.build());
     }
 
-    private void notifyUserVisitedFence(Bundle data) {
+    private void notifyUserVisitedFence(Map data) {
         // You entered a fence!
-        int fenceId = Integer.valueOf(data.getString("fenceId"));
-        String fenceName = data.getString("fenceName", "Unnamed Fence");
-        String ownerName = data.getString("ownerName", "Unknown User");
+        int fenceId = Integer.valueOf((String) data.get("fenceId"));
+        String fenceName = (String) data.get("fenceName");
+        String ownerName = (String) data.get("ownerName");
 
         String avatarUrl = mAvatarService.getAvatarUrl(ownerName);
         Timber.d("AvatarURL: %s", avatarUrl);

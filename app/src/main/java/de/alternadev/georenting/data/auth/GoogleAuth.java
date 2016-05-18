@@ -1,7 +1,6 @@
 package de.alternadev.georenting.data.auth;
 
 import android.app.Application;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -13,7 +12,6 @@ import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.OptionalPendingResult;
 
-import java.security.Key;
 import java.util.Date;
 
 import javax.inject.Inject;
@@ -21,7 +19,6 @@ import javax.inject.Inject;
 import de.alternadev.georenting.GeoRentingApplication;
 import de.alternadev.georenting.R;
 import de.alternadev.georenting.data.api.GeoRentingService;
-import de.alternadev.georenting.data.api.gcm.GcmRegistrationIntentService;
 import de.alternadev.georenting.data.api.model.SessionToken;
 import de.alternadev.georenting.data.api.model.User;
 import rx.Observable;
