@@ -42,7 +42,6 @@ import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 import timber.log.Timber;
 
-@RuntimePermissions
 public class SignInActivity extends BaseActivity implements GoogleApiClient.OnConnectionFailedListener {
 
     private static final int REQUEST_CODE_RESOLVE_ERR = 42;
@@ -111,10 +110,9 @@ public class SignInActivity extends BaseActivity implements GoogleApiClient.OnCo
 
 
     public void onClickSignIn(View v) {
-        SignInActivityPermissionsDispatcher.startSignInWithCheck(this);
+        startSignIn();
     }
 
-    @NeedsPermission({Manifest.permission.GET_ACCOUNTS})
     @DebugLog
     void startSignIn() {
         mProgressDialog.show();
