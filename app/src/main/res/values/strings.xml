@@ -16,6 +16,7 @@
     <string name="main_drawer_map">Map</string>
     <string name="main_drawer_profile">Cash</string>
     <string name="main_drawer_history">History</string>
+    <string name="main_drawer_invite">Invite Friends</string>
     <string name="activity_own_fence_visited"><b>%2$s</b> visited your GeoFence &lt;b&gt;%1$s&lt;/b&gt; and paid &lt;b&gt;%3$.2f&lt;/b&gt; GC in rent.</string>
     <string name="activity_foreign_fence_visited">You visited &lt;b&gt;%2$s&lt;/b&gt;s GeoFence &lt;b&gt;%1$s&lt;/b&gt; and paid &lt;b&gt;%3$.2f&lt;/b&gt; GC in rent.</string>
 
@@ -40,4 +41,8 @@
     <string name="button_deny">Deny</string>
     <string name="title_activity_geofence_create">Create GeoFence</string>
     <string name="create_geofence_cost_estimate">&lt;b&gt;Cost:&lt;/b&gt; %1$.2f</string>
+
+    <string name="app_invite_title">Send Invitations to GeoRenting.</string>
+    <string name="app_invite_message">Try out GeoRenting now!</string>
+    <string name="app_invite_cta">Build GeoFences</string>
 </resources>

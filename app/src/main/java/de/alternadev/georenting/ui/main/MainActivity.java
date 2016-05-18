@@ -9,6 +9,7 @@ import android.content.IntentSender;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.databinding.DataBindingUtil;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -19,6 +20,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
+import com.google.android.gms.appinvite.AppInviteInvitation;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.ConnectionResult;
@@ -59,6 +61,7 @@ import timber.log.Timber;
 @RuntimePermissions
 public class MainActivity extends BaseActivity implements GoogleApiClient.OnConnectionFailedListener {
     private static final int REQUEST_CODE_CHECK_SETTINGS = 45;
+    private static final int REQUEST_CODE_INVITE = 43;
 
     public static String EXTRA_FRAGMENT = "fragment";
 
@@ -238,8 +241,10 @@ public class MainActivity extends BaseActivity implements GoogleApiClient.OnConn
                 showFragment(HistoryFragment.newInstance());
                 break;
             case R.id.nav_settings:
-                menuItem.setChecked(false);
                 startActivity(new Intent(this, SettingsActivity.class));
+                break;
+            case R.id.nav_invite:
+                onInviteClicked();
                 break;
         }
 
@@ -247,6 +252,16 @@ public class MainActivity extends BaseActivity implements GoogleApiClient.OnConn
             mDrawerLayout.closeDrawer(GravityCompat.START);
 
         return true;
+    }
+
+    private void onInviteClicked() {
+        Intent intent = new AppInviteInvitation.IntentBuilder(getString(R.string.app_invite_title))
+                .setMessage(getString(R.string.app_invite_message))
+                //.setDeepLink(Uri.parse(getString(R.string.invitation_deep_link)))
+                //.setCustomImage(Uri.parse(getString(R.string.invitation_custom_image)))
+                .setCallToActionText(getString(R.string.app_invite_cta))
+                .build();
+        startActivityForResult(intent, REQUEST_CODE_INVITE);
     }
 
     @Override
