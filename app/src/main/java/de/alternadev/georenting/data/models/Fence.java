@@ -11,8 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @AutoValue public abstract class Fence implements FenceModel {
-    public static final Mapper<Fence> MAPPER = new Mapper<>(AutoValue_Fence::new);
-
+    public static final Mapper<Fence> MAPPER = new Mapper<>((_id, name, owner, geofenceId, latitude, longitude, radius) -> builder()._id(_id).name(name).owner(owner).geofenceId(geofenceId).latitude(latitude).longitude(longitude).radius(radius).build());
     public static final class Marshal extends FenceMarshal<Marshal> { }
 
     public static Builder builder() {
@@ -24,9 +23,9 @@ import java.util.List;
     @AutoValue.Builder
     public abstract static class Builder {
         public abstract Builder name(String value);
-        public abstract Builder owner(String value);
+        public abstract Builder owner(long value);
         public abstract Builder geofenceId(String value);
-        public abstract Builder _id(String value);
+        public abstract Builder _id(Long value);
         public abstract Builder latitude(double value);
         public abstract Builder longitude(double value);
         public abstract Builder radius(double value);

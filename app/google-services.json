@@ -1,18 +1,14 @@
 {
   "project_info": {
-    "project_id": "georenting-1",
     "project_number": "241559709275",
-    "name": "GeoRenting"
+    "project_id": "georenting-1"
   },
   "client": [
     {
       "client_info": {
         "mobilesdk_app_id": "1:241559709275:android:9c85692d845afbe2",
-        "client_id": "android:de.alternadev.georenting",
-        "client_type": 1,
         "android_client_info": {
-          "package_name": "de.alternadev.georenting",
-          "certificate_hash": []
+          "package_name": "de.alternadev.georenting"
         }
       },
       "oauth_client": [
@@ -29,17 +25,17 @@
           "client_type": 3
         }
       ],
-      "api_key": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBe0Fsax9Qr1dFjjWzq_xu9XoZKk4YE458"
+        }
+      ],
       "services": {
         "analytics_service": {
           "status": 2,
           "analytics_property": {
-            "tracking_id": "UA-74704409-2"
+            "tracking_id": "UA-59543236-1"
           }
-        },
-        "cloud_messaging_service": {
-          "status": 2,
-          "apns_config": []
         },
         "appinvite_service": {
           "status": 2,
@@ -50,9 +46,6 @@
             }
           ]
         },
-        "google_signin_service": {
-          "status": 2
-        },
         "ads_service": {
           "status": 1
         }
@@ -61,11 +54,8 @@
     {
       "client_info": {
         "mobilesdk_app_id": "1:241559709275:android:89677a84a5c67cd5",
-        "client_id": "android:de.alternadev.georenting.internal",
-        "client_type": 1,
         "android_client_info": {
-          "package_name": "de.alternadev.georenting.internal",
-          "certificate_hash": []
+          "package_name": "de.alternadev.georenting.internal"
         }
       },
       "oauth_client": [
@@ -82,14 +72,14 @@
           "client_type": 3
         }
       ],
-      "api_key": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDiJNWr65pZe7zMhxwdMpTO5sC2Eejm8z0"
+        }
+      ],
       "services": {
         "analytics_service": {
           "status": 1
-        },
-        "cloud_messaging_service": {
-          "status": 2,
-          "apns_config": []
         },
         "appinvite_service": {
           "status": 2,
@@ -100,9 +90,6 @@
             }
           ]
         },
-        "google_signin_service": {
-          "status": 2
-        },
         "ads_service": {
           "status": 1
         }
@@ -111,11 +98,8 @@
     {
       "client_info": {
         "mobilesdk_app_id": "1:241559709275:android:9bc88ffc24af8d90",
-        "client_id": "android:de.alternadev.georenting.internal.debug",
-        "client_type": 1,
         "android_client_info": {
-          "package_name": "de.alternadev.georenting.internal.debug",
-          "certificate_hash": []
+          "package_name": "de.alternadev.georenting.internal.debug"
         }
       },
       "oauth_client": [
@@ -132,14 +116,14 @@
           "client_type": 3
         }
       ],
-      "api_key": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCdflw5gyIJP-wimfgzw31gZIgEXzL_2dM"
+        }
+      ],
       "services": {
         "analytics_service": {
           "status": 1
-        },
-        "cloud_messaging_service": {
-          "status": 2,
-          "apns_config": []
         },
         "appinvite_service": {
           "status": 2,
@@ -150,9 +134,6 @@
             }
           ]
         },
-        "google_signin_service": {
-          "status": 2
-        },
         "ads_service": {
           "status": 1
         }
@@ -161,11 +142,8 @@
     {
       "client_info": {
         "mobilesdk_app_id": "1:241559709275:android:8586c5233404ebfe",
-        "client_id": "android:de.alternadev.georenting.debug",
-        "client_type": 1,
         "android_client_info": {
-          "package_name": "de.alternadev.georenting.debug",
-          "certificate_hash": []
+          "package_name": "de.alternadev.georenting.debug"
         }
       },
       "oauth_client": [
@@ -182,14 +160,14 @@
           "client_type": 3
         }
       ],
-      "api_key": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDoM-rOL_szVZKrohyzC1laMXrSR8CHejY"
+        }
+      ],
       "services": {
         "analytics_service": {
           "status": 1
-        },
-        "cloud_messaging_service": {
-          "status": 2,
-          "apns_config": []
         },
         "appinvite_service": {
           "status": 2,
@@ -200,15 +178,11 @@
             }
           ]
         },
-        "google_signin_service": {
-          "status": 2
-        },
         "ads_service": {
           "status": 1
         }
       }
     }
   ],
-  "client_info": [],
-  "ARTIFACT_VERSION": "1"
+  "configuration_version": "1"
 }

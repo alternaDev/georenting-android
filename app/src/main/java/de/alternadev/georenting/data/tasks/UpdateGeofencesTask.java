@@ -120,8 +120,9 @@ public class UpdateGeofencesTask extends GcmTaskService {
                         .latitude(remoteFence.centerLat)
                         .longitude(remoteFence.centerLon)
                         .radius(remoteFence.radius)
-                        ._id(remoteFence.id)
+                        ._id(Long.valueOf(remoteFence.id))
                         .geofenceId(createGeoFence(remoteFence.centerLat, remoteFence.centerLon, remoteFence.radius, i++) + "")
+                        .owner(remoteFence.owner)
                         .build();
                 Fence.insert(mDatabase, f);
             }

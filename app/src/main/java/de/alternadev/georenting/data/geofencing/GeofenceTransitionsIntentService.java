@@ -87,19 +87,22 @@ public class GeofenceTransitionsIntentService extends IntentService {
 
     private void notifyServer(Geofence f) {
         List<Fence> result = new ArrayList<>();
-        try (Cursor cursor = mDatabase.query(Fence.SELECT_ONE_BY_GEOFENCE_ID, f.getRequestId())) {
+        mDatabase.setLoggingEnabled(true);
+        try (Cursor cursor = mDatabase.query(Fence.SELECT_BY_GEOFENCE_ID, f.getRequestId())) {
+            Timber.d("Count: %d", cursor.getCount());
             while (cursor.moveToNext()) {
                 result.add(Fence.MAPPER.map(cursor));
             }
         }
+
         if(result.size() == 0) {
-            Timber.e("Can not visit fence.");
+            Timber.e("Can not visit fence. %s", result);
             return;
         }
         Fence fence = result.get(0);
 
         if(fence == null) {
-            Timber.e("Can not visit fence.");
+            Timber.e("Can not visit fence. %s", fence);
             return;
         }
 
