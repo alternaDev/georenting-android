@@ -115,13 +115,14 @@ public class UpdateGeofencesTask extends GcmTaskService {
             int i = 0;
             for (GeoFence remoteFence : remoteFences) {
                 Timber.i("Adding fence: %s", remoteFence.id);
+                geofences.add(createGeoFence(remoteFence.centerLat, remoteFence.centerLon, remoteFence.radius, i++));
                 Fence f = Fence.builder()
                         .name(remoteFence.name)
                         .latitude(remoteFence.centerLat)
                         .longitude(remoteFence.centerLon)
                         .radius(remoteFence.radius)
                         ._id(Long.valueOf(remoteFence.id))
-                        .geofenceId(createGeoFence(remoteFence.centerLat, remoteFence.centerLon, remoteFence.radius, i++) + "")
+                        .geofenceId(i + "")
                         .owner(remoteFence.owner)
                         .build();
                 Fence.insert(mDatabase, f);
@@ -131,7 +132,9 @@ public class UpdateGeofencesTask extends GcmTaskService {
             t.end();
         }
 
-        if (geofences.size() > 0 && !addGeoFences(geofences)) {
+        boolean addGeofencesResult = addGeoFences(geofences);
+
+        if (geofences.size() > 0 && !addGeofencesResult) {
             Timber.e("Could not add new Fences to google. Stopping.");
             mDatabase.close();
             return GcmNetworkManager.RESULT_FAILURE;
@@ -142,7 +145,6 @@ public class UpdateGeofencesTask extends GcmTaskService {
         return GcmNetworkManager.RESULT_SUCCESS;
     }
 
-    @DebugLog
     private Location getLocation() {
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             return null;
@@ -186,7 +188,6 @@ public class UpdateGeofencesTask extends GcmTaskService {
         GeofencingRequest r = new GeofencingRequest.Builder()
                 .addGeofences(fences)
                 .setInitialTrigger(GeofencingRequest.INITIAL_TRIGGER_ENTER)
-
                 .build();
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             return false;

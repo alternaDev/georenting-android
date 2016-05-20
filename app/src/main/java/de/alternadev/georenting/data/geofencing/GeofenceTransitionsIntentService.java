@@ -23,6 +23,7 @@ import de.alternadev.georenting.GeoRentingApplication;
 import de.alternadev.georenting.data.api.GeoRentingService;
 import de.alternadev.georenting.data.models.Fence;
 import de.alternadev.georenting.data.tasks.VisitGeofenceTask;
+import hugo.weaving.DebugLog;
 import timber.log.Timber;
 
 public class GeofenceTransitionsIntentService extends IntentService {
