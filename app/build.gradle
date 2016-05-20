@@ -160,10 +160,10 @@ dependencies {
 
     compile 'com.google.android.gms:play-services-auth:9.0.0'
     compile 'com.google.android.gms:play-services-gcm:9.0.0' // Still used for GcmNetworkManager
-    compile "com.google.firebase:firebase-messaging:9.0.0"
     compile 'com.google.android.gms:play-services-maps:9.0.0'
     compile 'com.google.android.gms:play-services-location:9.0.0'
-    compile 'com.google.android.gms:play-services-appinvite:9.0.0'
+    compile "com.google.firebase:firebase-messaging:9.0.0"
+    compile 'com.google.firebase:firebase-invites:9.0.0'
 
     compile 'rebus:header-view:1.1.4'
 
