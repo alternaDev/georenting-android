@@ -18,7 +18,7 @@ import timber.log.Timber;
 
 public class FcmRegistrationIntentService extends IntentService {
 
-    private static final String CURRENT_GCM_TOKEN = "current_gcm_token";
+    public static final String CURRENT_GCM_TOKEN = "current_gcm_token";
     @Inject
     GeoRentingService mGeoRentingService;
 
