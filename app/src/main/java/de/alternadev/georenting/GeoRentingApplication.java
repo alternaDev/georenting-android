@@ -43,11 +43,7 @@ public class GeoRentingApplication extends Application {
         }
 
         if(BuildConfig.DEBUG) {
-            Stetho.initialize(
-                    Stetho.newInitializerBuilder(this)
-                            .enableDumpapp(
-                                    Stetho.defaultDumperPluginsProvider(this))
-                            .build());
+            Stetho.initializeWithDefaults(this);
         }
 
         Timber.d("GeoRenting started.");

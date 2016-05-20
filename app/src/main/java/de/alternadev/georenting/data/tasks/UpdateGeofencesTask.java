@@ -112,19 +112,20 @@ public class UpdateGeofencesTask extends GcmTaskService {
 
         List<Geofence> geofences = new ArrayList<>();
         try {
-            int i = 0;
+            long i = 0;
             for (GeoFence remoteFence : remoteFences) {
-                Timber.i("Adding fence: %s", remoteFence.id);
-                geofences.add(createGeoFence(remoteFence.centerLat, remoteFence.centerLon, remoteFence.radius, i++));
+                geofences.add(createGeoFence(remoteFence.centerLat, remoteFence.centerLon, remoteFence.radius, remoteFence.id));
                 Fence f = Fence.builder()
                         .name(remoteFence.name)
                         .latitude(remoteFence.centerLat)
                         .longitude(remoteFence.centerLon)
                         .radius(remoteFence.radius)
-                        ._id(Long.valueOf(remoteFence.id))
-                        .geofenceId(i + "")
+                        ._id(i++)
+                        .geofenceId(remoteFence.id)
                         .owner(remoteFence.owner)
                         .build();
+                Timber.i("Adding fence: %s", remoteFence.id);
+
                 Fence.insert(mDatabase, f);
             }
             t.markSuccessful();
@@ -215,10 +216,10 @@ public class UpdateGeofencesTask extends GcmTaskService {
         return reqIDs;
     }
 
-    private Geofence createGeoFence(double latitude, double longitude, int radius, int id) {
+    private Geofence createGeoFence(double latitude, double longitude, int radius, String id) {
         return new Geofence.Builder()
                 .setCircularRegion(latitude, longitude, radius)
-                .setRequestId(id + "")
+                .setRequestId(id)
                 .setExpirationDuration(Geofence.NEVER_EXPIRE)
                 .setNotificationResponsiveness(60 * 1000) // Notify every minute.
                 .setTransitionTypes(Geofence.GEOFENCE_TRANSITION_ENTER | Geofence.GEOFENCE_TRANSITION_EXIT)
