@@ -108,7 +108,7 @@ public class GeofenceTransitionsIntentService extends IntentService {
         }
 
         Bundle taskData = new Bundle();
-        taskData.putString(VisitGeofenceTask.EXTRAS_FENCE_ID, fence.geofenceId());
+        taskData.putString(VisitGeofenceTask.EXTRAS_FENCE_ID, fence._id() + "");
 
         OneoffTask task = new OneoffTask.Builder()
                 .setService(VisitGeofenceTask.class)
