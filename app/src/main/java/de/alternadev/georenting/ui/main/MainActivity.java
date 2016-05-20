@@ -33,6 +33,7 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.LocationSettingsRequest;
 import com.google.android.gms.location.LocationSettingsResult;
 import com.google.android.gms.location.LocationSettingsStatusCodes;
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.squareup.picasso.Picasso;
 
 import javax.inject.Inject;
@@ -65,10 +66,13 @@ public class MainActivity extends BaseActivity implements GoogleApiClient.OnConn
 
     public static String EXTRA_FRAGMENT = "fragment";
 
+    private GoogleApiClient mApiClient;
     private ActionBarDrawerToggle mDrawerToggle;
     private HeaderCompactView mHeaderView;
     private DrawerLayout mDrawerLayout;
-
+    private NavigationView mNavigationView;
+    private Toolbar mToolbar;
+    private User mCurrentUser;
 
     @Inject
     GeoRentingService mService;
@@ -82,10 +86,9 @@ public class MainActivity extends BaseActivity implements GoogleApiClient.OnConn
     @Inject
     Picasso mPicasso;
 
-    private User mCurrentUser;
-    private GoogleApiClient mApiClient;
-    private Toolbar mToolbar;
-    private NavigationView mNavigationView;
+    @Inject
+    FirebaseAnalytics mAnalytics;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -160,6 +163,7 @@ public class MainActivity extends BaseActivity implements GoogleApiClient.OnConn
 
     private void setCurrentUser(User user) {
         mCurrentUser = user;
+        mAnalytics.setUserId(user.id + "");
         showUserInHeader(user);
         showStartFragment();
     }

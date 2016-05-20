@@ -4,6 +4,7 @@ import android.app.Application;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.squareup.leakcanary.LeakCanary;
 import com.squareup.leakcanary.RefWatcher;
 
@@ -38,5 +39,10 @@ public class GeoRentingModule {
 
     @Provides @Singleton GeoRentingApplication provideGeoRentingApplication() {
         return mApp;
+    }
+
+    @Provides @Singleton
+    FirebaseAnalytics provideAnalytics(Application app) {
+        return FirebaseAnalytics.getInstance(app);
     }
 }
