@@ -104,7 +104,7 @@ public class FcmListenerService extends FirebaseMessagingService {
         NotificationManager mNotificationManager =
                 (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 
-        mNotificationManager.notify(-1 * fenceId, mBuilder.build());
+        mNotificationManager.notify(-1 * (fenceId + " " + visitorName).hashCode(), mBuilder.build());
     }
 
     private void notifyUserVisitedFence(Map data) {
@@ -141,7 +141,7 @@ public class FcmListenerService extends FirebaseMessagingService {
         NotificationManager mNotificationManager =
                 (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 
-        mNotificationManager.notify(fenceId, mBuilder.build());
+        mNotificationManager.notify((fenceId + " " + ownerName).hashCode(), mBuilder.build());
     }
 
     private void startSync() {
