@@ -197,6 +197,7 @@ public class MapFragment extends Fragment implements GoogleApiClient.OnConnectio
 
     @Override
     public void onConnected(@Nullable Bundle bundle) {
+        if(mMapView == null) return;
         mMapView.getMapAsync(this::initMap);
     }
 
