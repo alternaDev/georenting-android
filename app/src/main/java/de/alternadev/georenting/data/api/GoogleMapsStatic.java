@@ -18,7 +18,7 @@ public class GoogleMapsStatic {
         double lon = (fence.centerLon * Math.PI) / 180;
         double d = fence.radius / 1000.0 / r;
 
-        for (int i = 0; i <= 360; i += 8) {
+        for (int i = 0; i <= 360; i += 16) {
             double brng = i * Math.PI / 180;
             double pLat = Math.asin(Math.sin(lat) * Math.cos(d) + Math.cos(lat) * Math.sin(d) * Math.cos(brng));
             double pLon = ((lon + Math.atan2(Math.sin(brng) * Math.sin(d) * Math.cos(lat), Math.cos(d) - Math.sin(lat) * Math.sin(pLat))) * 180) / Math.PI;
