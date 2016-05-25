@@ -369,10 +369,4 @@ public class MainActivity extends BaseActivity implements GoogleApiClient.OnConn
     public Toolbar getToolbar() {
         return mToolbar;
     }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        this.loadCurrentUser();
-    }
 }
