@@ -4,5 +4,6 @@
     <color name="text_geofence_card">#f0ffffff</color>
     <color name="gray">#dfdfdf</color>
     <color name="red">#aaff0000</color>
+    <color name="green">#aa00ff00</color>
     <color name="blue">#aa0000ff</color>
 </resources>
