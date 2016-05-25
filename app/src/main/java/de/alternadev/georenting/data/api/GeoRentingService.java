@@ -9,6 +9,7 @@ import de.alternadev.georenting.data.api.model.CostEstimate;
 import de.alternadev.georenting.data.api.model.GcmToken;
 import de.alternadev.georenting.data.api.model.GeoFence;
 import de.alternadev.georenting.data.api.model.SessionToken;
+import de.alternadev.georenting.data.api.model.UpgradeSettings;
 import de.alternadev.georenting.data.api.model.User;
 import de.alternadev.georenting.data.models.Fence;
 import retrofit2.Call;
@@ -21,6 +22,9 @@ import retrofit2.http.Query;
 import rx.Observable;
 
 public interface GeoRentingService {
+    @GET("application/upgrades")
+    Observable<UpgradeSettings> getUpgradeSettings();
+
     @POST("users/auth")
     Observable<SessionToken> auth(@Body User user);
 

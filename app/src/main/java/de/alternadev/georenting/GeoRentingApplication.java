@@ -18,14 +18,18 @@ import javax.inject.Inject;
 
 import de.alternadev.georenting.data.api.GeoRentingService;
 import de.alternadev.georenting.data.api.model.SessionToken;
+import de.alternadev.georenting.data.api.model.UpgradeSettings;
 import de.alternadev.georenting.data.api.model.User;
 import de.alternadev.georenting.data.auth.GoogleAuth;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 import timber.log.Timber;
 
 public class GeoRentingApplication extends Application {
 
     private GeoRentingComponent mComponent;
     private SessionToken mSessionToken = null;
+    private UpgradeSettings mUpgradeSettings = null;
 
     @Inject
     GeoRentingService mService;
@@ -52,6 +56,17 @@ public class GeoRentingApplication extends Application {
         }
 
         Timber.d("GeoRenting started.");
+
+        loadSettings();
+    }
+
+    private void loadSettings() {
+        mService.getUpgradeSettings()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe((settings) -> {
+                    this.mUpgradeSettings = settings;
+                });
     }
 
     @Override
@@ -62,6 +77,10 @@ public class GeoRentingApplication extends Application {
 
     public GeoRentingComponent getComponent() {
         return mComponent;
+    }
+
+    public UpgradeSettings getUpgradeSettings() {
+        return mUpgradeSettings;
     }
 
     public SessionToken getSessionToken() {return mSessionToken;}
