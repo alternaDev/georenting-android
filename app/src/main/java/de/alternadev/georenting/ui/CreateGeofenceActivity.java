@@ -38,6 +38,8 @@ import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 import timber.log.Timber;
 
+//TODO: Show Selection for GeoFence Sizes and Multipliers.
+
 public class CreateGeofenceActivity extends BaseActivity implements GoogleApiClient.ConnectionCallbacks {
     private static final float MINIMUM_ACCURACY = 40;
 
