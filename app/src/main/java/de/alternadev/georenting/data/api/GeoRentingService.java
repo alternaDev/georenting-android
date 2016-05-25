@@ -50,4 +50,7 @@ public interface GeoRentingService {
 
     @POST("fences/estimateCost")
     Observable<CostEstimate> estimateCost(@Body GeoFence f);
+
+    @POST("fences")
+    Observable<GeoFence> createGeoFence(@Body GeoFence f);
 }
