@@ -68,6 +68,7 @@ public class GeoRentingApplication extends Application {
 
     public void setSessionToken(SessionToken sessionToken) {
         this.mSessionToken = sessionToken;
-        mPreferences.edit().putString(GoogleAuth.PREF_TOKEN, sessionToken.token).apply();
+        if(sessionToken != null && sessionToken.token != null)
+            mPreferences.edit().putString(GoogleAuth.PREF_TOKEN, sessionToken.token).apply();
     }
 }
