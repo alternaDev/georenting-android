@@ -77,6 +77,7 @@ public class CreateGeofenceActivity extends BaseActivity implements GoogleApiCli
         setSupportActionBar(toolbar);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_close_white_24dp);
     }
 
     private void onCreateClick(View view) {
