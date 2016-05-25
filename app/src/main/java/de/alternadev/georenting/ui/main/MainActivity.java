@@ -220,7 +220,6 @@ public class MainActivity extends BaseActivity implements GoogleApiClient.OnConn
         FragmentTransaction transaction = getFragmentManager().beginTransaction();
 
         transaction.replace(R.id.main_content_frame, fragment);
-        transaction.addToBackStack(null);
 
         transaction.commit();
     }
