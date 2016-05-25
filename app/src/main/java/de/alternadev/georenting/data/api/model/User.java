@@ -2,23 +2,24 @@ package de.alternadev.georenting.data.api.model;
 
 
 import com.google.gson.annotations.SerializedName;
+import com.squareup.moshi.Json;
 
 @org.parceler.Parcel
 public class User {
-    @SerializedName("google_token")
+    @Json(name = "google_token")
     public String googleToken;
 
     public String name;
 
-    @SerializedName("avatar_url")
+    @Json(name = "avatar_url")
     public String avatarUrl;
 
-    @SerializedName("cover_url")
+    @Json(name = "cover_url")
     public String coverUrl;
 
     public double balance;
 
-    @SerializedName("ID")
+    @Json(name = "ID")
     public int id;
 
     public User(){}

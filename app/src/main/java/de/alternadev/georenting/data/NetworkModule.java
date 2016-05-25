@@ -5,6 +5,7 @@ import android.app.Application;
 import com.facebook.stetho.okhttp3.StethoInterceptor;
 import com.google.gson.Gson;
 import com.jakewharton.picasso.OkHttp3Downloader;
+import com.squareup.moshi.Moshi;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
@@ -42,8 +43,9 @@ public class NetworkModule {
     }
 
     @Provides
-    Gson provideGson() {
-        return new Gson();
+    @Singleton
+    Moshi provideMoshi() {
+        return new Moshi.Builder().build();
     }
 
     @Provides

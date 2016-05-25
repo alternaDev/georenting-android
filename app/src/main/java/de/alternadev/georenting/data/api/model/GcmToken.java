@@ -1,9 +1,10 @@
 package de.alternadev.georenting.data.api.model;
 
 import com.google.gson.annotations.SerializedName;
+import com.squareup.moshi.Json;
 
 public class GcmToken {
-    @SerializedName("gcm_id")
+    @Json(name = "gcm_id")
     public String gcmToken;
 
     public GcmToken(String token) {

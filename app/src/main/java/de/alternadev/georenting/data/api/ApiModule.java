@@ -3,6 +3,7 @@ package de.alternadev.georenting.data.api;
 import android.app.Application;
 
 import com.google.gson.Gson;
+import com.squareup.moshi.Moshi;
 
 import javax.inject.Named;
 import javax.inject.Singleton;
@@ -14,9 +15,9 @@ import okhttp3.HttpUrl;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
-import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
+import retrofit2.converter.moshi.MoshiConverterFactory;
 
 
 @Module
@@ -46,11 +47,11 @@ public class ApiModule {
 
     @Provides
     @Singleton
-    Retrofit provideRetrofit(OkHttpClient client, HttpUrl baseUrl, Gson gson) {
+    Retrofit provideRetrofit(OkHttpClient client, HttpUrl baseUrl, Moshi moshi) {
         return new Retrofit.Builder()
                 .client(client)
                 .baseUrl(baseUrl)
-                .addConverterFactory(GsonConverterFactory.create(gson))
+                .addConverterFactory(MoshiConverterFactory.create(moshi))
                 .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
                 .build();
     }
