@@ -64,7 +64,6 @@ public class GoogleAuth {
 
                         mPreferences.edit()
                                 .putBoolean(PREF_SIGNED_IN_BEFORE, true)
-                                .putString(PREF_TOKEN, sessionToken.token)
                                 .apply();
 
                         mApp.setSessionToken(sessionToken);

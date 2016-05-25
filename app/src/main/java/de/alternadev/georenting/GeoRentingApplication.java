@@ -2,6 +2,7 @@ package de.alternadev.georenting;
 
 import android.app.Application;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 //import android.support.multidex.MultiDex;
@@ -18,6 +19,7 @@ import javax.inject.Inject;
 import de.alternadev.georenting.data.api.GeoRentingService;
 import de.alternadev.georenting.data.api.model.SessionToken;
 import de.alternadev.georenting.data.api.model.User;
+import de.alternadev.georenting.data.auth.GoogleAuth;
 import timber.log.Timber;
 
 public class GeoRentingApplication extends Application {
@@ -27,6 +29,9 @@ public class GeoRentingApplication extends Application {
 
     @Inject
     GeoRentingService mService;
+
+    @Inject
+    SharedPreferences mPreferences;
 
     @Override
     public void onCreate() {
@@ -61,5 +66,8 @@ public class GeoRentingApplication extends Application {
 
     public SessionToken getSessionToken() {return mSessionToken;}
 
-    public void setSessionToken(SessionToken sessionToken) { this.mSessionToken = sessionToken;}
+    public void setSessionToken(SessionToken sessionToken) {
+        this.mSessionToken = sessionToken;
+        mPreferences.edit().putString(GoogleAuth.PREF_TOKEN, sessionToken.token).apply();
+    }
 }

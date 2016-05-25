@@ -53,4 +53,7 @@ public interface GeoRentingService {
 
     @POST("fences")
     Observable<GeoFence> createGeoFence(@Body GeoFence f);
+
+    @DELETE("fences/{fenceId}")
+    Observable<GeoFence> deleteGeoFence(@Path("fenceId") String fenceId);
 }

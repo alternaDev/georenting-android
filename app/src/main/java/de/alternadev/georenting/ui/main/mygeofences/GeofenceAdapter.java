@@ -1,18 +1,22 @@
 package de.alternadev.georenting.ui.main.mygeofences;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.util.Pair;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.view.Window;
 
+import com.google.android.gms.location.Geofence;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
@@ -26,11 +30,14 @@ import javax.inject.Inject;
 
 import de.alternadev.georenting.GeoRentingApplication;
 import de.alternadev.georenting.R;
+import de.alternadev.georenting.data.api.GeoRentingService;
 import de.alternadev.georenting.data.api.GoogleMapsStatic;
 import de.alternadev.georenting.data.api.model.GeoFence;
 import de.alternadev.georenting.databinding.ItemGeofenceBinding;
 import de.alternadev.georenting.ui.GeofenceDetailActivity;
 import hugo.weaving.DebugLog;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 import timber.log.Timber;
 
 /**
@@ -44,16 +51,14 @@ public class GeofenceAdapter extends RecyclerView.Adapter<GeofenceViewHolder> {
     @Inject
     Picasso mPicasso;
 
-    private final List<GeoFence> mGeoFences;
+    private List<GeoFence> mGeoFences;
 
-    private final Activity mActivity;
-    private final Toolbar mToolbar;
+    private GeofenceAdapterListener mListener;
 
-    public GeofenceAdapter(List<GeoFence> geoFences, Activity activity, Toolbar toolbar) {
+    public GeofenceAdapter(List<GeoFence> geoFences, Activity ctx) {
         mGeoFences = geoFences;
-        mActivity = activity;
-        mToolbar = toolbar;
-        ((GeoRentingApplication) activity.getApplication()).getComponent().inject(this);
+        this.setHasStableIds(true);
+        ((GeoRentingApplication) ctx.getApplication()).getComponent().inject(this);
     }
 
     @Override
@@ -84,22 +89,38 @@ public class GeofenceAdapter extends RecyclerView.Adapter<GeofenceViewHolder> {
 
         b.getRoot().setClickable(true);
         b.getRoot().setOnClickListener(v -> {
-            Intent intent = new Intent(v.getContext(), GeofenceDetailActivity.class);
-            intent.putExtra(GeofenceDetailActivity.EXTRA_GEOFENCE, Parcels.wrap(f));
-            Pair<View, String> navPair = Pair.create(mActivity.findViewById(android.R.id.navigationBarBackground),
-                    Window.NAVIGATION_BAR_BACKGROUND_TRANSITION_NAME);
-            Pair<View, String> toolbarPair = Pair.create(mToolbar, "toolbar");
-            Pair<View, String> p1 = Pair.create(b.geofenceMap, "map");
-            ActivityOptionsCompat options = ActivityOptionsCompat.
-                    makeSceneTransitionAnimation(mActivity, p1, navPair, toolbarPair);
-
-            mActivity.startActivity(intent, options.toBundle());
+            if(mListener != null)
+                mListener.onClick(f, b);
         });
+        b.getRoot().setOnLongClickListener(v -> {
+            if(mListener != null)
+                mListener.onLongClick(f, b);
+            return true;
+        });
+    }
+
+    public void setGeofenceAdapaterListener(GeofenceAdapterListener l) {
+        this.mListener = l;
+    }
+
+    public void setGeoFences(List<GeoFence> list) {
+        this.mGeoFences.clear();
+        this.mGeoFences.addAll(list);
     }
 
 
     @Override
     public int getItemCount() {
         return mGeoFences.size();
+    }
+
+    public interface GeofenceAdapterListener {
+        public void onClick(GeoFence fence, ItemGeofenceBinding v);
+        public void onLongClick(GeoFence fence, ItemGeofenceBinding v);
+    }
+
+    @Override
+    public long getItemId(int position) {
+        return mGeoFences.get(position).id.hashCode();
     }
 }

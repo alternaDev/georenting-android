@@ -4,11 +4,19 @@ import android.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityOptionsCompat;
+import android.support.v4.util.Pair;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+
+import com.google.android.gms.location.Geofence;
 
 import org.parceler.Parcels;
 
@@ -19,15 +27,18 @@ import javax.inject.Inject;
 import de.alternadev.georenting.GeoRentingApplication;
 import de.alternadev.georenting.R;
 import de.alternadev.georenting.data.api.GeoRentingService;
+import de.alternadev.georenting.data.api.model.GeoFence;
 import de.alternadev.georenting.data.api.model.User;
 import de.alternadev.georenting.databinding.FragmentMyGeofencesBinding;
+import de.alternadev.georenting.databinding.ItemGeofenceBinding;
 import de.alternadev.georenting.ui.CreateGeofenceActivity;
+import de.alternadev.georenting.ui.GeofenceDetailActivity;
 import de.alternadev.georenting.ui.main.mygeofences.GeofenceAdapter;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 import timber.log.Timber;
 
-public class MyGeofencesFragment extends Fragment {
+public class MyGeofencesFragment extends Fragment implements GeofenceAdapter.GeofenceAdapterListener {
     private static final String SAVED_INSTANCE_CURRENT_USER = "currentUser";
 
 
@@ -44,6 +55,8 @@ public class MyGeofencesFragment extends Fragment {
     GeoRentingService mService;
 
     private User mCurrentUser;
+    private FragmentMyGeofencesBinding mBinding;
+    private GeofenceAdapter mAdapater;
 
     public MyGeofencesFragment() {
         // Required empty public constructor
@@ -64,21 +77,21 @@ public class MyGeofencesFragment extends Fragment {
         if(mCurrentUser == null)
             mCurrentUser = Parcels.unwrap(savedInstanceState.getParcelable(SAVED_INSTANCE_CURRENT_USER));
 
-        FragmentMyGeofencesBinding b = FragmentMyGeofencesBinding.inflate(inflater, container, false);
+        mBinding = FragmentMyGeofencesBinding.inflate(inflater, container, false);
 
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
-        b.geofencesList.setLayoutManager(layoutManager);
+        mBinding.geofencesList.setLayoutManager(layoutManager);
 
-        b.buttonAddGeofence.setOnClickListener(view -> {
+        mBinding.buttonAddGeofence.setOnClickListener(view -> {
             startActivity(new Intent(this.getActivity(), CreateGeofenceActivity.class));
         });
 
-        b.geofencesRefresh.setOnRefreshListener(() -> loadFences(b));
-        b.geofencesRefresh.setRefreshing(true);
-        loadFences(b);
+        mBinding.geofencesRefresh.setOnRefreshListener(() -> loadFences(mBinding));
+        mBinding.geofencesRefresh.setRefreshing(true);
+        loadFences(mBinding);
 
         // Inflate the layout for this fragment
-        return b.getRoot();
+        return mBinding.getRoot();
     }
 
     private void loadFences(FragmentMyGeofencesBinding b) {
@@ -87,9 +100,17 @@ public class MyGeofencesFragment extends Fragment {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(geoFences -> {
                     if(geoFences != null) {
-                        RecyclerView.Adapter adapter = new GeofenceAdapter(geoFences, getActivity(), ((MainActivity) getActivity()).getToolbar());
-                        b.geofencesList.setAdapter(adapter);
+                        if (mAdapater == null) {
+                            GeofenceAdapter adapter = new GeofenceAdapter(geoFences, this.getActivity());
+                            adapter.setGeofenceAdapaterListener(this);
+                            b.geofencesList.setAdapter(adapter);
+                        } else {
+                            mAdapater.setGeoFences(geoFences);
+                        }
+
                         b.setGeoFences(geoFences);
+
+
                     } else {
                         b.setGeoFences(new ArrayList());
                     }
@@ -107,5 +128,47 @@ public class MyGeofencesFragment extends Fragment {
         super.onSaveInstanceState(outState);
 
         outState.putParcelable(SAVED_INSTANCE_CURRENT_USER, Parcels.wrap(mCurrentUser));
+    }
+
+    @Override
+    public void onClick(GeoFence fence, ItemGeofenceBinding b) {
+        Toolbar tb = ((MainActivity) getActivity()).getToolbar();
+
+        Intent intent = new Intent(getActivity(), GeofenceDetailActivity.class);
+        intent.putExtra(GeofenceDetailActivity.EXTRA_GEOFENCE, Parcels.wrap(fence));
+        Pair<View, String> navPair = Pair.create(getActivity().findViewById(android.R.id.navigationBarBackground),
+                Window.NAVIGATION_BAR_BACKGROUND_TRANSITION_NAME);
+        Pair<View, String> toolbarPair = Pair.create(tb, "toolbar");
+        Pair<View, String> p1 = Pair.create(b.geofenceMap, "map");
+        ActivityOptionsCompat options = ActivityOptionsCompat.
+                makeSceneTransitionAnimation(getActivity(), p1, navPair, toolbarPair);
+
+        getActivity().startActivityForResult(intent, 0, options.toBundle());
+    }
+
+    @Override
+    public void onLongClick(GeoFence fence, ItemGeofenceBinding b) {
+        PopupMenu popup = new PopupMenu(this.getActivity(), b.getRoot());
+        MenuInflater inflater = popup.getMenuInflater();
+        inflater.inflate(R.menu.geofence_item_actions, popup.getMenu());
+
+        popup.setOnMenuItemClickListener(item -> {
+            switch (item.getItemId()) {
+                case R.id.tear_down:
+                    mService.deleteGeoFence(fence.id).subscribeOn(Schedulers.io())
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .subscribe((f) -> {
+                                Timber.d("Removed GeoFence");
+                                loadFences(mBinding);
+                            }, error -> {
+                                Timber.e(error, "Could not tear down GeoFence.");
+                            });
+                    return true;
+                default:
+                    return false;
+            }
+        });
+
+        popup.show();
     }
 }
