@@ -6,15 +6,15 @@ import com.squareup.moshi.Json;
 import java.util.List;
 
 public class UpgradeSettings {
-    List<Integer> radius;
-    List<Double> rent;
+    public List<Integer> radius;
+    public List<Double> rent;
 
     @Json(name = "max_ttl")
-    long maxTtl;
+    public long maxTtl;
 
     @Json(name = "max_radius")
-    int maxRadius;
+    public int maxRadius;
 
     @Json(name = "min_radius")
-    int minRadius;
+    public int minRadius;
 }

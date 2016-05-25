@@ -53,5 +53,6 @@
     <string name="error_create_fence_overlap">You can not create this GeoFence because it overlaps with other GeoFences.</string>
     <string name="error_create_fence_cant_afford">You can not afford this GeoFence!</string>
     <string name="geofence_item_action_tear_down">Tear Down</string>
+    <string name="create_geofence_ttl">TTL</string>
 
 </resources>

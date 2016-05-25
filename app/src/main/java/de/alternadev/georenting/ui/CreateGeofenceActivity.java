@@ -13,6 +13,9 @@ import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.SeekBar;
 
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationListener;
@@ -30,6 +33,7 @@ import de.alternadev.georenting.BuildConfig;
 import de.alternadev.georenting.R;
 import de.alternadev.georenting.data.api.GeoRentingService;
 import de.alternadev.georenting.data.api.model.GeoFence;
+import de.alternadev.georenting.data.api.model.UpgradeSettings;
 import de.alternadev.georenting.data.models.Fence;
 import de.alternadev.georenting.databinding.ActivityGeofenceCreateBinding;
 import de.alternadev.georenting.databinding.ActivityGeofenceDetailBinding;
@@ -48,8 +52,9 @@ public class CreateGeofenceActivity extends BaseActivity implements GoogleApiCli
     private LocationListener mListener;
     private ActivityGeofenceCreateBinding mBinding;
 
-    private Location mLocation;
+    private GoogleMap mGoogleMap;
 
+    private Location mLocation;
     @Inject
     GeoRentingService mService;
 
@@ -72,12 +77,75 @@ public class CreateGeofenceActivity extends BaseActivity implements GoogleApiCli
 
         mBinding.createButton.setOnClickListener(this::onCreateClick);
 
+        populateSpinners();
+        setupTTLSlider();
+
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_close_white_24dp);
+    }
+
+    private void populateSpinners() {
+        Integer[] array = getGeoRentingApplication().getUpgradeSettings().radius.toArray(new Integer[getGeoRentingApplication().getUpgradeSettings().radius.size()]);
+        ArrayAdapter<Integer> adapter = new ArrayAdapter<>(this,
+                android.R.layout.simple_spinner_item, array);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+        mBinding.radiusSpinner.setAdapter(adapter);
+        mBinding.radiusSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                refreshEstimate();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+
+        Double[] array2 = getGeoRentingApplication().getUpgradeSettings().rent.toArray(new Double[getGeoRentingApplication().getUpgradeSettings().rent.size()]);
+        ArrayAdapter<Double> adapter2 = new ArrayAdapter<>(this,
+                android.R.layout.simple_spinner_item, array2);
+        adapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+        mBinding.rentMultiplierSpinner.setAdapter(adapter2);
+        mBinding.rentMultiplierSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                refreshEstimate();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+
+    }
+
+    private void setupTTLSlider() {
+        mBinding.ttlSeekBar.setProgress(10);
+        mBinding.ttlSeekBar.setMax((int) getGeoRentingApplication().getUpgradeSettings().maxTtl);
+        mBinding.ttlSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean b) {
+                mBinding.ttlEditText.setText((progress / 60 / 60) + "");
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+                refreshEstimate();
+            }
+        });
     }
 
     private void onCreateClick(View view) {
@@ -93,10 +161,9 @@ public class CreateGeofenceActivity extends BaseActivity implements GoogleApiCli
         }
 
 
-        GeoFence fence = new GeoFence();
-        fence.centerLat = mLocation.getLatitude();
-        fence.centerLon = mLocation.getLongitude();
+        GeoFence fence = getGeoFenceFromParams();
         fence.name = fenceName;
+
 
         stopLocationUpdates();
         mBinding.createButton.setEnabled(false);
@@ -122,7 +189,8 @@ public class CreateGeofenceActivity extends BaseActivity implements GoogleApiCli
     }
 
     private void stopLocationUpdates() {
-        LocationServices.FusedLocationApi.removeLocationUpdates(mApiClient, mListener);
+        if(mApiClient.isConnected())
+            LocationServices.FusedLocationApi.removeLocationUpdates(mApiClient, mListener);
     }
 
     @Override
@@ -177,6 +245,8 @@ public class CreateGeofenceActivity extends BaseActivity implements GoogleApiCli
 
         mBinding.setLoading(true);
 
+        this.mGoogleMap = map;
+
         mListener = l -> {
             if(map == null) return;
             if(l.getAccuracy() > MINIMUM_ACCURACY) return;
@@ -185,34 +255,52 @@ public class CreateGeofenceActivity extends BaseActivity implements GoogleApiCli
 
             // if(l.isFromMockProvider() && !BuildConfig.DEBUG) return; //TODO: Detect mock location on api level 15-18
 
-            map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(l.getLatitude(), l.getLongitude()), 15));
-            map.clear();
-            mBinding.setLoading(true);
-
-            CircleOptions circle = new CircleOptions().center(new LatLng(l.getLatitude(), l.getLongitude())).radius(100); // TODO: Fetch possible Geofence Sizes from server.
-            circle.fillColor(getResources().getColor(R.color.blue));
-            circle.strokeColor(getResources().getColor( R.color.blue));
-            map.addCircle(circle);
-
-            mService.estimateCost(new GeoFence(l.getLatitude(), l.getLongitude()))
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe((estimate) -> {
-                        mBinding.setOverlap(false);
-                        mBinding.setCostEstimate(estimate);
-                        mBinding.setLoading(false);
-
-                    }, (error) -> {
-                        if(error instanceof HttpException) {
-                            if(((HttpException) error).code() == 400) {
-                                mBinding.setOverlap(true);
-                                mBinding.setLoading(false);
-                            }
-                        }
-                    });
+           refreshEstimate();
         };
 
         LocationServices.FusedLocationApi.requestLocationUpdates(mApiClient, request, mListener);
+    }
+
+    private GeoFence getGeoFenceFromParams() {
+        UpgradeSettings s = getGeoRentingApplication().getUpgradeSettings();
+        GeoFence fence = new GeoFence(mLocation.getLatitude(), mLocation.getLongitude());
+        fence.radius = s.radius.get(mBinding.radiusSpinner.getSelectedItemPosition());
+        fence.rentMultiplier = s.rent.get(mBinding.rentMultiplierSpinner.getSelectedItemPosition());
+        fence.ttl = mBinding.ttlSeekBar.getProgress();
+        return fence;
+    }
+
+    private void refreshEstimate() {
+        if(mLocation == null) return;
+        mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(mLocation.getLatitude(), mLocation.getLongitude()), 14));
+        mGoogleMap.clear();
+        mBinding.setLoading(true);
+
+        GeoFence fence = getGeoFenceFromParams();
+
+        CircleOptions circle = new CircleOptions().center(new LatLng(fence.centerLat, fence.centerLon)).radius(fence.radius);
+        circle.fillColor(getResources().getColor(R.color.blue));
+        circle.strokeColor(getResources().getColor( R.color.blue));
+        mGoogleMap.addCircle(circle);
+
+
+
+        mService.estimateCost(fence)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe((estimate) -> {
+                    mBinding.setOverlap(false);
+                    mBinding.setCostEstimate(estimate);
+                    mBinding.setLoading(false);
+
+                }, (error) -> {
+                    if(error instanceof HttpException) {
+                        if(((HttpException) error).code() == 400) {
+                            mBinding.setOverlap(true);
+                            mBinding.setLoading(false);
+                        }
+                    }
+                });
     }
 
     @Override

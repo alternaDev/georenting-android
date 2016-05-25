@@ -133,6 +133,12 @@ public class UpdateGeofencesTask extends GcmTaskService {
             t.end();
         }
 
+        if(geofences.size() == 0) {
+            Timber.i("Noe Fences. Done!");
+            mDatabase.close();
+            return GcmNetworkManager.RESULT_SUCCESS;
+        }
+
         boolean addGeofencesResult = addGeoFences(geofences);
 
         if (geofences.size() > 0 && !addGeofencesResult) {

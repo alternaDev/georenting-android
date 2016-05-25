@@ -14,6 +14,7 @@ import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
+import de.alternadev.georenting.data.api.DateAdapter;
 import okhttp3.Cache;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
@@ -44,7 +45,7 @@ public class NetworkModule {
     @Provides
     @Singleton
     Moshi provideMoshi() {
-        return new Moshi.Builder().build();
+        return new Moshi.Builder().add(new DateAdapter()).build();
     }
 
     @Provides
