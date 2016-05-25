@@ -80,8 +80,9 @@ public class CreateGeofenceActivity extends BaseActivity implements GoogleApiCli
     }
 
     private void onCreateClick(View view) {
+        String fenceName = mBinding.nameText.getText().toString().trim();
 
-        if(TextUtils.isEmpty(mBinding.nameText.getText())) {
+        if(TextUtils.isEmpty(fenceName)) {
             mBinding.nameLayout.setErrorEnabled(true);
             mBinding.nameLayout.setError(getString(R.string.create_geofence_error_name_empty));
         }
@@ -90,7 +91,6 @@ public class CreateGeofenceActivity extends BaseActivity implements GoogleApiCli
             return;
         }
 
-        String fenceName = mBinding.nameText.getText().toString();
 
         GeoFence fence = new GeoFence();
         fence.centerLat = mLocation.getLatitude();
