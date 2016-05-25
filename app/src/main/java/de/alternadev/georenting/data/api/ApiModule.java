@@ -2,7 +2,6 @@ package de.alternadev.georenting.data.api;
 
 import android.app.Application;
 
-import com.google.gson.Gson;
 import com.squareup.moshi.Moshi;
 
 import javax.inject.Named;

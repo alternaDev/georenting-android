@@ -1,6 +1,5 @@
 package de.alternadev.georenting.data.api.model;
 
-import com.google.gson.annotations.SerializedName;
 
 /**
  * Created by jhbruhn on 23.04.16.

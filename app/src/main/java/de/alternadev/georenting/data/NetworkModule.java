@@ -3,7 +3,6 @@ package de.alternadev.georenting.data;
 import android.app.Application;
 
 import com.facebook.stetho.okhttp3.StethoInterceptor;
-import com.google.gson.Gson;
 import com.jakewharton.picasso.OkHttp3Downloader;
 import com.squareup.moshi.Moshi;
 import com.squareup.picasso.Picasso;

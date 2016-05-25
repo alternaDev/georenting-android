@@ -1,7 +1,6 @@
 package de.alternadev.georenting.data.api.model;
 
 
-import com.google.gson.annotations.SerializedName;
 import com.squareup.moshi.Json;
 
 @org.parceler.Parcel
