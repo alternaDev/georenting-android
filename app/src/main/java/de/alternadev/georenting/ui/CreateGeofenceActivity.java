@@ -98,14 +98,15 @@ public class CreateGeofenceActivity extends BaseActivity implements GoogleApiCli
         fence.name = fenceName;
 
         stopLocationUpdates();
-        mBinding.setLoading(true);
+        mBinding.createButton.setEnabled(false);
         mService.createGeoFence(fence)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe((geoFence) -> {
                     finish();
                 }, error -> {
-                    mBinding.setLoading(false);
+                    mBinding.createButton.setEnabled(true);
+
                     if(mApiClient.isConnected())
                         mMapView.getMapAsync(this::initMap);
 
