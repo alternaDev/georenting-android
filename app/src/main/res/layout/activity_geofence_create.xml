@@ -15,7 +15,7 @@
         <import type="android.view.View" />
 
     </data>
-    <LinearLayout
+    <android.support.design.widget.CoordinatorLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -111,5 +111,5 @@
         </LinearLayout>
 
 
-    </LinearLayout>
+    </android.support.design.widget.CoordinatorLayout>
 </layout>
