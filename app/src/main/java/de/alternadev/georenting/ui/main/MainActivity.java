@@ -132,7 +132,6 @@ public class MainActivity extends BaseActivity implements GoogleApiClient.OnConn
         }
 
         MainActivityPermissionsDispatcher.askForLocationAccessWithCheck(this);
-        loadCurrentUser();
 
         UpdateGeofencesTask.initializeTasks(this);
     }
@@ -372,5 +371,6 @@ public class MainActivity extends BaseActivity implements GoogleApiClient.OnConn
     @Override
     protected void onResume() {
         super.onResume();
+        this.loadCurrentUser();
     }
 }
