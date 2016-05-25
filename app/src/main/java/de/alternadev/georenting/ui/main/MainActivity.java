@@ -134,29 +134,32 @@ public class MainActivity extends BaseActivity implements GoogleApiClient.OnConn
         MainActivityPermissionsDispatcher.askForLocationAccessWithCheck(this);
 
         UpdateGeofencesTask.initializeTasks(this);
+
+        mCurrentUser = getGeoRentingApplication().getSessionToken().user;
+        showFragment(LoadingFragment.newInstance());
     }
 
     private void loadCurrentUser() {
-        showFragment(LoadingFragment.newInstance());
-        mCurrentUser = getGeoRentingApplication().getSessionToken().user;
-
         if(mCurrentUser == null) {
-            Timber.i("Refreshing Token.");
-            mService.refreshToken(getGeoRentingApplication().getSessionToken())
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe((sessionToken) -> {
-                        getGeoRentingApplication().setSessionToken(sessionToken);
-                        setCurrentUser(sessionToken.user);
-                    }, error -> {
-                        Timber.e(error, "Could not refresh Token.");
-                        reSignIn();
-                    });
-
+            reloadCurrentUser();
         } else {
             showUserInHeader(mCurrentUser);
             showFragment(MyGeofencesFragment.newInstance(mCurrentUser));
         }
+    }
+
+    private void reloadCurrentUser() {
+        Timber.i("Refreshing Token.");
+        mService.refreshToken(getGeoRentingApplication().getSessionToken())
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe((sessionToken) -> {
+                    getGeoRentingApplication().setSessionToken(sessionToken);
+                    setCurrentUser(sessionToken.user);
+                }, error -> {
+                    Timber.e(error, "Could not refresh Token.");
+                    reSignIn();
+                });
     }
 
     private void setCurrentUser(User user) {
@@ -369,8 +372,10 @@ public class MainActivity extends BaseActivity implements GoogleApiClient.OnConn
     }
 
     @Override
+    @DebugLog
     protected void onResume() {
         super.onResume();
+        mCurrentUser = null;
         this.loadCurrentUser();
     }
 }
