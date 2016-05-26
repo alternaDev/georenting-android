@@ -16,10 +16,8 @@
 
     </data>
     <android.support.design.widget.CoordinatorLayout
-        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:fitsSystemWindows="false">
+        android:layout_height="match_parent">
 
         <android.support.design.widget.AppBarLayout
             android:id="@+id/appbar"
@@ -33,11 +31,10 @@
                 android:background="@color/primary_color"
                 android:transitionName="toolbar"
                 app:title="@string/title_activity_geofence_create"
-                app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-                app:layout_scrollFlags="scroll|enterAlways" />
+                app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
         </android.support.design.widget.AppBarLayout>
+
         <LinearLayout
-            app:layout_behavior="@string/appbar_scrolling_view_behavior"
             android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
