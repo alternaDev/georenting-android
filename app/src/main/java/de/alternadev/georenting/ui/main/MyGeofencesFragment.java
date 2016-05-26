@@ -174,4 +174,10 @@ public class MyGeofencesFragment extends Fragment implements GeofenceAdapter.Geo
 
         popup.show();
     }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        this.loadFences(mBinding);
+    }
 }

@@ -52,6 +52,6 @@ public class VisitGeofenceTask extends GcmTaskService {
             return GcmNetworkManager.RESULT_RESCHEDULE;
         }
 
-        return GcmNetworkManager.RESULT_FAILURE;
+        return GcmNetworkManager.RESULT_SUCCESS;
     }
 }

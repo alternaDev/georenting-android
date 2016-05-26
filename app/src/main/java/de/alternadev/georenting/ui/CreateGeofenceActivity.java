@@ -55,10 +55,8 @@ import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 import timber.log.Timber;
 
-//TODO: Show Selection for GeoFence Sizes and Multipliers.
-
 public class CreateGeofenceActivity extends BaseActivity implements GoogleApiClient.ConnectionCallbacks {
-    private static final float MINIMUM_ACCURACY = 40;
+    private static final float MINIMUM_ACCURACY = 50;
     private static final int MINIMUM_TTL = 60 * 60;
 
     private GoogleApiClient mApiClient;
@@ -296,6 +294,7 @@ public class CreateGeofenceActivity extends BaseActivity implements GoogleApiCli
                 });
     }
 
+    @DebugLog
     private void stopLocationUpdates() {
         if(mApiClient.isConnected() && mListener != null)
             LocationServices.FusedLocationApi.removeLocationUpdates(mApiClient, mListener);
@@ -335,6 +334,7 @@ public class CreateGeofenceActivity extends BaseActivity implements GoogleApiCli
 
 
 
+    @DebugLog
     private void initMap(GoogleMap googleMap) {
         if (googleMap == null) return;
         googleMap.getUiSettings().setScrollGesturesEnabled(false);
@@ -358,8 +358,13 @@ public class CreateGeofenceActivity extends BaseActivity implements GoogleApiCli
         this.mGoogleMap = map;
 
         mListener = l -> {
+            Timber.d("Location: %s", l);
+
             if(map == null) return;
-            if(l.getAccuracy() > MINIMUM_ACCURACY) return;
+            if(l.getAccuracy() > MINIMUM_ACCURACY) {
+                Timber.d("Higher Accuracy wanted. Got %f, expected %f.", l.getAccuracy(), MINIMUM_ACCURACY);
+                return;
+            }
 
             this.mLocation = l;
 
