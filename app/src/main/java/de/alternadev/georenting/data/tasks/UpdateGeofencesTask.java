@@ -78,8 +78,10 @@ public class UpdateGeofencesTask extends GcmTaskService {
          */
         Timber.i("removing old Fences");
 
+        List<String> oldRequestIds = getOldRequestIDs();
+        oldRequestIds.add(GEOFENCE_UPDATE);
 
-        if (!removeOldGeofences(getOldRequestIDs())) {
+        if (!removeOldGeofences(oldRequestIds)) {
             Timber.e("Could not remove old Geofences. Stopping.");
             mDatabase.close();
             return GcmNetworkManager.RESULT_FAILURE;
