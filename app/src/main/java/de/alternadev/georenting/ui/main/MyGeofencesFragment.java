@@ -34,6 +34,7 @@ import de.alternadev.georenting.databinding.ItemGeofenceBinding;
 import de.alternadev.georenting.ui.CreateGeofenceActivity;
 import de.alternadev.georenting.ui.GeofenceDetailActivity;
 import de.alternadev.georenting.ui.main.mygeofences.GeofenceAdapter;
+import hugo.weaving.DebugLog;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 import timber.log.Timber;
@@ -96,6 +97,7 @@ public class MyGeofencesFragment extends Fragment implements GeofenceAdapter.Geo
         return mBinding.getRoot();
     }
 
+    @DebugLog
     private void loadFences(FragmentMyGeofencesBinding b) {
         mService.getFencesBy("" + mCurrentUser.id)
                 .subscribeOn(Schedulers.io())

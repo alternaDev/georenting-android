@@ -456,7 +456,6 @@ public class CreateGeofenceActivity extends BaseActivity implements GoogleApiCli
         finishActivityWithAnimation();
     }
 
-    @DebugLog
     private void setBuyButtonEnabled(boolean e) {
         mBuyButtonEnabled = e;
         mBuyButton.setEnabled(e);

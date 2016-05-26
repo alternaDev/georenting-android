@@ -40,9 +40,4 @@ public class GeoRentingModule {
     @Provides @Singleton GeoRentingApplication provideGeoRentingApplication() {
         return mApp;
     }
-
-    @Provides @Singleton
-    FirebaseAnalytics provideAnalytics(Application app) {
-        return FirebaseAnalytics.getInstance(app);
-    }
 }
