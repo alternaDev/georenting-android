@@ -136,7 +136,7 @@ public class CreateGeofenceActivity extends BaseActivity implements GoogleApiCli
 
         // create the animator for this view (the start radius is zero)
         Animator circularReveal = ViewAnimationUtils.createCircularReveal(rootLayout, cx, cy, 0, finalRadius);
-        circularReveal.setDuration(300);
+        circularReveal.setDuration(250);
 
         // make the view visible and start the animation
         rootLayout.setVisibility(View.VISIBLE);
@@ -153,7 +153,7 @@ public class CreateGeofenceActivity extends BaseActivity implements GoogleApiCli
 
         // create the animator for this view (the start radius is zero)
         Animator circularReveal = ViewAnimationUtils.createCircularReveal(rootLayout, cx, cy, finalRadius, 0);
-        circularReveal.setDuration(300);
+        circularReveal.setDuration(250);
 
         circularReveal.addListener(new Animator.AnimatorListener() {
             @Override
@@ -163,6 +163,7 @@ public class CreateGeofenceActivity extends BaseActivity implements GoogleApiCli
 
             @Override
             public void onAnimationEnd(Animator animator) {
+                rootLayout.setVisibility(View.INVISIBLE);
                 overridePendingTransition(0, 0);
                 finish();
             }
@@ -179,7 +180,6 @@ public class CreateGeofenceActivity extends BaseActivity implements GoogleApiCli
         });
 
         // make the view visible and start the animation
-        rootLayout.setVisibility(View.VISIBLE);
         circularReveal.start();
     }
 
