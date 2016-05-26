@@ -9,6 +9,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.squareup.sqlbrite.BriteDatabase;
+
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -18,6 +20,7 @@ import de.alternadev.georenting.GeoRentingApplication;
 import de.alternadev.georenting.R;
 import de.alternadev.georenting.data.api.GeoRentingService;
 import de.alternadev.georenting.data.api.model.User;
+import de.alternadev.georenting.data.models.Notification;
 import de.alternadev.georenting.databinding.FragmentHistoryBinding;
 import de.alternadev.georenting.databinding.FragmentMyGeofencesBinding;
 import de.alternadev.georenting.ui.main.history.ActivityItemAdapter;
@@ -39,6 +42,9 @@ public class HistoryFragment extends Fragment {
     @Inject
     GeoRentingService mService;
 
+    @Inject
+    BriteDatabase mDatabase;
+
     public HistoryFragment() {
         // Required empty public constructor
     }
@@ -47,6 +53,8 @@ public class HistoryFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ((GeoRentingApplication) getActivity().getApplicationContext()).getComponent().inject(this);
+
+        Notification.deleteAll(mDatabase);
     }
 
     @Override

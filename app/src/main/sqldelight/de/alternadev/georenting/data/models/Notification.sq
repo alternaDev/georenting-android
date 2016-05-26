@@ -1,0 +1,11 @@
+CREATE TABLE notification (
+    data TEXT NOT NULL
+);
+
+select_all:
+select *
+from notification;
+
+delete_all:
+delete from notification
+where 1=1;

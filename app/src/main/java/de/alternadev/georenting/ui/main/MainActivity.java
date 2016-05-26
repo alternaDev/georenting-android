@@ -213,10 +213,9 @@ public class MainActivity extends BaseActivity implements GoogleApiClient.OnConn
 
     private void showFragment(Fragment fragment) {
         Fragment currentFragment = getFragmentManager().findFragmentById(R.id.main_content_frame);
-        Timber.d("Current Fragment: %s", currentFragment);
-        Timber.d("New Fragment: %s", fragment);
-        Timber.d("IsInstance: %b", fragment.getClass().isInstance(currentFragment));
+
         if(fragment.getClass().isInstance(currentFragment)) return;
+
         FragmentTransaction transaction = getFragmentManager().beginTransaction();
 
         transaction.replace(R.id.main_content_frame, fragment);

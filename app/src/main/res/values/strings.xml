@@ -57,6 +57,7 @@
     <string name="app_invite_message">Try out GeoRenting now!</string>
     <string name="app_invite_cta">Build GeoFences</string>
     <string name="geofence_item_action_tear_down">Tear Down</string>
+    <string name="pref_key_notify_expired">notifyExpired</string>
 
 
 </resources>
