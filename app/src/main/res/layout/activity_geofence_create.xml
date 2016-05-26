@@ -56,8 +56,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:orientation="vertical"
-                    android:padding="8dp"
-                    android:visibility="@{(overlap || costEstimate == null) ? View.GONE : View.VISIBLE}">
+                    android:padding="12dp"
+                    android:visibility="@{(costEstimate == null) ? View.GONE : View.VISIBLE}">
                     <android.support.design.widget.TextInputLayout
                         android:id="@+id/nameLayout"
                         android:layout_width="match_parent"
@@ -87,6 +87,7 @@
                             android:layout_gravity="center_vertical"
                             android:id="@+id/ttl_seek_bar" />
                         <EditText
+                            android:inputType="none"
                             android:layout_weight="0.2"
                             android:id="@+id/ttl_edit_text"
                             android:layout_width="0dp"
@@ -96,30 +97,47 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content">
-                        <Spinner
+                        <com.satsuware.usefulviews.LabelledSpinner
+                            app:labelText="@string/create_geofence_radius_title"
                             android:id="@+id/radius_spinner"
-                            android:layout_width="150dp"
-                            android:layout_height="48dp" />
+                            android:layout_weight="0.5"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content" />
 
-                        <Spinner
+                        <com.satsuware.usefulviews.LabelledSpinner
                             android:id="@+id/rent_multiplier_spinner"
-                            android:layout_width="150dp"
-                            android:layout_height="48dp" />
+                            app:labelText="@string/create_geofence_rent_title"
+                            android:layout_weight="0.5"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content" />
                     </LinearLayout>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="end"
+                        android:layout_marginTop="12dp"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                        android:visibility="@{!overlap &amp;&amp; !loading ? View.VISIBLE : View.GONE}"
+                        android:textColor="@{costEstimate.canAfford ? @color/green : @color/red}"
+                        android:text="@{Html.fromHtml(@string/create_geofence_cost_estimate(costEstimate.cost))}"/>
+
+                    <TextView
+                        android:visibility="@{overlap &amp;&amp; !loading ? View.VISIBLE : View.GONE}"
+                        android:layout_gravity="center"
+                        android:gravity="center"
+                        android:text="@string/create_geofence_error_overlap"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/red"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                        android:textAlignment="center"
+                        android:id="@+id/textView" />
                     <ProgressBar
                         android:indeterminate="true"
                         android:layout_gravity="center"
                         android:visibility="@{loading ? View.VISIBLE : View.GONE}"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content" />
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="end"
-                        android:layout_marginTop="12dp"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                        android:textColor="@{costEstimate.canAfford ? @color/green : @color/red}"
-                        android:text="@{Html.fromHtml(@string/create_geofence_cost_estimate(costEstimate.cost))}"/>
                 </LinearLayout>
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -130,22 +148,6 @@
                         android:layout_gravity="center"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content" />
-                </LinearLayout>
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:visibility="@{overlap &amp;&amp; !loading ? View.VISIBLE : View.GONE}">
-
-                    <TextView
-                        android:layout_gravity="center"
-                        android:gravity="center"
-                        android:text="@string/create_geofence_error_overlap"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:textColor="@color/red"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                        android:textAlignment="center"
-                        android:id="@+id/textView" />
                 </LinearLayout>
 
             </android.support.v7.widget.CardView>

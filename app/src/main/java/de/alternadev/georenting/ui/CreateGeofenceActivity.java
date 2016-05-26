@@ -27,6 +27,10 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
+import com.satsuware.usefulviews.LabelledSpinner;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -49,6 +53,7 @@ import timber.log.Timber;
 
 public class CreateGeofenceActivity extends BaseActivity implements GoogleApiClient.ConnectionCallbacks {
     private static final float MINIMUM_ACCURACY = 40;
+    private static final int MINIMUM_TTL = 60 * 60;
 
     private GoogleApiClient mApiClient;
     private MapView mMapView;
@@ -60,9 +65,12 @@ public class CreateGeofenceActivity extends BaseActivity implements GoogleApiCli
     private Location mLocation;
     private MenuItem mBuyButton;
     private boolean mBuyButtonEnabled;
+    private int mSelectedRadiusPosition;
+    private int mSelectedRentPosition;
 
     @Inject
     GeoRentingService mService;
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -93,20 +101,26 @@ public class CreateGeofenceActivity extends BaseActivity implements GoogleApiCli
     }
 
     private void populateSpinners() {
-        Integer[] array = getGeoRentingApplication().getUpgradeSettings().radius.toArray(new Integer[getGeoRentingApplication().getUpgradeSettings().radius.size()]);
-        ArrayAdapter<Integer> adapter = new ArrayAdapter<>(this,
+        List<String> sizes = new ArrayList<>(getGeoRentingApplication().getUpgradeSettings().radius.size());
+        for (Integer i : getGeoRentingApplication().getUpgradeSettings().radius) {
+            sizes.add(i + "m");
+        }
+        String[] array = sizes.toArray(new String[sizes.size()]);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this,
                 android.R.layout.simple_spinner_item, array);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
-        mBinding.radiusSpinner.setAdapter(adapter);
-        mBinding.radiusSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        mBinding.radiusSpinner.setCustomAdapter(adapter);
+        mBinding.radiusSpinner.setSelection(0);
+        mBinding.radiusSpinner.setOnItemChosenListener(new LabelledSpinner.OnItemChosenListener() {
             @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+            public void onItemChosen(View labelledSpinner, AdapterView<?> adapterView, View itemView, int position, long id) {
+                mSelectedRadiusPosition = position;
                 refreshEstimate();
             }
 
             @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
+            public void onNothingChosen(View labelledSpinner, AdapterView<?> adapterView) {
 
             }
         });
@@ -116,15 +130,17 @@ public class CreateGeofenceActivity extends BaseActivity implements GoogleApiCli
                 android.R.layout.simple_spinner_item, array2);
         adapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
-        mBinding.rentMultiplierSpinner.setAdapter(adapter2);
-        mBinding.rentMultiplierSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        mBinding.rentMultiplierSpinner.setCustomAdapter(adapter2);
+        mBinding.rentMultiplierSpinner.setSelection(0);
+        mBinding.rentMultiplierSpinner.setOnItemChosenListener(new LabelledSpinner.OnItemChosenListener() {
             @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+            public void onItemChosen(View labelledSpinner, AdapterView<?> adapterView, View itemView, int position, long id) {
+                mSelectedRentPosition = position;
                 refreshEstimate();
             }
 
             @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
+            public void onNothingChosen(View labelledSpinner, AdapterView<?> adapterView) {
 
             }
         });
@@ -132,12 +148,11 @@ public class CreateGeofenceActivity extends BaseActivity implements GoogleApiCli
     }
 
     private void setupTTLSlider() {
-        mBinding.ttlSeekBar.setProgress(10);
-        mBinding.ttlSeekBar.setMax((int) getGeoRentingApplication().getUpgradeSettings().maxTtl);
+        mBinding.ttlSeekBar.setMax((int) getGeoRentingApplication().getUpgradeSettings().maxTtl - MINIMUM_TTL);
         mBinding.ttlSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean b) {
-                mBinding.ttlEditText.setText((progress / 60 / 60) + "");
+                refreshTTLEditText();
             }
 
             @Override
@@ -150,6 +165,12 @@ public class CreateGeofenceActivity extends BaseActivity implements GoogleApiCli
                 refreshEstimate();
             }
         });
+        refreshTTLEditText();
+    }
+
+    private void refreshTTLEditText() {
+        int progress = mBinding.ttlSeekBar.getProgress() + MINIMUM_TTL;
+        mBinding.ttlEditText.setText(getString(R.string.create_geofence_ttl_hours, (progress / 60f / 60f)));
     }
 
     private void onCreateClick() {
@@ -268,9 +289,9 @@ public class CreateGeofenceActivity extends BaseActivity implements GoogleApiCli
     private GeoFence getGeoFenceFromParams() {
         UpgradeSettings s = getGeoRentingApplication().getUpgradeSettings();
         GeoFence fence = new GeoFence(mLocation.getLatitude(), mLocation.getLongitude());
-        fence.radius = s.radius.get(mBinding.radiusSpinner.getSelectedItemPosition());
-        fence.rentMultiplier = s.rent.get(mBinding.rentMultiplierSpinner.getSelectedItemPosition());
-        fence.ttl = mBinding.ttlSeekBar.getProgress();
+        fence.radius = s.radius.get(mSelectedRadiusPosition);
+        fence.rentMultiplier = s.rent.get(mSelectedRentPosition);
+        fence.ttl = mBinding.ttlSeekBar.getProgress() + MINIMUM_TTL;
         return fence;
     }
 
