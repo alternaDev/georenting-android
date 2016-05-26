@@ -73,6 +73,9 @@ public class GeofenceDetailActivity extends BaseActivity {
             return true;
         });
 
+        if(mGeofence != null)
+            logSelectGeoFence(mGeofence);
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 

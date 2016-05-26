@@ -115,6 +115,7 @@ public class SignInActivity extends BaseActivity implements GoogleApiClient.OnCo
                     Timber.d("Test: %s", sessionToken);
                     mProgressDialog.dismiss();
                     startService(new Intent(this, FcmRegistrationIntentService.class));
+                    logSignIn(sessionToken.user);
                     startMainActivity();
                 }, error -> {
                     Timber.e(error, "Could not handle Token.");

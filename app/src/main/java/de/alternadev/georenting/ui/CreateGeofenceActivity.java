@@ -67,6 +67,7 @@ public class CreateGeofenceActivity extends BaseActivity implements GoogleApiCli
     private boolean mBuyButtonEnabled;
     private int mSelectedRadiusPosition;
     private int mSelectedRentPosition;
+    private double mCurrentPrice;
 
     @Inject
     GeoRentingService mService;
@@ -195,6 +196,7 @@ public class CreateGeofenceActivity extends BaseActivity implements GoogleApiCli
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe((geoFence) -> {
+                    logBuyGeoFence(geoFence, mCurrentPrice);
                     finish();
                 }, error -> {
                     setBuyButtonEnabled(true);
@@ -318,6 +320,7 @@ public class CreateGeofenceActivity extends BaseActivity implements GoogleApiCli
                     mBinding.setCostEstimate(estimate);
                     mBinding.setLoading(false);
                     setBuyButtonEnabled(estimate.canAfford);
+                    mCurrentPrice = estimate.cost;
                 }, (error) -> {
                     if(error instanceof HttpException) {
                         setBuyButtonEnabled(false);

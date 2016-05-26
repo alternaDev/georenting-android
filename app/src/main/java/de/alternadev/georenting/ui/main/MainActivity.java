@@ -144,6 +144,7 @@ public class MainActivity extends BaseActivity implements GoogleApiClient.OnConn
             reloadCurrentUser();
         } else {
             showUserInHeader(mCurrentUser);
+            logUserAnalytics(mCurrentUser);
             showFragment(MyGeofencesFragment.newInstance(mCurrentUser));
         }
     }
@@ -362,6 +363,12 @@ public class MainActivity extends BaseActivity implements GoogleApiClient.OnConn
                     askForLocationAccess();
                     break;
                 default:
+                    break;
+            }
+        } else if(requestCode == REQUEST_CODE_INVITE) {
+            switch (resultCode) {
+                case Activity.RESULT_OK:
+                    logSentInvite();
                     break;
             }
         }
