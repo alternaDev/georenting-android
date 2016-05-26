@@ -97,7 +97,6 @@ public class MyGeofencesFragment extends Fragment implements GeofenceAdapter.Geo
         return mBinding.getRoot();
     }
 
-    @DebugLog
     private void loadFences(FragmentMyGeofencesBinding b) {
         mService.getFencesBy("" + mCurrentUser.id)
                 .subscribeOn(Schedulers.io())

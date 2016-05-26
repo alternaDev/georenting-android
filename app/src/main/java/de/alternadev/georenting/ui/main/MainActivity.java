@@ -211,7 +211,6 @@ public class MainActivity extends BaseActivity implements GoogleApiClient.OnConn
     }
 
 
-    @DebugLog
     private void showFragment(Fragment fragment) {
         Fragment currentFragment = getFragmentManager().findFragmentById(R.id.main_content_frame);
         Timber.d("Current Fragment: %s", currentFragment);
