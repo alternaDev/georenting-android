@@ -1,9 +1,11 @@
 package de.alternadev.georenting.ui;
 
 import android.Manifest;
+import android.animation.Animator;
 import android.content.pm.PackageManager;
 import android.databinding.DataBindingUtil;
 import android.location.Location;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
@@ -11,9 +13,13 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.text.TextUtilsCompat;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.transition.Transition;
+import android.transition.TransitionValues;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewAnimationUtils;
+import android.view.ViewTreeObserver;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.SeekBar;
@@ -99,6 +105,82 @@ public class CreateGeofenceActivity extends BaseActivity implements GoogleApiCli
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_close_white_24dp);
+
+        if (savedInstanceState == null && Build.VERSION.SDK_INT >= 21) {
+            mBinding.getRoot().setVisibility(View.INVISIBLE);
+
+            ViewTreeObserver viewTreeObserver = mBinding.getRoot().getViewTreeObserver();
+            if (viewTreeObserver.isAlive()) {
+                viewTreeObserver.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+                    @Override
+                    public void onGlobalLayout() {
+                        circularRevealActivity();
+                        mBinding.getRoot().getViewTreeObserver().removeGlobalOnLayoutListener(this);
+                    }
+                });
+            }
+        }
+    }
+
+
+
+    private void circularRevealActivity() {
+        overridePendingTransition(0, 0);
+
+        View rootLayout = mBinding.getRoot();
+
+        int cx = rootLayout.getWidth();
+        int cy = rootLayout.getHeight();
+
+        float finalRadius = Math.max(rootLayout.getWidth(), rootLayout.getHeight());
+
+        // create the animator for this view (the start radius is zero)
+        Animator circularReveal = ViewAnimationUtils.createCircularReveal(rootLayout, cx, cy, 0, finalRadius);
+        circularReveal.setDuration(300);
+
+        // make the view visible and start the animation
+        rootLayout.setVisibility(View.VISIBLE);
+        circularReveal.start();
+    }
+
+    private void finishActivityWithAnimation() {
+        View rootLayout = mBinding.getRoot();
+
+        int cx = rootLayout.getWidth();
+        int cy = rootLayout.getHeight();
+
+        float finalRadius = Math.max(rootLayout.getWidth(), rootLayout.getHeight());
+
+        // create the animator for this view (the start radius is zero)
+        Animator circularReveal = ViewAnimationUtils.createCircularReveal(rootLayout, cx, cy, finalRadius, 0);
+        circularReveal.setDuration(300);
+
+        circularReveal.addListener(new Animator.AnimatorListener() {
+            @Override
+            public void onAnimationStart(Animator animator) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animator) {
+                overridePendingTransition(0, 0);
+                finish();
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animator) {
+
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animator) {
+
+            }
+        });
+
+        // make the view visible and start the animation
+        rootLayout.setVisibility(View.VISIBLE);
+        circularReveal.start();
     }
 
     private void populateSpinners() {
@@ -197,7 +279,7 @@ public class CreateGeofenceActivity extends BaseActivity implements GoogleApiCli
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe((geoFence) -> {
                     logBuyGeoFence(geoFence, mCurrentPrice);
-                    finish();
+                    finishActivityWithAnimation();
                 }, error -> {
                     setBuyButtonEnabled(true);
 
@@ -223,6 +305,7 @@ public class CreateGeofenceActivity extends BaseActivity implements GoogleApiCli
     public void onPause() {
         super.onPause();
         stopLocationUpdates();
+        overridePendingTransition(0, 0);
         if (mMapView != null)
             mMapView.onPause();
     }
@@ -362,10 +445,15 @@ public class CreateGeofenceActivity extends BaseActivity implements GoogleApiCli
                 return false;
                 // Respond to the action bar's Up/Home button
             case android.R.id.home:
-                supportFinishAfterTransition();
+                finishActivityWithAnimation();
                 return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onBackPressed() {
+        finishActivityWithAnimation();
     }
 
     @DebugLog

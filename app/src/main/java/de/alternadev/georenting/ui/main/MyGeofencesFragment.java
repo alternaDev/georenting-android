@@ -83,7 +83,9 @@ public class MyGeofencesFragment extends Fragment implements GeofenceAdapter.Geo
         mBinding.geofencesList.setLayoutManager(layoutManager);
 
         mBinding.buttonAddGeofence.setOnClickListener(view -> {
-            startActivity(new Intent(this.getActivity(), CreateGeofenceActivity.class));
+            Intent i = new Intent(this.getActivity(), CreateGeofenceActivity.class);
+            i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+            startActivity(i);
         });
 
         mBinding.geofencesRefresh.setOnRefreshListener(() -> loadFences(mBinding));
