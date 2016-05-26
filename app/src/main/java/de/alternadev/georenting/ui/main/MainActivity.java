@@ -179,6 +179,8 @@ public class MainActivity extends BaseActivity implements GoogleApiClient.OnConn
                 showFragment(HistoryFragment.newInstance());
                 break;
         }
+
+        setIntent(null);
     }
 
     public void onNewIntent(Intent intent){
