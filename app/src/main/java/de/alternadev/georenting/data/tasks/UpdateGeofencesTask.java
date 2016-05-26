@@ -281,7 +281,7 @@ public class UpdateGeofencesTask extends GcmTaskService {
                 .setExecutionWindow(0L, 5L)
                 .setUpdateCurrent(true)
                 .setPersisted(true)
-                .setRequiredNetwork(PeriodicTask.NETWORK_STATE_CONNECTED)
+                .setRequiredNetwork(OneoffTask.NETWORK_STATE_CONNECTED)
                 .build();
         GcmNetworkManager.getInstance(ctx).schedule(task);
     }
