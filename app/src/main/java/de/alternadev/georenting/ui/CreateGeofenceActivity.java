@@ -11,6 +11,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.text.TextUtilsCompat;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -38,6 +39,7 @@ import de.alternadev.georenting.data.api.model.UpgradeSettings;
 import de.alternadev.georenting.data.models.Fence;
 import de.alternadev.georenting.databinding.ActivityGeofenceCreateBinding;
 import de.alternadev.georenting.databinding.ActivityGeofenceDetailBinding;
+import hugo.weaving.DebugLog;
 import retrofit2.adapter.rxjava.HttpException;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
@@ -50,12 +52,15 @@ public class CreateGeofenceActivity extends BaseActivity implements GoogleApiCli
 
     private GoogleApiClient mApiClient;
     private MapView mMapView;
+    private GoogleMap mGoogleMap;
     private LocationListener mListener;
+
     private ActivityGeofenceCreateBinding mBinding;
 
-    private GoogleMap mGoogleMap;
-
     private Location mLocation;
+    private MenuItem mBuyButton;
+    private boolean mBuyButtonEnabled;
+
     @Inject
     GeoRentingService mService;
 
@@ -75,8 +80,6 @@ public class CreateGeofenceActivity extends BaseActivity implements GoogleApiCli
                 .addApi(LocationServices.API)
                 .build();
         mApiClient.connect();
-
-        mBinding.createButton.setOnClickListener(this::onCreateClick);
 
         populateSpinners();
         setupTTLSlider();
@@ -149,32 +152,31 @@ public class CreateGeofenceActivity extends BaseActivity implements GoogleApiCli
         });
     }
 
-    private void onCreateClick(View view) {
+    private void onCreateClick() {
         String fenceName = mBinding.nameText.getText().toString().trim();
 
         if(TextUtils.isEmpty(fenceName)) {
             mBinding.nameLayout.setErrorEnabled(true);
             mBinding.nameLayout.setError(getString(R.string.create_geofence_error_name_empty));
+            return;
         }
         if(mLocation == null || mLocation.getAccuracy() > MINIMUM_ACCURACY) {
             Timber.d("Location: %s", mLocation);
             return;
         }
 
-
         GeoFence fence = getGeoFenceFromParams();
         fence.name = fenceName;
 
-
         stopLocationUpdates();
-        mBinding.createButton.setEnabled(false);
+        setBuyButtonEnabled(false);
         mService.createGeoFence(fence)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe((geoFence) -> {
                     finish();
                 }, error -> {
-                    mBinding.createButton.setEnabled(true);
+                    setBuyButtonEnabled(true);
 
                     if(mApiClient.isConnected())
                         mMapView.getMapAsync(this::initMap);
@@ -245,6 +247,7 @@ public class CreateGeofenceActivity extends BaseActivity implements GoogleApiCli
                 .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
 
         mBinding.setLoading(true);
+        setBuyButtonEnabled(false);
 
         this.mGoogleMap = map;
 
@@ -275,7 +278,9 @@ public class CreateGeofenceActivity extends BaseActivity implements GoogleApiCli
         if(mLocation == null) return;
         mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(mLocation.getLatitude(), mLocation.getLongitude()), 14));
         mGoogleMap.clear();
+
         mBinding.setLoading(true);
+        setBuyButtonEnabled(false);
 
         GeoFence fence = getGeoFenceFromParams();
 
@@ -284,8 +289,6 @@ public class CreateGeofenceActivity extends BaseActivity implements GoogleApiCli
         circle.strokeColor(getResources().getColor( R.color.blue));
         mGoogleMap.addCircle(circle);
 
-
-
         mService.estimateCost(fence)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -293,8 +296,10 @@ public class CreateGeofenceActivity extends BaseActivity implements GoogleApiCli
                     mBinding.setOverlap(false);
                     mBinding.setCostEstimate(estimate);
                     mBinding.setLoading(false);
+                    setBuyButtonEnabled(estimate.canAfford);
                 }, (error) -> {
                     if(error instanceof HttpException) {
+                        setBuyButtonEnabled(false);
                         mBinding.setLoading(false);
                         mBinding.setCostEstimate(new CostEstimate());
                         if(((HttpException) error).code() == 400) {
@@ -315,13 +320,34 @@ public class CreateGeofenceActivity extends BaseActivity implements GoogleApiCli
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.create_geofence_toolbar, menu);
+        mBuyButton = menu.findItem(R.id.action_buy);
+        return true;
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            // Respond to the action bar's Up/Home button
+            case R.id.action_buy:
+                if(item.isEnabled() && mBuyButtonEnabled) { // Fix for not working Android API... WTF
+                    this.onCreateClick();
+                    return true;
+                }
+                return false;
+                // Respond to the action bar's Up/Home button
             case android.R.id.home:
                 supportFinishAfterTransition();
                 return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @DebugLog
+    private void setBuyButtonEnabled(boolean e) {
+        mBuyButtonEnabled = e;
+        mBuyButton.setEnabled(e);
+        supportInvalidateOptionsMenu();
     }
 }

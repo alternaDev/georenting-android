@@ -43,16 +43,16 @@
     <string name="title_activity_geofence_create">Create GeoFence</string>
     <string name="create_geofence_cost_estimate">&lt;b&gt;%1$.2f GC&lt;/b&gt; </string>
     <string name="create_geofence_name_title">Name</string>
+    <string name="create_geofence_ttl">TTL</string>
     <string name="create_geofence_error_overlap">You can not create a GeoFence at this place.</string>
     <string name="create_geofence_action_buy">Buy GeoFence</string>
+    <string name="create_geofence_error_name_empty">The name is required.</string>
+    <string name="error_create_fence_overlap">You can not create this GeoFence because it overlaps with other GeoFences.</string>
+    <string name="error_create_fence_cant_afford">You can not afford this GeoFence!</string>
 
     <string name="app_invite_title">Send Invitations to GeoRenting.</string>
     <string name="app_invite_message">Try out GeoRenting now!</string>
     <string name="app_invite_cta">Build GeoFences</string>
-    <string name="create_geofence_error_name_empty">The name is required.</string>
-    <string name="error_create_fence_overlap">You can not create this GeoFence because it overlaps with other GeoFences.</string>
-    <string name="error_create_fence_cant_afford">You can not afford this GeoFence!</string>
     <string name="geofence_item_action_tear_down">Tear Down</string>
-    <string name="create_geofence_ttl">TTL</string>
 
 </resources>
