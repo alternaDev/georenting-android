@@ -137,3 +137,9 @@
 #AutoValue
 -dontwarn autovalue.shaded.com.**
 -dontwarn com.google.auto.value.**
+
+#Moshi
+-keepclassmembers class ** {
+    @com.squareup.moshi.FromJson *;
+    @com.squareup.moshi.ToJson *;
+}
