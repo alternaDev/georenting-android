@@ -32,6 +32,7 @@ import javax.inject.Inject;
 import de.alternadev.georenting.BuildConfig;
 import de.alternadev.georenting.R;
 import de.alternadev.georenting.data.api.GeoRentingService;
+import de.alternadev.georenting.data.api.model.CostEstimate;
 import de.alternadev.georenting.data.api.model.GeoFence;
 import de.alternadev.georenting.data.api.model.UpgradeSettings;
 import de.alternadev.georenting.data.models.Fence;
@@ -292,12 +293,12 @@ public class CreateGeofenceActivity extends BaseActivity implements GoogleApiCli
                     mBinding.setOverlap(false);
                     mBinding.setCostEstimate(estimate);
                     mBinding.setLoading(false);
-
                 }, (error) -> {
                     if(error instanceof HttpException) {
+                        mBinding.setLoading(false);
+                        mBinding.setCostEstimate(new CostEstimate());
                         if(((HttpException) error).code() == 400) {
                             mBinding.setOverlap(true);
-                            mBinding.setLoading(false);
                         }
                     }
                 });
