@@ -67,6 +67,9 @@ public class FcmListenerService extends FirebaseMessagingService {
                 if(mPrefs.getBoolean(getString(R.string.pref_key_notify_visited), true))
                     notifyUserForeignerEnteredFence(data);
                 break;
+            case "onFenceExpired":
+                notifyFenceExpired(data);
+                break;
         }
     }
 
@@ -136,12 +139,48 @@ public class FcmListenerService extends FirebaseMessagingService {
         resultIntent.putExtra(MainActivity.EXTRA_FRAGMENT, "history");
 
         PendingIntent resultPendingIntent =
-            PendingIntent.getActivity(this, (int) (System.currentTimeMillis() & 0xfffffff), resultIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+                PendingIntent.getActivity(this, (int) (System.currentTimeMillis() & 0xfffffff), resultIntent, PendingIntent.FLAG_UPDATE_CURRENT);
         mBuilder.setContentIntent(resultPendingIntent);
         NotificationManager mNotificationManager =
                 (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 
         mNotificationManager.notify((fenceId + " " + ownerName).hashCode(), mBuilder.build());
+    }
+
+    private void notifyFenceExpired(Map data) {
+        // Your fence expired.
+        int fenceId = Integer.valueOf((String) data.get("fenceId"));
+        String fenceName = (String) data.get("fenceName");
+
+        String avatarUrl = mAvatarService.getAvatarUrl(fenceName);
+        Timber.d("AvatarURL: %s", avatarUrl);
+        Bitmap avatar;
+        try {
+            avatar = mPicasso.load(avatarUrl).get();
+        } catch (IOException e) {
+            e.printStackTrace();
+            return;
+        }
+
+        // You entered a fence!
+        NotificationCompat.Builder mBuilder =
+                new NotificationCompat.Builder(this)
+                        .setLargeIcon(avatar)
+                        .setSmallIcon(R.drawable.ic_person_black_24dp)
+                        .setAutoCancel(true)
+                        .setContentTitle("Fence Expired!")
+                        .setContentText("Your fence " + fenceName + "has died.");
+        Intent resultIntent = new Intent(this, MainActivity.class);
+        resultIntent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        resultIntent.putExtra(MainActivity.EXTRA_FRAGMENT, "history");
+
+        PendingIntent resultPendingIntent =
+                PendingIntent.getActivity(this, (int) (System.currentTimeMillis() & 0xfffffff), resultIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        mBuilder.setContentIntent(resultPendingIntent);
+        NotificationManager mNotificationManager =
+                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+
+        mNotificationManager.notify((fenceId + "expired").hashCode(), mBuilder.build());
     }
 
     private void startSync() {
