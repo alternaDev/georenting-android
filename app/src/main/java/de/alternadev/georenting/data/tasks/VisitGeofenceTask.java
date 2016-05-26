@@ -12,6 +12,7 @@ import javax.inject.Inject;
 import de.alternadev.georenting.GeoRentingApplication;
 import de.alternadev.georenting.data.api.GeoRentingService;
 import de.alternadev.georenting.data.auth.GoogleAuth;
+import retrofit2.adapter.rxjava.HttpException;
 import timber.log.Timber;
 
 /**
@@ -49,6 +50,11 @@ public class VisitGeofenceTask extends GcmTaskService {
             Timber.d("Visited Fence!");
         } catch (Exception e) {
             Timber.e(e, "Failed to Visit fence.");
+            if(e instanceof HttpException)
+                if(((HttpException) e).code() == 404) { // Not Found.
+                    Timber.d("GeoFence not found. Returning Success.");
+                    return GcmNetworkManager.RESULT_SUCCESS;
+                }
             return GcmNetworkManager.RESULT_RESCHEDULE;
         }
 
