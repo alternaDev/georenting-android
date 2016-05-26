@@ -297,7 +297,7 @@ public class CreateGeofenceActivity extends BaseActivity implements GoogleApiCli
     }
 
     private void stopLocationUpdates() {
-        if(mApiClient.isConnected())
+        if(mApiClient.isConnected() && mListener != null)
             LocationServices.FusedLocationApi.removeLocationUpdates(mApiClient, mListener);
     }
 
