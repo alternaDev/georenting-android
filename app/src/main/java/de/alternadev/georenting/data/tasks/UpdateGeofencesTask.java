@@ -42,6 +42,10 @@ import timber.log.Timber;
 
 public class UpdateGeofencesTask extends GcmTaskService {
 
+    public static final String GEOFENCE_UPDATE = "UPDATE";
+
+    private static final int SEARCH_RADIUS = 5000;
+
     private GoogleApiClient mApiClient;
 
     @Inject
@@ -133,11 +137,14 @@ public class UpdateGeofencesTask extends GcmTaskService {
             t.end();
         }
 
+        geofences.add(createUpdateGeoFence(lastLocation.getLatitude(), lastLocation.getLongitude()));
+
         if(geofences.size() == 0) {
-            Timber.i("Noe Fences. Done!");
+            Timber.i("No Fences. Done!");
             mDatabase.close();
             return GcmNetworkManager.RESULT_SUCCESS;
         }
+
 
         boolean addGeofencesResult = addGeoFences(geofences);
 
@@ -188,7 +195,7 @@ public class UpdateGeofencesTask extends GcmTaskService {
     }
 
     private List<GeoFence> getRemoteGeoFences(Location location) throws IOException {
-        return mService.getFencesNear(location.getLatitude(), location.getLongitude(), 5000).execute().body();
+        return mService.getFencesNear(location.getLatitude(), location.getLongitude(), SEARCH_RADIUS).execute().body();
     }
 
     private boolean addGeoFences(List<Geofence> fences) {
@@ -232,6 +239,16 @@ public class UpdateGeofencesTask extends GcmTaskService {
                 .build();
     }
 
+    private Geofence createUpdateGeoFence(double latitude, double longitude) {
+        return new Geofence.Builder()
+                .setCircularRegion(latitude, longitude, SEARCH_RADIUS)
+                .setRequestId(GEOFENCE_UPDATE)
+                .setExpirationDuration(Geofence.NEVER_EXPIRE)
+                .setNotificationResponsiveness(60 * 1000) // Notify every minute.
+                .setTransitionTypes(Geofence.GEOFENCE_TRANSITION_EXIT)
+                .build();
+    }
+
     @Override
     public void onInitializeTasks() {
         super.onInitializeTasks();
@@ -252,7 +269,11 @@ public class UpdateGeofencesTask extends GcmTaskService {
 
         GcmNetworkManager.getInstance(ctx).schedule(task);
 
-        task = new OneoffTask.Builder()
+        scheduleUpdate(ctx);
+    }
+
+    public static void scheduleUpdate(Context ctx) {
+        Task task = new OneoffTask.Builder()
                 .setService(UpdateGeofencesTask.class)
                 .setTag("UpdateFences")
                 .setExecutionWindow(0L, 5L)

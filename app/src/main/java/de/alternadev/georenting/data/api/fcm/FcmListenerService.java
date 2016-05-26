@@ -184,14 +184,6 @@ public class FcmListenerService extends FirebaseMessagingService {
     }
 
     private void startSync() {
-        Task task = new OneoffTask.Builder()
-                .setService(UpdateGeofencesTask.class)
-                .setTag("UpdateFences")
-                .setExecutionWindow(0L, 5L)
-                .setUpdateCurrent(true)
-                .setPersisted(true)
-                .setRequiredNetwork(PeriodicTask.NETWORK_STATE_CONNECTED)
-                .build();
-        GcmNetworkManager.getInstance(this).schedule(task);
+        UpdateGeofencesTask.scheduleUpdate(this.getApplicationContext());
     }
 }

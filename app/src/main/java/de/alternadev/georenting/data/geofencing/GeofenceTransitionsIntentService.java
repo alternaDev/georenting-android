@@ -22,6 +22,7 @@ import javax.inject.Inject;
 import de.alternadev.georenting.GeoRentingApplication;
 import de.alternadev.georenting.data.api.GeoRentingService;
 import de.alternadev.georenting.data.models.Fence;
+import de.alternadev.georenting.data.tasks.UpdateGeofencesTask;
 import de.alternadev.georenting.data.tasks.VisitGeofenceTask;
 import hugo.weaving.DebugLog;
 import timber.log.Timber;
@@ -78,7 +79,11 @@ public class GeofenceTransitionsIntentService extends IntentService {
         } else if(geofenceTransition == Geofence.GEOFENCE_TRANSITION_EXIT) {
             List<Geofence> triggeringGeofences = geofencingEvent.getTriggeringGeofences();
             for(Geofence f : triggeringGeofences) {
-                mPreferences.edit().putBoolean(PREF_CURRENT_GEOFENCE + "_" + f.getRequestId(), false).apply();
+                if(f.getRequestId().equals(UpdateGeofencesTask.GEOFENCE_UPDATE)) {
+                    UpdateGeofencesTask.scheduleUpdate(getApplicationContext());
+                } else {
+                    mPreferences.edit().putBoolean(PREF_CURRENT_GEOFENCE + "_" + f.getRequestId(), false).apply();
+                }
             }
         } else {
             // Log the error.
