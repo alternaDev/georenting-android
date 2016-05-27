@@ -19,8 +19,6 @@ buildscript {
 
         classpath 'com.testfairy.plugins.gradle:testfairy:1.12'
 
-        classpath 'com.github.triplet.gradle:play-publisher:1.1.4'
-
         classpath 'com.google.gms:google-services:3.0.0'
 
         classpath 'com.getkeepsafe.dexcount:dexcount-gradle-plugin:0.4.4'
