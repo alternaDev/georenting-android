@@ -1,0 +1,3 @@
+keyfile "./google.p12" # Path to the P12 Secret file - Follow https://github.com/fastlane/supply#setup to get one
+issuer "807533877543-r2nl3jgumug06qauj00q9eallhnru6oi@developer.gserviceaccount.com"
+package_name "de.alternadev.georenting" # e.g. com.krausefx.app

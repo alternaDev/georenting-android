@@ -13,7 +13,7 @@ env:
   - BUILD_TYPE=assembleAll
   - BUILD_TYPE=testfairyRelease
   - BUILD_TYPE=productionRelease
-  
+
 android:
   components:
   - tools
@@ -29,11 +29,12 @@ before_install:
 - mkdir -p ~/.gradle
 - echo "georentingKeystorePassword=$KEYSTORE_PASSWORD" >> ~/.gradle/gradle.properties
 - echo "testfairyKey=$TESTFAIRY_KEY" >> ~/.gradle/gradle.properties
+- gem install fastlane
 
 script:
 - if [ "$BUILD_TYPE" == "assembleAll" ]; then ./gradlew assemble; fi;
 - if [ "$TRAVIS_BRANCH" == "master" ] && [ "$TRAVIS_PULL_REQUEST" == "false" ] && [ "$BUILD_TYPE" == "testfairyRelease" ]; then ./gradlew testfairyInternalRelease; fi;
-- if [ "$TRAVIS_TAG" ] && [ "$BUILD_TYPE" == "productionRelease" ]; then ./gradlew publishProductionRelease; fi;
+- if [ "$TRAVIS_TAG" ] && [ "$BUILD_TYPE" == "productionRelease" ]; then fastlane beta; fi;
 
 notifications:
   slack:
