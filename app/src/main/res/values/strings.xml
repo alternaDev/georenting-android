@@ -58,6 +58,7 @@
     <string name="app_invite_cta">Build GeoFences</string>
     <string name="geofence_item_action_tear_down">Tear Down</string>
     <string name="pref_key_notify_expired">notifyExpired</string>
+    <string name="yes">Yes</string>
 
 
 </resources>

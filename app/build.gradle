@@ -59,13 +59,14 @@ android {
 
     defaultConfig {
         signingConfig signingConfigs.release
-        minSdkVersion 15
+        minSdkVersion 18
         targetSdkVersion 23
 
         versionCode vCode + 1000
         versionName "${vName}"
 
         resConfigs "en", "de"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
 
 
@@ -127,9 +128,11 @@ dependencies {
     apt 'com.github.hotchemi:permissionsdispatcher-processor:2.1.3'
 
     compile 'com.android.support:support-v4:23.4.0'
+    androidTestCompile 'com.android.support:support-v4:23.4.0'
     compile 'com.android.support:appcompat-v7:23.4.0'
     compile 'com.android.support:cardview-v7:23.4.0'
     compile 'com.android.support:recyclerview-v7:23.4.0'
+    androidTestCompile 'com.android.support:recyclerview-v7:23.4.0'
     compile 'com.android.support:design:23.4.0'
 
     compile 'de.hdodenhof:circleimageview:2.0.0'
@@ -158,6 +161,8 @@ dependencies {
 
     compile 'com.google.dagger:dagger:2.2'
     apt 'com.google.dagger:dagger-compiler:2.2'
+    testCompile 'com.google.dagger:dagger:2.2'
+    testApt 'com.google.dagger:dagger-compiler:2.2'
 
     compile 'com.jakewharton.byteunits:byteunits:0.9.1'
 
@@ -179,6 +184,20 @@ dependencies {
     retrolambdaConfig 'net.orfjackal.retrolambda:retrolambda:2.3.0'
 
     compile 'com.google.auto.value:auto-value:1.2'
+
+    debugCompile 'org.hamcrest:hamcrest-core:1.3'
+    androidTestCompile 'com.android.support:support-annotations:23.4.0'
+    androidTestCompile 'com.android.support.test:runner:0.4'
+    androidTestCompile 'com.android.support.test:rules:0.4'
+    androidTestCompile 'com.android.support.test.espresso:espresso-core:2.2.1'
+    androidTestCompile 'com.android.support.test.espresso:espresso-contrib:2.2.1'
+    androidTestCompile 'tools.fastlane:screengrab:0.3.2'
+
+    compile 'org.mockito:mockito-core:1.10.19'
+    androidTestCompile 'org.mockito:mockito-core:1.10.19'
+    androidTestCompile 'com.google.dexmaker:dexmaker:1.2'
+    androidTestCompile 'com.google.dexmaker:dexmaker-mockito:1.2'
+    androidTestCompile 'com.android.support.test.uiautomator:uiautomator-v18:2.1.2'
 }
 
 def installAll = tasks.create('installAll')
@@ -188,4 +207,31 @@ android.applicationVariants.all { variant ->
     // Ensure we end up in the same group as the other install tasks.
     installAll.group = variant.install.group
 }
+
+task grantPermissions(type: Exec, dependsOn: 'installProductionDebug') {
+    def rootDir = project.rootDir
+    def localProperties = new File(rootDir, "local.properties")
+    if (localProperties.exists()) {
+        Properties properties = new Properties()
+        localProperties.withInputStream {
+            instr -> properties.load(instr)
+        }
+        def sdkDir = properties.getProperty('sdk.dir')
+        def adb = "$sdkDir/platform-tools/adb"
+        def pm = "de.alternadev.georenting.debug"
+        commandLine "$adb shell pm grant $pm android.permission.ACCESS_FINE_LOCATION".split(" ")
+        commandLine "$adb shell pm grant $pm android.permission.ACCESS_COARSE_LOCATION".split(" ")
+    }
+}
+
+afterEvaluate {
+    // When launching tests from Android Studio, it seems that only the assemble tasks
+    // get called directly, not the install* versions
+    tasks.each { task ->
+        if (task.name.startsWith('assembleProductionDebugAndroidTest')) {
+            task.dependsOn grantPermissions
+        }
+    }
+}
+
 apply plugin: 'com.google.gms.google-services'

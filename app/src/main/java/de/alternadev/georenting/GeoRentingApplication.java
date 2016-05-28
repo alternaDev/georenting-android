@@ -16,6 +16,7 @@ import com.google.android.gms.common.api.GoogleApiClient;
 
 import javax.inject.Inject;
 
+import dagger.Component;
 import de.alternadev.georenting.data.api.GeoRentingService;
 import de.alternadev.georenting.data.api.model.SessionToken;
 import de.alternadev.georenting.data.api.model.UpgradeSettings;
@@ -41,11 +42,9 @@ public class GeoRentingApplication extends Application {
     public void onCreate() {
         super.onCreate();
 
-        mComponent = DaggerGeoRentingComponent.builder()
+        setComponent(DaggerGeoRentingComponent.builder()
                 .geoRentingModule(new GeoRentingModule(this))
-                .build();
-
-        mComponent.inject(this);
+                .build());
 
         if(BuildConfig.DEBUG) {
             Timber.plant(new Timber.DebugTree());
@@ -58,6 +57,11 @@ public class GeoRentingApplication extends Application {
         Timber.d("GeoRenting started.");
 
         loadSettings();
+    }
+
+    public void setComponent(GeoRentingComponent c) {
+        mComponent = c;
+        mComponent.inject(this);
     }
 
     private void loadSettings() {

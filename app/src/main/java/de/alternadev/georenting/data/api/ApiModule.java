@@ -28,35 +28,6 @@ public class ApiModule {
 
     @Provides
     @Singleton
-    @Named("sessionToken")
-    Interceptor provideInterceptor(Application application) {
-        return chain -> {
-            Request original = chain.request();
-
-            if (((GeoRentingApplication) application).getSessionToken() != null && ((GeoRentingApplication) application).getSessionToken().token != null) {
-                Request request = original.newBuilder().header("Authorization", ((GeoRentingApplication) application).getSessionToken().token)
-                        .method(original.method(), original.body())
-                        .build();
-
-                return chain.proceed(request);
-            }
-            return chain.proceed(original);
-        };
-    }
-
-    @Provides
-    @Singleton
-    Retrofit provideRetrofit(OkHttpClient client, HttpUrl baseUrl, Moshi moshi) {
-        return new Retrofit.Builder()
-                .client(client)
-                .baseUrl(baseUrl)
-                .addConverterFactory(MoshiConverterFactory.create(moshi))
-                .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
-                .build();
-    }
-
-    @Provides
-    @Singleton
     GeoRentingService provideGeoRentingService(Retrofit restAdapter) {
         return restAdapter.create(GeoRentingService.class);
     }

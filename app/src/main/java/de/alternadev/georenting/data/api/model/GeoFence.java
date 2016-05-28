@@ -22,4 +22,11 @@ public class GeoFence {
         this.centerLat = lat;
         this.centerLon = lon;
     }
+    public GeoFence(double lat, double lon, int radius, String name, String id) {
+        this.centerLat = lat;
+        this.centerLon = lon;
+        this.radius = radius;
+        this.name = name;
+        this.id = id;
+    }
 }

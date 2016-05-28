@@ -14,10 +14,16 @@ import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
+import de.alternadev.georenting.GeoRentingApplication;
 import de.alternadev.georenting.data.api.DateAdapter;
 import okhttp3.Cache;
+import okhttp3.HttpUrl;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import retrofit2.Retrofit;
+import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
+import retrofit2.converter.moshi.MoshiConverterFactory;
 
 import static com.jakewharton.byteunits.DecimalByteUnit.MEGABYTES;
 import static java.util.concurrent.TimeUnit.SECONDS;
@@ -52,5 +58,34 @@ public class NetworkModule {
     @Singleton
     Picasso providePicasso(Application app, OkHttpClient client) {
         return new Picasso.Builder(app).downloader(new OkHttp3Downloader(client)).build();
+    }
+
+    @Provides
+    @Singleton
+    @Named("sessionToken")
+    Interceptor provideInterceptor(Application application) {
+        return chain -> {
+            Request original = chain.request();
+
+            if (((GeoRentingApplication) application).getSessionToken() != null && ((GeoRentingApplication) application).getSessionToken().token != null) {
+                Request request = original.newBuilder().header("Authorization", ((GeoRentingApplication) application).getSessionToken().token)
+                        .method(original.method(), original.body())
+                        .build();
+
+                return chain.proceed(request);
+            }
+            return chain.proceed(original);
+        };
+    }
+
+    @Provides
+    @Singleton
+    Retrofit provideRetrofit(OkHttpClient client, HttpUrl baseUrl, Moshi moshi) {
+        return new Retrofit.Builder()
+                .client(client)
+                .baseUrl(baseUrl)
+                .addConverterFactory(MoshiConverterFactory.create(moshi))
+                .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
+                .build();
     }
 }
