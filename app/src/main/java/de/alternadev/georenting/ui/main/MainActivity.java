@@ -280,7 +280,7 @@ public class MainActivity extends BaseActivity implements GoogleApiClient.OnConn
 
 
     private void showUserInHeader(User user) {
-        mHeaderView.background().setBackgroundColor(getResources().getColor(R.color.primary_color));
+        mHeaderView.background().setBackgroundColor(getResources().getColor(R.color.dark_primary_color));
         if(user.avatarUrl != null && !user.avatarUrl.isEmpty()) {
             mPicasso.load(user.avatarUrl)
                     .into(mHeaderView.avatar());
