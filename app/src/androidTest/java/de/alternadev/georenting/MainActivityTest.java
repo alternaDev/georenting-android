@@ -3,6 +3,7 @@ package de.alternadev.georenting;
 
 import android.os.Build;
 import android.support.test.espresso.contrib.DrawerActions;
+import android.support.test.espresso.contrib.NavigationViewActions;
 import android.support.test.uiautomator.UiDevice;
 import android.support.test.uiautomator.UiObject;
 import android.support.test.uiautomator.UiObjectNotFoundException;
@@ -69,10 +70,15 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
 
     public void testTakeScreenshot() {
         allowLocationServicePermissionsIfNeeded();
-        Screengrab.screenshot("beforeNavClick");
+        Screengrab.screenshot("main_activity");
 
         onView(withId(R.id.main_drawer_layout)).perform(DrawerActions.open());
 
-        Screengrab.screenshot("afterNavClick");
+        Screengrab.screenshot("drawer_main_activity");
+
+        onView(withId(R.id.main_navigation_view)).perform(NavigationViewActions.navigateTo(R.id.nav_map));
+
+        Screengrab.screenshot("map_main_activity");
+
     }
 }
