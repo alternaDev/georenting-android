@@ -75,14 +75,4 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
 
         Screengrab.screenshot("afterNavClick");
     }
-
-    /*public void testTakeMoreScreenshots() {
-        Screengrab.screenshot("mainActivity");
-
-        onView(withId(tools.fastlane.localetester.R.id.nav_button)).perform(click());
-
-        Screengrab.screenshot("anotherActivity");
-
-        onView(withId(R.id.hello)).check(matches(isDisplayed()));
-    }*/
 }

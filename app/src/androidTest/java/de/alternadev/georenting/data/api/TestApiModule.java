@@ -35,7 +35,7 @@ public class TestApiModule extends ApiModule {
 
     @Override
     AvatarService provideAvatarService(HttpUrl baseUrl) {
-        return Mockito.mock(AvatarService.class);
+        return new AvatarService(baseUrl);
     }
 
     @Override

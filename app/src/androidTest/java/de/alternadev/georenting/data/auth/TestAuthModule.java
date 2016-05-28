@@ -20,10 +20,14 @@ import javax.inject.Singleton;
 import dagger.Module;
 import dagger.Provides;
 import de.alternadev.georenting.R;
+import de.alternadev.georenting.data.api.ApiModule;
+import de.alternadev.georenting.data.api.AvatarService;
+import de.alternadev.georenting.data.api.ProductionApiModule;
 import de.alternadev.georenting.data.api.model.SessionToken;
 import de.alternadev.georenting.data.api.model.User;
 import de.alternadev.georenting.data.auth.AuthModule;
 import de.alternadev.georenting.data.auth.GoogleAuth;
+import okhttp3.HttpUrl;
 import rx.Observable;
 
 public class TestAuthModule extends AuthModule {
@@ -75,11 +79,13 @@ public class TestAuthModule extends AuthModule {
     @Override
     GoogleAuth provideGoogleAuth(Application application) {
         GoogleAuth gA = Mockito.mock(GoogleAuth.class);
+        AvatarService aS = new AvatarService(HttpUrl.parse(ApiModule.PRODUCTION_API_URL));
 
         User u = new User();
         u.name = "Peter B.";
         u.id = 0;
         u.balance = 42.13;
+        u.avatarUrl = aS.getAvatarUrl(u.name);
 
 
         SessionToken t = new SessionToken();

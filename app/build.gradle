@@ -220,7 +220,7 @@ task grantPermissions(type: Exec, dependsOn: 'installProductionDebug') {
         def adb = "$sdkDir/platform-tools/adb"
         def pm = "de.alternadev.georenting.debug"
         commandLine "$adb shell pm grant $pm android.permission.ACCESS_FINE_LOCATION".split(" ")
-        commandLine "$adb shell pm grant $pm android.permission.ACCESS_COARSE_LOCATION".split(" ")
+        //commandLine "$adb shell pm grant $pm android.permission.ACCESS_COARSE_LOCATION".split(" ")
     }
 }
 
