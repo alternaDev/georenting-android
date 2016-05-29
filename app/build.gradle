@@ -210,7 +210,7 @@ android.applicationVariants.all { variant ->
     installAll.group = variant.install.group
 }
 
-task grantPermissions(type: Exec, dependsOn: 'installProductionDebug') {
+/*task grantPermissions(type: Exec, dependsOn: 'installProductionDebug') {
     try {
         def rootDir = project.rootDir
         def localProperties = new File(rootDir, "local.properties")
@@ -240,6 +240,6 @@ afterEvaluate {
             task.dependsOn grantPermissions
         }
     }
-}
+}*/
 
 apply plugin: 'com.google.gms.google-services'
