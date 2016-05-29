@@ -98,17 +98,14 @@ public class GeoRentingApplication extends Application {
 
     public void createMapViewCacheIfNecessary() {
         if(mMapViewCached) return;
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    MapView mv = new MapView(getApplicationContext());
-                    mv.onCreate(null);
-                    mv.onPause();
-                    mv.onDestroy();
-                }catch (Exception ignored){
+        new Thread(() -> {
+            try {
+                MapView mv = new MapView(getApplicationContext());
+                mv.onCreate(null);
+                mv.onPause();
+                mv.onDestroy();
+            }catch (Exception ignored){
 
-                }
             }
         }).start();
         mMapViewCached = true;
