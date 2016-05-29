@@ -33,7 +33,7 @@ android {
     buildToolsVersion '23.0.3'
 
     adbOptions {
-        timeOutInMs 300000 // set timeout to 1 minute
+        timeOutInMs 600000 // set timeout to 1 minute
     }
 
     dexOptions {
@@ -211,18 +211,22 @@ android.applicationVariants.all { variant ->
 }
 
 task grantPermissions(type: Exec, dependsOn: 'installProductionDebug') {
-    def rootDir = project.rootDir
-    def localProperties = new File(rootDir, "local.properties")
-    if (localProperties.exists()) {
-        Properties properties = new Properties()
-        localProperties.withInputStream {
-            instr -> properties.load(instr)
+    try {
+        def rootDir = project.rootDir
+        def localProperties = new File(rootDir, "local.properties")
+        if (localProperties.exists()) {
+            Properties properties = new Properties()
+            localProperties.withInputStream {
+                instr -> properties.load(instr)
+            }
+            def sdkDir = properties.getProperty('sdk.dir')
+            def adb = "$sdkDir/platform-tools/adb"
+            def pm = "de.alternadev.georenting.debug"
+            commandLine "$adb shell pm grant $pm android.permission.ACCESS_FINE_LOCATION".split(" ")
+            //commandLine "$adb shell pm grant $pm android.permission.ACCESS_COARSE_LOCATION".split(" ")
         }
-        def sdkDir = properties.getProperty('sdk.dir')
-        def adb = "$sdkDir/platform-tools/adb"
-        def pm = "de.alternadev.georenting.debug"
-        commandLine "$adb shell pm grant $pm android.permission.ACCESS_FINE_LOCATION".split(" ")
-        //commandLine "$adb shell pm grant $pm android.permission.ACCESS_COARSE_LOCATION".split(" ")
+    } catch(Exception e) {
+        // Do nothing...
     }
 }
 
