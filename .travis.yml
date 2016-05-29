@@ -10,8 +10,6 @@ cache:
     - $HOME/.gradle/wrapper/
 
 env:
-  global:
-    - ADB_INSTALL_TIMEOUT=8 # minutes (2 minutes by default)
   - BUILD_TYPE=assembleAll
   - BUILD_TYPE=testfairyRelease
   - BUILD_TYPE=productionRelease
@@ -35,6 +33,7 @@ before_install:
 - echo "testfairyKey=$TESTFAIRY_KEY" >> ~/.gradle/gradle.properties
 - rvm use 2.2.2 --install --binary --fuzzy
 - gem install fastlane
+- export ADB_INSTALL_TIMEOUT=8 # minutes (2 minutes by default)
 - scripts/prepareEmulator.sh;
 
 script:
