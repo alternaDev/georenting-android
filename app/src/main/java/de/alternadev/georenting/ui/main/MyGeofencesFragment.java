@@ -139,14 +139,8 @@ public class MyGeofencesFragment extends Fragment implements GeofenceAdapter.Geo
 
         Intent intent = new Intent(getActivity(), GeofenceDetailActivity.class);
         intent.putExtra(GeofenceDetailActivity.EXTRA_GEOFENCE, Parcels.wrap(fence));
-        Pair<View, String> navPair = Pair.create(getActivity().findViewById(android.R.id.navigationBarBackground),
-                Window.NAVIGATION_BAR_BACKGROUND_TRANSITION_NAME);
-        Pair<View, String> toolbarPair = Pair.create(tb, "toolbar");
-        Pair<View, String> p1 = Pair.create(b.geofenceMap, "map");
-        ActivityOptionsCompat options = ActivityOptionsCompat.
-                makeSceneTransitionAnimation(getActivity(), p1, navPair, toolbarPair);
 
-        getActivity().startActivityForResult(intent, 0, options.toBundle());
+        getActivity().startActivityForResult(intent, 0);
     }
 
     @Override
