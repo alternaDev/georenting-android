@@ -104,8 +104,30 @@ public class GeofenceAdapter extends RecyclerView.Adapter<GeofenceViewHolder> {
     }
 
     public void setGeoFences(List<GeoFence> list) {
-        this.mGeoFences.clear();
-        this.mGeoFences.addAll(list);
+        for(int i = 0; i < mGeoFences.size(); i++) {
+            boolean contains = false;
+            for(GeoFence f : list) {
+                if(f.id.equals(mGeoFences.get(i).id)) {
+                    contains = true;
+                }
+            }
+            if (!contains) {
+                mGeoFences.remove(i);
+                this.notifyItemRemoved(i);
+            }
+        }
+        for(GeoFence f : list) {
+            boolean contains = false;
+            for(GeoFence fence : mGeoFences) {
+                if(f.id.equals(fence.id)) {
+                    contains = true;
+                }
+            }
+            if(!contains) {
+                mGeoFences.add(f);
+                this.notifyItemInserted(mGeoFences.size());
+            }
+        }
     }
 
 
