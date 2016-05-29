@@ -19,6 +19,7 @@
     <string name="main_drawer_invite">Invite Friends</string>
     <string name="activity_own_fence_visited"><b>%2$s</b> visited your GeoFence &lt;b&gt;%1$s&lt;/b&gt; and paid &lt;b&gt;%3$.2f&lt;/b&gt; GC in rent.</string>
     <string name="activity_foreign_fence_visited">You visited &lt;b&gt;%2$s&lt;/b&gt;s GeoFence &lt;b&gt;%1$s&lt;/b&gt; and paid &lt;b&gt;%3$.2f&lt;/b&gt; GC in rent.</string>
+    <string name="activity_fence_expired">Your Fence <b>%1$s</b> has expired.</string>
 
     <string name="title_activity_geofence_detail">GeoFence</string>
 
@@ -33,6 +34,7 @@
     <string name="pref_notify_visited">Visited Notification</string>
     <string name="pref_notify_visited_desc">Show Notification if someone visits your GeoFence.</string>
     <string name="pref_notify_visit_desc">Show Notification if you visit a GeoFence.</string>
+    <string name="pref_key_notify_expired">notifyExpired</string>
 
     <string name="error_network">Network error.</string>
     <string name="error_network_action_retry">Retry</string>
@@ -53,11 +55,12 @@
     <string name="error_create_fence_overlap">You can not create this GeoFence because it overlaps with other GeoFences.</string>
     <string name="error_create_fence_cant_afford">You can not afford this GeoFence!</string>
 
+    <string name="geofence_item_action_tear_down">Tear Down</string>
+
+
     <string name="app_invite_title">Send Invitations to GeoRenting.</string>
     <string name="app_invite_message">Try out GeoRenting now!</string>
     <string name="app_invite_cta">Build GeoFences</string>
-    <string name="geofence_item_action_tear_down">Tear Down</string>
-    <string name="pref_key_notify_expired">notifyExpired</string>
     <string name="yes">Yes</string>
 
 

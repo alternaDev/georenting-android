@@ -28,6 +28,12 @@
             android:text="@{Html.fromHtml(@string/activity_own_fence_visited(item.fenceName, item.visitorName, item.rent))}"
             android:layout_width="match_parent"
             android:layout_height="50dp" />
+        <TextView
+            android:textSize="16sp"
+            android:visibility='@{item.verb.equals("fenceExpired") ? View.VISIBLE : View.GONE}'
+            android:text="@{Html.fromHtml(@string/activity_fence_expired(item.fenceName))}"
+            android:layout_width="match_parent"
+            android:layout_height="50dp" />
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="0dp"
