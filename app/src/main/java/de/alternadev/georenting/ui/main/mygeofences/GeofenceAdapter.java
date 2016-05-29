@@ -56,8 +56,8 @@ public class GeofenceAdapter extends RecyclerView.Adapter<GeofenceViewHolder> {
     private GeofenceAdapterListener mListener;
 
     public GeofenceAdapter(List<GeoFence> geoFences, Activity ctx) {
-        mGeoFences = geoFences;
         this.setHasStableIds(true);
+        mGeoFences = geoFences;
         ((GeoRentingApplication) ctx.getApplication()).getComponent().inject(this);
     }
 
@@ -121,6 +121,6 @@ public class GeofenceAdapter extends RecyclerView.Adapter<GeofenceViewHolder> {
 
     @Override
     public long getItemId(int position) {
-        return mGeoFences.get(position).id.hashCode();
+        return Long.valueOf(mGeoFences.get(position).id);
     }
 }

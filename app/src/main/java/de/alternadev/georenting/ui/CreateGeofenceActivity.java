@@ -272,13 +272,20 @@ public class CreateGeofenceActivity extends BaseActivity implements GoogleApiCli
 
         stopLocationUpdates();
         setBuyButtonEnabled(false);
+
+        mBinding.setLoading(true);
+
         mService.createGeoFence(fence)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe((geoFence) -> {
+                    mBinding.setLoading(false);
+
                     logBuyGeoFence(geoFence, mCurrentPrice);
                     finishActivityWithAnimation();
                 }, error -> {
+                    mBinding.setLoading(false);
+
                     setBuyButtonEnabled(true);
 
                     if(mApiClient.isConnected())
@@ -464,6 +471,7 @@ public class CreateGeofenceActivity extends BaseActivity implements GoogleApiCli
     private void setBuyButtonEnabled(boolean e) {
         mBuyButtonEnabled = e;
         mBuyButton.setEnabled(e);
+
         supportInvalidateOptionsMenu();
     }
 }
