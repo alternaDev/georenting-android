@@ -70,6 +70,7 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
 
     public void testTakeScreenshot() {
         allowLocationServicePermissionsIfNeeded();
+        allowLocationServicePermissionsIfNeeded();
         Screengrab.screenshot("main_activity");
 
         onView(withId(R.id.main_drawer_layout)).perform(DrawerActions.open());

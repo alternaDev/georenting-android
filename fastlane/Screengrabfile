@@ -1,1 +1,5 @@
-tests_package_name "de.alternadev.georenting.debug"
+tests_package_name "de.alternadev.georenting.debug.test"
+app_package_name "de.alternadev.georenting.debug"
+test_instrumentation_runner "android.support.test.runner.AndroidJUnitRunner"
+app_apk_path "app/build/outputs/apk/app-production-debug.apk"
+tests_apk_path "app/build/outputs/apk/app-production-debug-androidTest.apk"

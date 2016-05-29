@@ -21,6 +21,7 @@ android:
   - android-23
   - extra-google-m2repository
   - extra-android-m2repository
+  - sys-img-x86-addon-google_apis-google-23
 
 before_install:
 - openssl aes-256-cbc -K $encrypted_6ca2067ed10f_key -iv $encrypted_6ca2067ed10f_iv
@@ -34,7 +35,7 @@ before_install:
 
 script:
 - if [ "$BUILD_TYPE" == "assembleAll" ]; then ./gradlew assemble; fi;
-- if [ "$TRAVIS_BRANCH" == "master" ] && [ "$TRAVIS_PULL_REQUEST" == "false" ] && [ "$BUILD_TYPE" == "testfairyRelease" ]; then ./gradlew testfairyInternalRelease; fi;
+- if [ "$TRAVIS_BRANCH" == "master" ] && [ "$TRAVIS_PULL_REQUEST" == "false" ] && [ "$BUILD_TYPE" == "testfairyRelease" ]; then scripts/prepareEmulator.sh; ./gradlew testfairyInternalRelease; fi;
 - if [ "$TRAVIS_TAG" ] && [ "$BUILD_TYPE" == "productionRelease" ]; then fastlane beta; fi;
 
 notifications:
