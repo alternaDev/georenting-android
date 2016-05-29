@@ -13,6 +13,7 @@ import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.maps.MapView;
 
 import javax.inject.Inject;
 
@@ -31,10 +32,10 @@ public class GeoRentingApplication extends Application {
     private GeoRentingComponent mComponent;
     private SessionToken mSessionToken = null;
     private UpgradeSettings mUpgradeSettings = null;
+    private boolean mMapViewCached;
 
     @Inject
     GeoRentingService mService;
-
     @Inject
     SharedPreferences mPreferences;
 
@@ -93,5 +94,23 @@ public class GeoRentingApplication extends Application {
         this.mSessionToken = sessionToken;
         if(sessionToken != null && sessionToken.token != null)
             mPreferences.edit().putString(GoogleAuth.PREF_TOKEN, sessionToken.token).apply();
+    }
+
+    public void createMapViewCacheIfNecessary() {
+        if(mMapViewCached) return;
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    MapView mv = new MapView(getApplicationContext());
+                    mv.onCreate(null);
+                    mv.onPause();
+                    mv.onDestroy();
+                }catch (Exception ignored){
+
+                }
+            }
+        }).start();
+        mMapViewCached = true;
     }
 }

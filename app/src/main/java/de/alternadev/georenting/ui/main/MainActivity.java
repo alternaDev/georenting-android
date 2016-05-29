@@ -131,6 +131,8 @@ public class MainActivity extends BaseActivity implements GoogleApiClient.OnConn
 
         mCurrentUser = getGeoRentingApplication().getSessionToken().user;
         showFragment(LoadingFragment.newInstance());
+
+        getGeoRentingApplication().createMapViewCacheIfNecessary();
     }
 
     private void loadCurrentUser() {
