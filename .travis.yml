@@ -10,6 +10,8 @@ cache:
     - $HOME/.gradle/wrapper/
 
 env:
+  global:
+    - ADB_INSTALL_TIMEOUT=8 # minutes (2 minutes by default)
   - BUILD_TYPE=assembleAll
   - BUILD_TYPE=testfairyRelease
   - BUILD_TYPE=productionRelease
