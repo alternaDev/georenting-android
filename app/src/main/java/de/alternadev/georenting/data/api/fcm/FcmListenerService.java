@@ -151,7 +151,7 @@ public class FcmListenerService extends FirebaseMessagingService {
 
             mBuilder.setStyle(inboxStyle);
             inboxStyle.setSummaryText(notifications.size() + "");
-            mBuilder.setContentText(Html.fromHtml(notificationDataToString(mMoshi.adapter(Map.class).fromJson(notifications.get(0).data()))).subSequence(0, 25) + "...");
+            mBuilder.setContentText(getSummary(notifications));
         }
 
         Intent resultIntent = new Intent(this, MainActivity.class);
@@ -165,6 +165,32 @@ public class FcmListenerService extends FirebaseMessagingService {
                 (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 
         mNotificationManager.notify(NOTIFICATION_GEOFENCE_OPERATIONS_ID, mBuilder.build());
+    }
+
+    private String getSummary(List<Notification> notifications) throws IOException {
+        int visitCount = 0, foreignVisitCount = 0, expiryCount = 0;
+        for(Notification n : notifications) {
+            Map data = mMoshi.adapter(Map.class).fromJson(n.data());
+            if(data.get(KEY_NOTIFICATION_TYPE).equals(NOTIFICATION_TYPE_FOREIGN_FENCE_ENTERED)) {
+                foreignVisitCount++;
+            } else if(data.get(KEY_NOTIFICATION_TYPE).equals(NOTIFICATION_TYPE_OWN_FENCE_ENTERED)) {
+                visitCount++;
+            } else if(data.get(KEY_NOTIFICATION_TYPE).equals(NOTIFICATION_TYPE_FENCE_EXPIRED)) {
+                expiryCount++;
+            }
+        }
+
+        StringBuilder b = new StringBuilder();
+        if(visitCount > 0) {
+            b.append(visitCount + " Fences visited, ");
+        }
+        if(foreignVisitCount > 0) {
+            b.append(foreignVisitCount + " visitors, ");
+        }
+        if(expiryCount > 0) {
+            b.append(expiryCount + " fences expired.");
+        }
+        return b.toString();
     }
 
     private String notificationDataToString(Map data) {
