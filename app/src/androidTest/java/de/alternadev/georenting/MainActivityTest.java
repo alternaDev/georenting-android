@@ -31,12 +31,15 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
 
     private SessionToken mToken = new SessionToken();
     private UiDevice mDevice;
+    private SystemAnimations systemAnimations;
 
     public MainActivityTest() {
         super(MainActivity.class);
     }
 
     public void setUp(){
+        systemAnimations = new SystemAnimations(getInstrumentation().getContext());
+        systemAnimations.disableAll();
         mDevice = UiDevice.getInstance(getInstrumentation());
         mToken.token = "token";
 
@@ -66,6 +69,7 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
 
     public void tearDown() {
         LocaleUtil.changeDeviceLocaleTo(LocaleUtil.getEndingLocale());
+        systemAnimations.enableAll();
     }
 
     public void testTakeScreenshot() {
