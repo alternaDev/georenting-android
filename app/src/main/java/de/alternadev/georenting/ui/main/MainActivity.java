@@ -66,13 +66,20 @@ public class MainActivity extends BaseActivity implements GoogleApiClient.OnConn
 
     public static String EXTRA_FRAGMENT = "fragment";
 
+    private static final String FRAGMENT_MAP = "map";
+    private static final String FRAGMENT_PROFILE = "profile";
+    private static final String FRAGMENT_MY_FENCES = "myGeofences";
+    private static final String FRAGMENT_HISTORY = "history";
+
     private GoogleApiClient mApiClient;
+
     private ActionBarDrawerToggle mDrawerToggle;
     private HeaderCompactView mHeaderView;
     private DrawerLayout mDrawerLayout;
     private NavigationView mNavigationView;
     private Toolbar mToolbar;
     private User mCurrentUser;
+    private String mCurrentFragment = FRAGMENT_MY_FENCES;
 
     @Inject
     GeoRentingService mService;
@@ -161,12 +168,29 @@ public class MainActivity extends BaseActivity implements GoogleApiClient.OnConn
     private void setCurrentUser(User user) {
         mCurrentUser = user;
         showUserInHeader(user);
-        showStartFragment();
+        showCurrentFragment();
+    }
+
+    private void showCurrentFragment() {
+        switch(this.mCurrentFragment) {
+            case FRAGMENT_MY_FENCES:
+                showFragment(MyGeofencesFragment.newInstance(mCurrentUser));
+                break;
+            case FRAGMENT_PROFILE:
+                showFragment(ProfileFragment.newInstance(mCurrentUser));
+                break;
+            case FRAGMENT_MAP:
+                showFragment(MapFragment.newInstance());
+                break;
+            case FRAGMENT_HISTORY:
+                showFragment(HistoryFragment.newInstance());
+                break;
+        }
     }
 
     private void showStartFragment() {
         if(getIntent() == null || getIntent().getStringExtra(EXTRA_FRAGMENT) == null) {
-            showFragment(MyGeofencesFragment.newInstance(mCurrentUser));
+            showCurrentFragment();
             return;
         }
         String extraFragment = getIntent().getStringExtra(EXTRA_FRAGMENT);
@@ -174,11 +198,13 @@ public class MainActivity extends BaseActivity implements GoogleApiClient.OnConn
         switch(extraFragment) {
             case "myFences":
                 mNavigationView.getMenu().getItem(0).setChecked(true);
-                showFragment(MyGeofencesFragment.newInstance(mCurrentUser));
+                this.mCurrentFragment = FRAGMENT_MY_FENCES;
+                showCurrentFragment();
                 break;
             case "history":
                 mNavigationView.getMenu().getItem(3).setChecked(true);
-                showFragment(HistoryFragment.newInstance());
+                this.mCurrentFragment = FRAGMENT_HISTORY;
+                showCurrentFragment();
                 break;
         }
 
@@ -231,19 +257,23 @@ public class MainActivity extends BaseActivity implements GoogleApiClient.OnConn
         switch (menuItem.getItemId()) {
             case R.id.nav_my_geofences:
                 menuItem.setChecked(true);
-                showFragment(MyGeofencesFragment.newInstance(mCurrentUser));
+                this.mCurrentFragment = FRAGMENT_MY_FENCES;
+                showCurrentFragment();
                 break;
             case R.id.nav_map:
                 menuItem.setChecked(true);
-                showFragment(MapFragment.newInstance());
+                this.mCurrentFragment = FRAGMENT_MAP;
+                showCurrentFragment();
                 break;
             case R.id.nav_profile:
                 menuItem.setChecked(true);
-                showFragment(ProfileFragment.newInstance(mCurrentUser));
+                this.mCurrentFragment = FRAGMENT_PROFILE;
+                showCurrentFragment();
                 break;
             case R.id.nav_history:
                 menuItem.setChecked(true);
-                showFragment(HistoryFragment.newInstance());
+                this.mCurrentFragment = FRAGMENT_HISTORY;
+                showCurrentFragment();
                 break;
             case R.id.nav_settings:
                 startActivity(new Intent(this, SettingsActivity.class));
