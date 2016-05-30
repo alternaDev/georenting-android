@@ -262,7 +262,7 @@ public class UpdateGeofencesTask extends GcmTaskService {
         Task task = new PeriodicTask.Builder()
                 .setRequiredNetwork(PeriodicTask.NETWORK_STATE_CONNECTED)
                 .setService(UpdateGeofencesTask.class)
-                .setPeriod(60 * 60) // Every 60 Minutes.
+                .setPeriod(30 * 60) // Every 30 Minutes.
                 .setFlex(30)
                 .setUpdateCurrent(true)
                 .setTag("GeofenceUpdater")
