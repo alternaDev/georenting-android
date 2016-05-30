@@ -22,7 +22,6 @@ import dagger.Provides;
 import de.alternadev.georenting.R;
 import de.alternadev.georenting.data.api.ApiModule;
 import de.alternadev.georenting.data.api.AvatarService;
-import de.alternadev.georenting.data.api.ProductionApiModule;
 import de.alternadev.georenting.data.api.model.SessionToken;
 import de.alternadev.georenting.data.api.model.User;
 import de.alternadev.georenting.data.auth.AuthModule;
