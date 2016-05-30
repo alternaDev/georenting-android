@@ -2,6 +2,7 @@ package de.alternadev.georenting;
 
 
 import android.os.Build;
+import android.os.RemoteException;
 import android.support.test.espresso.contrib.DrawerActions;
 import android.support.test.espresso.contrib.NavigationViewActions;
 import android.support.test.uiautomator.UiDevice;
@@ -40,7 +41,16 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
     public void setUp(){
         systemAnimations = new SystemAnimations(getInstrumentation().getContext());
         systemAnimations.disableAll();
+
         mDevice = UiDevice.getInstance(getInstrumentation());
+
+
+        try {
+            mDevice.wakeUp();
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+
         mToken.token = "token";
 
         GeoRentingApplication app = ((GeoRentingApplication) getInstrumentation().getTargetContext().getApplicationContext());
@@ -50,7 +60,17 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
                .authModule(new TestAuthModule())
                .geoRentingModule(new GeoRentingModule(app))
                .build());
+        try {
+            mDevice.wakeUp();
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
         getActivity();
+        try {
+            mDevice.wakeUp();
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
         LocaleUtil.changeDeviceLocaleTo(LocaleUtil.getTestLocale());
     }
 
