@@ -55,14 +55,12 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
     }
 
     private void allowLocationServicePermissionsIfNeeded()  {
-        if (Build.VERSION.SDK_INT >= 23) {
-            UiObject allowPermissions = mDevice.findObject(new UiSelector().text(getActivity().getString(R.string.yes)));
-            if (allowPermissions.exists()) {
-                try {
-                    allowPermissions.click();
-                } catch (UiObjectNotFoundException e) {
-                    Timber.e(e, "There is no Location Service dialog to interact with ");
-                }
+        UiObject allowPermissions = mDevice.findObject(new UiSelector().text(getActivity().getString(R.string.yes)));
+        if (allowPermissions.exists()) {
+            try {
+                allowPermissions.click();
+            } catch (UiObjectNotFoundException e) {
+                Timber.e(e, "There is no Location Service dialog to interact with ");
             }
         }
     }
