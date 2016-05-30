@@ -188,7 +188,7 @@ public class FcmListenerService extends FirebaseMessagingService {
             b.append(foreignVisitCount + " visitors, ");
         }
         if(expiryCount > 0) {
-            b.append(expiryCount + " fences expired.");
+            b.append(expiryCount + " Fences expired.");
         }
         return b.toString();
     }
