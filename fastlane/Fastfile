@@ -27,9 +27,10 @@ platform :android do
 
   desc "Submit a new Beta Build to Google Play Beta"
   lane :beta do
-    gradle(task: "assembleProductionDebug")
-    gradle(task: "assembleProductionDebugAndroidTest")
-    screengrab
+    # Disabled until automatic screenshots work.
+    # gradle(task: "assembleProductionDebug")
+    # gradle(task: "assembleProductionDebugAndroidTest")
+    # screengrab
     gradle(task: "assembleProductionRelease")
     supply track: 'beta', apk_paths: ["./app/build/outputs/apk/app-production-release.apk"]
 

@@ -8,6 +8,7 @@ public class User {
     @Json(name = "google_token")
     public String googleToken;
 
+    @Json(name = "name")
     public String name;
 
     @Json(name = "avatar_url")
@@ -16,6 +17,7 @@ public class User {
     @Json(name = "cover_url")
     public String coverUrl;
 
+    @Json(name = "balance")
     public double balance;
 
     @Json(name = "ID")

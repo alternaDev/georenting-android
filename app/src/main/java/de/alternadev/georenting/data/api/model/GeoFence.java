@@ -2,19 +2,37 @@ package de.alternadev.georenting.data.api.model;
 
 import java.util.Date;
 
+import com.squareup.moshi.Json;
+
 import de.alternadev.georenting.data.api.DateAdapter;
 
 @org.parceler.Parcel
 public class GeoFence {
+    @Json(name = "id")
     public String id;
+
+    @Json(name = "center_lat")
     public double centerLat;
+
+    @Json(name = "center_lon")
     public double centerLon;
+
+    @Json(name = "radius")
     public int radius;
+
+    @Json(name = "ttl")
     public long ttl;
+
     //@DateAdapter.DateType
     //public Date diesAt; //TODO: FIX
+
+    @Json(name = "rent_multiplier")
     public double rentMultiplier;
+
+    @Json(name = "name")
     public String name;
+
+    @Json(name = "owner_id")
     public int owner;
 
     public GeoFence() {}
