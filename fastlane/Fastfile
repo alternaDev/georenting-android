@@ -25,6 +25,16 @@ platform :android do
     gradle(task: "test")
   end
 
+  desc "Submit a new Alpha Build to Google Play Beta"
+  lane :alpha do
+    # Disabled until automatic screenshots work.
+    # gradle(task: "assembleProductionDebug")
+    # gradle(task: "assembleProductionDebugAndroidTest")
+    # screengrab
+    gradle(task: "assembleProductionRelease")
+    supply track: 'alpha', apk_paths: ["./app/build/outputs/apk/app-production-release.apk"]
+  end
+
   desc "Submit a new Beta Build to Google Play Beta"
   lane :beta do
     # Disabled until automatic screenshots work.
@@ -33,9 +43,6 @@ platform :android do
     # screengrab
     gradle(task: "assembleProductionRelease")
     supply track: 'beta', apk_paths: ["./app/build/outputs/apk/app-production-release.apk"]
-
-    # sh "your_script.sh"
-    # You can also use other beta testing services here
   end
 
   # You can define as many lanes as you want
