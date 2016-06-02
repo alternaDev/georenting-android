@@ -89,7 +89,9 @@ public class MapFragment extends Fragment implements GoogleApiClient.OnConnectio
     @Override
     public void onPause() {
         super.onPause();
-        LocationServices.FusedLocationApi.removeLocationUpdates(mApiClient, mListener);
+
+        if(mApiClient.isConnected())
+            LocationServices.FusedLocationApi.removeLocationUpdates(mApiClient, mListener);
 
         if (mMapView != null)
             mMapView.onPause();
