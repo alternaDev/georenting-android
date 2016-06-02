@@ -142,6 +142,10 @@ public class CreateGeofenceActivity extends BaseActivity implements GoogleApiCli
     }
 
     private void finishActivityWithAnimation() {
+        if(Build.VERSION.SDK_INT < 21) {
+            finish();
+            return;
+        }
         View rootLayout = mBinding.getRoot();
 
         int cx = rootLayout.getWidth();
