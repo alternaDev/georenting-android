@@ -156,7 +156,7 @@ public class FcmListenerService extends FirebaseMessagingService {
 
         Intent resultIntent = new Intent(this, MainActivity.class);
         resultIntent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-        resultIntent.putExtra(MainActivity.EXTRA_FRAGMENT, "history");
+        resultIntent.putExtra(MainActivity.EXTRA_FRAGMENT, MainActivity.FRAGMENT_HISTORY);
 
         PendingIntent resultPendingIntent =
                 PendingIntent.getActivity(this, (int) (System.currentTimeMillis() & 0xfffffff), resultIntent, PendingIntent.FLAG_UPDATE_CURRENT);

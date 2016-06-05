@@ -18,6 +18,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.MenuItem;
 
 import com.google.android.gms.appinvite.AppInviteInvitation;
@@ -66,17 +67,16 @@ public class MainActivity extends BaseActivity implements GoogleApiClient.OnConn
 
     public static String EXTRA_FRAGMENT = "fragment";
 
-    private static final String FRAGMENT_MAP = "map";
-    private static final String FRAGMENT_PROFILE = "profile";
-    private static final String FRAGMENT_MY_FENCES = "myGeofences";
-    private static final String FRAGMENT_HISTORY = "history";
+    public static final String FRAGMENT_MAP = "map";
+    public static final String FRAGMENT_PROFILE = "profile";
+    public static final String FRAGMENT_MY_FENCES = "myGeofences";
+    public static final String FRAGMENT_HISTORY = "history";
 
     private GoogleApiClient mApiClient;
 
     private ActionBarDrawerToggle mDrawerToggle;
     private HeaderCompactView mHeaderView;
     private DrawerLayout mDrawerLayout;
-    private NavigationView mNavigationView;
     private Toolbar mToolbar;
     private User mCurrentUser;
     private String mCurrentFragment = FRAGMENT_MY_FENCES;
@@ -119,7 +119,6 @@ public class MainActivity extends BaseActivity implements GoogleApiClient.OnConn
 
         mHeaderView = new HeaderCompactView(this, false);
 
-        mNavigationView = b.mainNavigationView;
         b.mainNavigationView.addHeaderView(mHeaderView);
         b.mainNavigationView.setNavigationItemSelectedListener(this::onNavigationItemSelected);
 
@@ -195,18 +194,11 @@ public class MainActivity extends BaseActivity implements GoogleApiClient.OnConn
         }
         String extraFragment = getIntent().getStringExtra(EXTRA_FRAGMENT);
 
-        switch(extraFragment) {
-            case "myFences":
-                mNavigationView.getMenu().getItem(0).setChecked(true);
-                this.mCurrentFragment = FRAGMENT_MY_FENCES;
-                showCurrentFragment();
-                break;
-            case "history":
-                mNavigationView.getMenu().getItem(3).setChecked(true);
-                this.mCurrentFragment = FRAGMENT_HISTORY;
-                showCurrentFragment();
-                break;
+        if(extraFragment != null && !TextUtils.isEmpty(extraFragment)) {
+            mCurrentFragment = extraFragment;
         }
+
+        showCurrentFragment();
 
         setIntent(null);
     }
