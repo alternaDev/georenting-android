@@ -78,16 +78,21 @@ public class ProfileFragment extends Fragment {
             mBinding.profileImage.setClipToOutline(false);
         }
 
+        mBinding.profileRefresh.setOnRefreshListener(this::loadCashStatus);
+
+
         loadCashStatus();
 
         return mBinding.getRoot();
     }
 
     private void loadCashStatus() {
+        mBinding.profileRefresh.setRefreshing(true);
         mService.getCash().subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe((cash) -> {
                     mBinding.setCash(cash);
+                    mBinding.profileRefresh.setRefreshing(false);
                 });
     }
 
