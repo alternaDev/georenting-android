@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="text_geofence_card_background">#70000000</color>
+    <color name="text_geofence_card_background">#90000000</color>
     <color name="text_geofence_card">#f0ffffff</color>
     <color name="gray">#dfdfdf</color>
     <color name="red">#aaff0000</color>

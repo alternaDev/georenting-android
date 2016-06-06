@@ -37,7 +37,7 @@
                 android:textSize="22sp"
                 android:layout_margin="0dp"
                 android:padding="8dp"
-                android:background="@color/text_geofence_card_background"
+                android:background="@drawable/black_gradient"
                 android:textColor="@color/text_geofence_card"
                 android:text="@{geoFence.name}"/>
             <LinearLayout
