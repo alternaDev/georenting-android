@@ -18,6 +18,8 @@ import de.alternadev.georenting.R;
 import de.alternadev.georenting.data.api.GeoRentingService;
 import de.alternadev.georenting.data.api.model.User;
 import de.alternadev.georenting.databinding.FragmentProfileBinding;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
 public class ProfileFragment extends Fragment {
     private static final String SAVED_INSTANCE_CURRENT_USER = "currentUser";
@@ -32,6 +34,7 @@ public class ProfileFragment extends Fragment {
     }
 
     private User mCurrentUser;
+    private FragmentProfileBinding mBinding;
 
     @Inject
     GeoRentingService mService;
@@ -60,29 +63,32 @@ public class ProfileFragment extends Fragment {
             mCurrentUser = Parcels.unwrap(savedInstanceState.getParcelable(SAVED_INSTANCE_CURRENT_USER));
 
         // Inflate the layout for this fragment
-        FragmentProfileBinding b = FragmentProfileBinding.inflate(inflater, container, false);
+        mBinding = FragmentProfileBinding.inflate(inflater, container, false);
 
         if(mCurrentUser.avatarUrl != null && !mCurrentUser.avatarUrl.isEmpty()) {
             mPicasso.load(mCurrentUser.avatarUrl + "&sz=250")
                     .placeholder(R.drawable.default_avatar)
-                    .into(b.profileImage);
+                    .into(mBinding.profileImage);
         }
 
-        if(mCurrentUser.coverUrl != null && !mCurrentUser.coverUrl.isEmpty()) {
-            mPicasso.load(mCurrentUser.coverUrl)
-                    .fit()
-                    .centerCrop()
-                    .into(b.backgroundImage);
-        }
-
-        b.setUser(mCurrentUser);
+        mBinding.setUser(mCurrentUser);
 
         if(Build.VERSION.SDK_INT >= 21) {
-            b.profileUserCard.setClipToOutline(false);
-            b.profileImage.setClipToOutline(false);
+            mBinding.profileUserCard.setClipToOutline(false);
+            mBinding.profileImage.setClipToOutline(false);
         }
 
-        return b.getRoot();
+        loadCashStatus();
+
+        return mBinding.getRoot();
+    }
+
+    private void loadCashStatus() {
+        mService.getCash().subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe((cash) -> {
+                    mBinding.setCash(cash);
+                });
     }
 
     @Override

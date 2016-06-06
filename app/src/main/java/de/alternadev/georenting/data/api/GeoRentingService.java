@@ -5,6 +5,7 @@ package de.alternadev.georenting.data.api;
 import java.util.List;
 
 import de.alternadev.georenting.data.api.model.ActivityItem;
+import de.alternadev.georenting.data.api.model.CashStatus;
 import de.alternadev.georenting.data.api.model.CostEstimate;
 import de.alternadev.georenting.data.api.model.GcmToken;
 import de.alternadev.georenting.data.api.model.GeoFence;
@@ -39,6 +40,9 @@ public interface GeoRentingService {
 
     @GET("users/me/history")
     Observable<List<ActivityItem>> getHistory(@Query("from") long from, @Query("to") long to);
+
+    @GET("users/me/cash")
+    Observable<CashStatus> getCash();
 
     @GET("fences")
     Call<List<GeoFence>> getFencesNear(@Query("latitude") double latitude, @Query("longitude") double longitude, @Query("radius") int radius);

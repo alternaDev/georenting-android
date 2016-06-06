@@ -62,6 +62,14 @@
     <string name="app_invite_message">Try out GeoRenting now!</string>
     <string name="app_invite_cta">Build GeoFences</string>
     <string name="yes">Yes</string>
+    <string name="fragment_cash_earnings_rent_seven_days">Earnings Rent:</string>
+    <string name="fragment_cash_expenses_rent_seven_days">Expenses Rent:</string>
+    <string name="fragment_cash_expenses_geo_fence_seven_days">Expenses GeoFence:</string>
+    <string name="fragment_cash_seven_days_title">Seven Days:</string>
+    <string name="fragment_cash_all_time_title">All Time:</string>
+    <string name="fragment_cash_earnings_rent">Earnings Rent:</string>
+    <string name="fragment_cash_expenses_rent">Expenses Rent:</string>
+    <string name="fragment_cash_expenses_geo_fence">Expenses GeoFence:</string>
 
 
 </resources>

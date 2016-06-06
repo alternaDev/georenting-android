@@ -4,55 +4,269 @@
 
     <data>
         <variable name="user" type="de.alternadev.georenting.data.api.model.User" />
+        <variable name="cash" type="de.alternadev.georenting.data.api.model.CashStatus" />
     </data>
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-        <FrameLayout
+        <LinearLayout
+            android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             tools:context="de.alternadev.georenting.ui.main.ProfileFragment">
-
-            <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="150dp"
-                android:background="@drawable/default_background"
-                android:id="@+id/background_image" />
-
-
             <android.support.v7.widget.CardView
                 android:layout_width="match_parent"
-                android:layout_height="200dp"
+                android:layout_height="wrap_content"
                 android:layout_marginStart="5dp"
                 android:layout_marginEnd="5dp"
-                android:layout_marginTop="155dp"
+                android:layout_marginTop="8dp"
                 android:layout_marginBottom="5dp"
                 android:clipChildren="false"
                 android:id="@+id/profile_user_card"
                 app:cardElevation="2dp">
-                <TextView
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="75dp"
-                    android:text="@{user.name}"
-                    android:layout_gravity="center_horizontal"
-                    style="@style/TextAppearance.AppCompat.Headline" />
+                    android:paddingTop="8dp"
+                    android:paddingBottom="24dp"
+                    android:paddingStart="8dp"
+                    android:paddingEnd="8dp">
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        app:elevation="4dp"
+                        android:elevation="4dp"
+                        android:id="@+id/profile_image"
+                        android:layout_width="100dp"
+                        android:layout_height="100dp"
+                        app:civ_border_width="2dp"
+                        app:civ_border_color="#FFFFFFFF"
+                        android:drawable="@drawable/default_avatar"
+                        android:layout_marginTop="7dp"
+                        android:layout_gravity="center_horizontal" />
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@{user.name}"
+                        android:gravity="center_horizontal"
+                        style="@style/TextAppearance.AppCompat.Headline" />
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@{@string/n_money_units(user.balance)}"
+                        android:gravity="center_horizontal"
+                        style="@style/TextAppearance.AppCompat.Medium" />
+                </LinearLayout>
+            </android.support.v7.widget.CardView>
+            <android.support.v7.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:layout_marginEnd="5dp"
+                android:layout_marginBottom="5dp"
+                android:clipChildren="false"
+                android:id="@+id/profile_seven_days_card"
+                app:cardElevation="2dp">
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:paddingTop="8dp"
+                    android:paddingBottom="24dp"
+                    android:paddingStart="8dp"
+                    android:paddingEnd="8dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/fragment_cash_seven_days_title"
+                        android:gravity="start"
+                        android:layout_marginBottom="8dp"
+                        style="@style/TextAppearance.AppCompat.Headline" />
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/fragment_cash_earnings_rent"
+                            android:layout_weight="1"
+                            android:layout_gravity="start" />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@{@string/n_money_units(cash.earningsRentSevenDays)}"
+                            android:layout_weight="1"
+                            android:gravity="end"
+                            android:textColor="@color/green"/>
+                    </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/fragment_cash_expenses_rent"
+                            android:layout_weight="1"
+                            android:layout_gravity="start" />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@{@string/n_money_units(-cash.expensesRentSevenDays)}"
+                            android:layout_weight="1"
+                            android:gravity="end"
+                            android:textColor="@{cash.getSevenDaysTotal() &lt; 0 ? @color/red : @color/green}"/>
+                    </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/fragment_cash_expenses_geo_fence"
+                            android:layout_weight="1"
+                            android:layout_gravity="start" />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@{@string/n_money_units(-cash.expensesGeoFenceSevenDays)}"
+                            android:layout_weight="1"
+                            android:gravity="end"
+                            android:textColor="@color/red"/>
+                    </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+                        <View
+                            android:layout_weight="1"
+                            android:layout_width="wrap_content"
+                            android:layout_height="1dp"
+                            android:layout_marginTop="5dp"/>
+                        <View
+                            android:layout_weight="1"
+                            android:layout_width="wrap_content"
+                            android:layout_height="1dp"
+                            android:layout_marginTop="5dp"
+                            android:background="@color/black" />
+                    </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:text="@{@string/n_money_units(cash.getSevenDaysTotal())}"
+                            android:layout_weight="1"
+                            android:gravity="end"
+                            android:textColor="@color/red"/>
+                    </LinearLayout>
+                </LinearLayout>
+            </android.support.v7.widget.CardView>
+            <android.support.v7.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:layout_marginEnd="5dp"
+                android:layout_marginBottom="5dp"
+                android:clipChildren="false"
+                android:id="@+id/profile_all_time_card"
+                app:cardElevation="2dp">
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:paddingTop="8dp"
+                    android:paddingBottom="24dp"
+                    android:paddingStart="8dp"
+                    android:paddingEnd="8dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/fragment_cash_all_time_title"
+                        android:gravity="start"
+                        android:layout_marginBottom="8dp"
+                        style="@style/TextAppearance.AppCompat.Headline" />
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/fragment_cash_earnings_rent"
+                            android:layout_weight="1"
+                            android:layout_gravity="start" />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@{@string/n_money_units(cash.earningsRentAllTime)}"
+                            android:layout_weight="1"
+                            android:gravity="end"
+                            android:textColor="@color/green"/>
+                    </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/fragment_cash_expenses_rent"
+                            android:layout_weight="1"
+                            android:layout_gravity="start" />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@{@string/n_money_units(-cash.expensesRentAllTime)}"
+                            android:layout_weight="1"
+                            android:gravity="end"
+                            android:textColor="@color/red"/>
+                    </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/fragment_cash_expenses_geo_fence"
+                            android:layout_weight="1"
+                            android:layout_gravity="start" />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@{@string/n_money_units(-cash.expensesGeoFenceAllTime)}"
+                            android:layout_weight="1"
+                            android:gravity="end"
+                            android:textColor="@color/red"/>
+                    </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+                        <View
+                            android:layout_weight="1"
+                            android:layout_width="wrap_content"
+                            android:layout_height="1dp"
+                            android:layout_marginTop="5dp"/>
+                        <View
+                            android:layout_weight="1"
+                            android:layout_width="wrap_content"
+                            android:layout_height="1dp"
+                            android:layout_marginTop="5dp"
+                            android:background="@color/black" />
+                    </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:text="@{@string/n_money_units(cash.getAllTimeTotal())}"
+                            android:layout_weight="1"
+                            android:gravity="end"
+                            android:textColor="@{cash.getAllTimeTotal() &lt; 0 ? @color/red : @color/green}"/>
+                    </LinearLayout>
+                </LinearLayout>
             </android.support.v7.widget.CardView>
 
-            <de.hdodenhof.circleimageview.CircleImageView
-                app:elevation="4dp"
-                android:elevation="4dp"
-                android:id="@+id/profile_image"
-                android:layout_width="150dp"
-                android:layout_height="150dp"
-                app:civ_border_width="2dp"
-                app:civ_border_color="#FFFFFFFF"
-                android:drawable="@drawable/default_avatar"
-                android:layout_marginTop="77dp"
-                android:layout_gravity="center_horizontal" />
 
-        </FrameLayout>
+        </LinearLayout>
     </ScrollView>
 </layout>
