@@ -32,7 +32,7 @@ public class GeoFence {
     @Json(name = "name")
     public String name;
 
-    @Json(name = "owner_id")
+    @Json(name = "owner")
     public int owner;
 
     public GeoFence() {}
