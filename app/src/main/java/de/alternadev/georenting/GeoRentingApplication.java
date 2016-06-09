@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 //import android.support.multidex.MultiDex;
+import android.support.multidex.MultiDex;
 import android.text.TextUtils;
 
 import com.facebook.stetho.Stetho;
@@ -76,7 +77,7 @@ public class GeoRentingApplication extends Application {
 
     @Override
     protected void attachBaseContext(Context base) {
-        //MultiDex.install(base);
+        MultiDex.install(base);
         super.attachBaseContext(base);
     }
 

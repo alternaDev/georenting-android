@@ -69,6 +69,8 @@ android {
 
         resConfigs "en", "de"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
+        multiDexEnabled true
     }
 
 
@@ -91,6 +93,7 @@ android {
 
     productFlavors {
         internal {
+            minSdkVersion 21 // Use version 21 here so multidex can optimize this.
             applicationId 'de.alternadev.georenting.internal'
         }
         production {
@@ -124,6 +127,8 @@ android {
 
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
+
+    compile 'com.android.support:multidex:1.0.0'
 
     apt "org.parceler:parceler:1.1.0"
 

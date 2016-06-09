@@ -3,6 +3,7 @@ package de.alternadev.georenting;
 
 import android.os.Build;
 import android.os.RemoteException;
+import android.support.multidex.MultiDex;
 import android.support.test.espresso.contrib.DrawerActions;
 import android.support.test.espresso.contrib.NavigationViewActions;
 import android.support.test.uiautomator.UiDevice;
@@ -19,6 +20,7 @@ import timber.log.Timber;
 import tools.fastlane.screengrab.Screengrab;
 import tools.fastlane.screengrab.locale.LocaleUtil;
 
+import static android.support.test.InstrumentationRegistry.getTargetContext;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
@@ -38,7 +40,8 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
         super(MainActivity.class);
     }
 
-    public void setUp(){
+    public void setUp() {
+        MultiDex.install(getTargetContext());
         systemAnimations = new SystemAnimations(getInstrumentation().getContext());
         systemAnimations.disableAll();
 
@@ -74,7 +77,7 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
         LocaleUtil.changeDeviceLocaleTo(LocaleUtil.getTestLocale());
     }
 
-    private void allowLocationServicePermissionsIfNeeded()  {
+    private void allowLocationServicePermissionsIfNeeded() {
         UiObject allowPermissions = mDevice.findObject(new UiSelector().text(getActivity().getString(R.string.yes)));
         if (allowPermissions.exists()) {
             try {
