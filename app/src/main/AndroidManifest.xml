@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="de.alternadev.georenting" >
+    xmlns:tools="http://schemas.android.com/tools"
+    package="de.alternadev.georenting">
 
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.INTERNET" />
@@ -9,6 +10,7 @@
 
     <application
         android:name=".GeoRentingApplication"
+        tools:replace="android:allowBackup"
         android:allowBackup="false"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
