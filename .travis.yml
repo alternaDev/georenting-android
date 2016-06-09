@@ -45,7 +45,7 @@ script:
 - if [ "$BUILD_TYPE" == "assembleAll" ]; then ./gradlew assemble; fi;
 - if [ "$TRAVIS_BRANCH" == "master" ] && [ "$TRAVIS_PULL_REQUEST" == "false" ] && [ "$BUILD_TYPE" == "testfairyRelease" ]; then ./gradlew testfairyInternalRelease; fi;
 - if [ "$TRAVIS_BRANCH" == "master" ] && [ "$TRAVIS_PULL_REQUEST" == "false" ] && [ "$BUILD_TYPE" == "googlePlayAlpha" ]; then fastlane alpha; fi;
-- if [ "$TRAVIS_TAG" ] && [ "$BUILD_TYPE" == "productionRelease" ]; then fastlane alpha beta; fi;
+- if [ "$TRAVIS_TAG" ] && [ "$BUILD_TYPE" == "productionRelease" ]; then fastlane beta; fi;
 
 notifications:
   slack:

@@ -42,7 +42,8 @@ platform :android do
     # gradle(task: "assembleProductionDebugAndroidTest")
     # screengrab
     gradle(task: "assembleProductionRelease")
-    supply track: 'beta', apk_paths: ["./app/build/outputs/apk/app-production-release.apk"]
+    supply track: 'alpha', apk_paths: ["./app/build/outputs/apk/app-production-release.apk"]
+    supply track: 'alpha', track_promote_to: 'beta', skip_upload_apk: true, skip_upload_metadata: true, skip_upload_screenshots: true, skip_upload_images: true
   end
 
   # You can define as many lanes as you want
