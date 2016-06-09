@@ -4,6 +4,7 @@ import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.StrictMode;
 import android.support.annotation.Nullable;
 //import android.support.multidex.MultiDex;
 import android.support.multidex.MultiDex;
@@ -54,6 +55,18 @@ public class GeoRentingApplication extends Application {
 
         if(BuildConfig.DEBUG) {
             Stetho.initializeWithDefaults(this);
+        }
+
+        if (BuildConfig.DEBUG && BuildConfig.VERSION_CODE >= 23) {
+            // Enable StrictMode
+            StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder()
+                    .detectAll()
+                    .penaltyLog()
+                    .build());
+            StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder()
+                    .detectAll()
+                    .penaltyLog()
+                    .build());
         }
 
         Timber.d("GeoRenting started.");
