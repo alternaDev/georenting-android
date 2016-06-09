@@ -24,7 +24,9 @@ import de.alternadev.georenting.data.models.Notification;
 import de.alternadev.georenting.databinding.FragmentHistoryBinding;
 import de.alternadev.georenting.databinding.FragmentMyGeofencesBinding;
 import de.alternadev.georenting.ui.main.history.ActivityItemAdapter;
+import de.alternadev.georenting.ui.main.history.OnLoadMoreListener;
 import de.alternadev.georenting.ui.main.mygeofences.GeofenceAdapter;
+import hugo.weaving.DebugLog;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 import timber.log.Timber;
@@ -32,7 +34,10 @@ import timber.log.Timber;
 /**
  * Created by jhbruhn on 23.04.16.
  */
-public class HistoryFragment extends Fragment {
+public class HistoryFragment extends Fragment implements OnLoadMoreListener {
+
+    private static final long INFINITE_SCROLL_DISTANCE = 2 * 24 * 60 * 60;
+
     public static HistoryFragment newInstance() {
         HistoryFragment f = new HistoryFragment();
 
@@ -44,6 +49,10 @@ public class HistoryFragment extends Fragment {
 
     @Inject
     BriteDatabase mDatabase;
+
+    private ActivityItemAdapter mAdapter;
+    private long mLastEndTime;
+    private long mLastStartTime;
 
     public HistoryFragment() {
         // Required empty public constructor
@@ -74,14 +83,17 @@ public class HistoryFragment extends Fragment {
     }
 
     private void loadHistory(FragmentHistoryBinding b) {
-        mService.getHistory(new Date().getTime() / 1000, (new Date().getTime() - 3 * 24 * 60 * 60 * 1000) / 1000) // TODO: Implement infinite Scroll.
+        mLastEndTime = (new Date().getTime() / 1000);
+        mLastStartTime = mLastEndTime - INFINITE_SCROLL_DISTANCE;
+        mService.getHistory(mLastEndTime, mLastStartTime)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(history -> {
                     b.setItems(history);
                     if(history != null) {
-                        RecyclerView.Adapter adapter = new ActivityItemAdapter(history, getActivity());
-                        b.historyList.setAdapter(adapter);
+                        mAdapter = new ActivityItemAdapter(history, b.historyList);
+                        mAdapter.setOnLoadMoreListener(this);
+                        b.historyList.setAdapter(mAdapter);
                     }
                 }, t -> {
                     t.printStackTrace();
@@ -90,6 +102,28 @@ public class HistoryFragment extends Fragment {
                     }).show();
                 }, () -> {
                     b.historyRefresh.setRefreshing(false);
+                });
+    }
+
+    @Override
+    @DebugLog
+    public void onLoadMore() {
+        mAdapter.getActivityList().add(null);
+        mAdapter.notifyItemInserted(mAdapter.getActivityList().size() - 1);
+
+        mLastEndTime = mLastStartTime - 1;
+        mLastStartTime = mLastEndTime - INFINITE_SCROLL_DISTANCE;
+        mService.getHistory(mLastEndTime, mLastStartTime)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(history -> {
+                    mAdapter.getActivityList().remove(mAdapter.getActivityList().size() - 1);
+                    mAdapter.notifyItemRemoved(mAdapter.getActivityList().size());
+                    for(int i = 0; i < history.size(); i++) {
+                        mAdapter.getActivityList().add(history.get(i));
+                        mAdapter.notifyItemInserted(mAdapter.getActivityList().size());
+                    }
+                    mAdapter.setLoaded();
                 });
     }
 }
