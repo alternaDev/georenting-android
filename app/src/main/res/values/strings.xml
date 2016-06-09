@@ -70,6 +70,7 @@
     <string name="fragment_cash_earnings_rent">Earnings Rent:</string>
     <string name="fragment_cash_expenses_rent">Expenses Rent:</string>
     <string name="fragment_cash_expenses_geo_fence">Expenses GeoFence:</string>
+    <string name="default_geofence_name">MagicUlfs Area</string>
 
 
 </resources>
