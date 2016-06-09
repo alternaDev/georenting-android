@@ -15,31 +15,35 @@
         <import type="android.view.View" />
 
     </data>
-    <android.support.design.widget.CoordinatorLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-
-        <android.support.design.widget.AppBarLayout
-            android:id="@+id/appbar"
+        <android.support.design.widget.CoordinatorLayout
+            android:id="@+id/coordinatorLayout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
-            <android.support.v7.widget.Toolbar
-                android:id="@+id/toolbar"
-                android:layout_width="match_parent"
-                android:layout_height="?android:attr/actionBarSize"
-                android:background="@color/primary_color"
-                android:transitionName="toolbar"
-                app:title="@string/title_activity_geofence_create"
-                app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
-        </android.support.design.widget.AppBarLayout>
+            android:layout_height="wrap_content">
 
+            <android.support.design.widget.AppBarLayout
+                android:id="@+id/appbar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+                <android.support.v7.widget.Toolbar
+                    android:id="@+id/toolbar"
+                    android:layout_width="match_parent"
+                    android:layout_height="?android:attr/actionBarSize"
+                    android:background="@color/primary_color"
+                    android:transitionName="toolbar"
+                    app:title="@string/title_activity_geofence_create"
+                    app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
+            </android.support.design.widget.AppBarLayout>
+        </android.support.design.widget.CoordinatorLayout>
         <LinearLayout
+            android:layout_below="@+id/coordinatorLayout"
             android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
             <com.google.android.gms.maps.MapView
-                android:layout_below="@+id/appbar"
                 android:id="@+id/geofence_map"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
@@ -86,6 +90,7 @@
                             android:id="@+id/ttl_seek_bar" />
                         <EditText
                             android:inputType="none"
+                            android:focusable="false"
                             android:layout_weight="0.2"
                             android:id="@+id/ttl_edit_text"
                             android:layout_width="0dp"
@@ -150,7 +155,5 @@
 
             </android.support.v7.widget.CardView>
         </LinearLayout>
-
-
-    </android.support.design.widget.CoordinatorLayout>
+    </RelativeLayout>
 </layout>
