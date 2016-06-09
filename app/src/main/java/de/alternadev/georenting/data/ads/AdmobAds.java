@@ -1,13 +1,17 @@
 package de.alternadev.georenting.data.ads;
 
 
+import android.app.Activity;
+import android.content.Context;
 import android.view.View;
 
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.MobileAds;
 
 import de.alternadev.georenting.BuildConfig;
+import de.alternadev.georenting.R;
 
 public class AdmobAds {
     private static final String[] TEST_DEVICES = new String[]{
@@ -40,5 +44,9 @@ public class AdmobAds {
 
     private boolean shouldLoadAd() {
         return !BuildConfig.DEBUG && BuildConfig.FLAVOR.equals("production"); //TODO: Check for AntiAdInAppPurchase Here.
+    }
+
+    public void initialize(Context context) {
+        MobileAds.initialize(context, context.getString(R.string.admob_app_id));
     }
 }

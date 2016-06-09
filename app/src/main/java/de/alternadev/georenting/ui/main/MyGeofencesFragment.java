@@ -75,7 +75,7 @@ public class MyGeofencesFragment extends Fragment implements GeofenceAdapter.Geo
         super.onCreate(savedInstanceState);
         ((GeoRentingApplication) getActivity().getApplicationContext()).getComponent().inject(this);
 
-        MobileAds.initialize(getActivity(), getString(R.string.admob_app_id));
+        mAds.initialize(getActivity());
     }
 
     @Override
