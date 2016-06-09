@@ -139,7 +139,7 @@ public class GoogleAuth {
 
             Task<AuthResult> result = firebaseAuthWithGoogle(r.getSignInAccount());
 
-            String authCode = result.getResult().getUser().getToken(false).getResult().getToken();
+            String authCode = waitForTask(waitForTask(result).getUser().getToken(false)).getToken();
 
             SessionToken sessionToken = mGeoRentingService.auth(new User(authCode)).toBlocking().first();
             mApp.setSessionToken(sessionToken);
@@ -148,6 +148,13 @@ public class GoogleAuth {
         }
 
         return false;
+    }
+
+    private <T> T waitForTask(Task<T> t) {
+        while(!t.isComplete()) {
+            Thread.yield();
+        }
+        return t.getResult();
     }
 
     @DebugLog
