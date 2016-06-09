@@ -16,6 +16,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 
+import com.google.android.gms.ads.AdListener;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.MobileAds;
 import com.google.android.gms.location.Geofence;
 
 import org.parceler.Parcels;
@@ -26,6 +29,7 @@ import javax.inject.Inject;
 
 import de.alternadev.georenting.GeoRentingApplication;
 import de.alternadev.georenting.R;
+import de.alternadev.georenting.data.ads.AdmobAds;
 import de.alternadev.georenting.data.api.GeoRentingService;
 import de.alternadev.georenting.data.api.model.GeoFence;
 import de.alternadev.georenting.data.api.model.User;
@@ -55,6 +59,9 @@ public class MyGeofencesFragment extends Fragment implements GeofenceAdapter.Geo
     @Inject
     GeoRentingService mService;
 
+    @Inject
+    AdmobAds mAds;
+
     private User mCurrentUser;
     private FragmentMyGeofencesBinding mBinding;
     private GeofenceAdapter mAdapater;
@@ -67,6 +74,8 @@ public class MyGeofencesFragment extends Fragment implements GeofenceAdapter.Geo
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ((GeoRentingApplication) getActivity().getApplicationContext()).getComponent().inject(this);
+
+        MobileAds.initialize(getActivity(), getString(R.string.admob_app_id));
     }
 
     @Override
@@ -92,6 +101,9 @@ public class MyGeofencesFragment extends Fragment implements GeofenceAdapter.Geo
         mBinding.geofencesRefresh.setOnRefreshListener(() -> loadFences(mBinding));
         mBinding.geofencesRefresh.setRefreshing(true);
         loadFences(mBinding);
+
+
+        mAds.loadBannerAdIntoAdView(mBinding.adView);
 
         // Inflate the layout for this fragment
         return mBinding.getRoot();

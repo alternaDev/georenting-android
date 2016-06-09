@@ -1,7 +1,9 @@
 {
   "project_info": {
     "project_number": "241559709275",
-    "project_id": "georenting-1"
+    "firebase_url": "https://georenting-1.firebaseio.com",
+    "project_id": "georenting-1",
+    "storage_bucket": "georenting-1.appspot.com"
   },
   "client": [
     {
@@ -19,6 +21,10 @@
             "package_name": "de.alternadev.georenting",
             "certificate_hash": "3A8DCF2B2713816D9F116E711DC2BFB842A543D6"
           }
+        },
+        {
+          "client_id": "241559709275-skpsbj5ni827f7090pct7oium6rlaidr.apps.googleusercontent.com",
+          "client_type": 3
         },
         {
           "client_id": "241559709275-nrik7ri1ltvprjqqmp0vcgq7cq7jj91p.apps.googleusercontent.com",
@@ -41,7 +47,7 @@
           "status": 2,
           "other_platform_oauth_client": [
             {
-              "client_id": "241559709275-nrik7ri1ltvprjqqmp0vcgq7cq7jj91p.apps.googleusercontent.com",
+              "client_id": "241559709275-skpsbj5ni827f7090pct7oium6rlaidr.apps.googleusercontent.com",
               "client_type": 3
             }
           ]
@@ -68,6 +74,10 @@
           }
         },
         {
+          "client_id": "241559709275-skpsbj5ni827f7090pct7oium6rlaidr.apps.googleusercontent.com",
+          "client_type": 3
+        },
+        {
           "client_id": "241559709275-nrik7ri1ltvprjqqmp0vcgq7cq7jj91p.apps.googleusercontent.com",
           "client_type": 3
         }
@@ -85,7 +95,7 @@
           "status": 2,
           "other_platform_oauth_client": [
             {
-              "client_id": "241559709275-nrik7ri1ltvprjqqmp0vcgq7cq7jj91p.apps.googleusercontent.com",
+              "client_id": "241559709275-skpsbj5ni827f7090pct7oium6rlaidr.apps.googleusercontent.com",
               "client_type": 3
             }
           ]
@@ -112,6 +122,10 @@
           }
         },
         {
+          "client_id": "241559709275-skpsbj5ni827f7090pct7oium6rlaidr.apps.googleusercontent.com",
+          "client_type": 3
+        },
+        {
           "client_id": "241559709275-nrik7ri1ltvprjqqmp0vcgq7cq7jj91p.apps.googleusercontent.com",
           "client_type": 3
         }
@@ -129,7 +143,7 @@
           "status": 2,
           "other_platform_oauth_client": [
             {
-              "client_id": "241559709275-nrik7ri1ltvprjqqmp0vcgq7cq7jj91p.apps.googleusercontent.com",
+              "client_id": "241559709275-skpsbj5ni827f7090pct7oium6rlaidr.apps.googleusercontent.com",
               "client_type": 3
             }
           ]
@@ -156,6 +170,10 @@
           }
         },
         {
+          "client_id": "241559709275-skpsbj5ni827f7090pct7oium6rlaidr.apps.googleusercontent.com",
+          "client_type": 3
+        },
+        {
           "client_id": "241559709275-nrik7ri1ltvprjqqmp0vcgq7cq7jj91p.apps.googleusercontent.com",
           "client_type": 3
         }
@@ -173,7 +191,7 @@
           "status": 2,
           "other_platform_oauth_client": [
             {
-              "client_id": "241559709275-nrik7ri1ltvprjqqmp0vcgq7cq7jj91p.apps.googleusercontent.com",
+              "client_id": "241559709275-skpsbj5ni827f7090pct7oium6rlaidr.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

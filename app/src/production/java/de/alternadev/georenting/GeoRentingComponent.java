@@ -12,6 +12,7 @@ import de.alternadev.georenting.data.auth.AuthModule;
 import de.alternadev.georenting.ui.SignInActivity;
 import de.alternadev.georenting.ui.main.MainActivity;
 import de.alternadev.georenting.ui.main.ProfileFragment;
+import de.alternadev.georenting.data.ads.AdModule;
 
 @Singleton
 @Component(
@@ -20,7 +21,8 @@ import de.alternadev.georenting.ui.main.ProfileFragment;
         NetworkModule.class,
         ProductionApiModule.class,
         AuthModule.class,
-        DataModule.class
+        DataModule.class,
+        AdModule.class
     }
 )
 public interface GeoRentingComponent extends GeoRentingGraph {
