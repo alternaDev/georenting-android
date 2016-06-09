@@ -156,6 +156,7 @@ public class GoogleAuth {
     }
 
     public void signOut(GoogleApiClient mGoogleClient) {
+        mAuth.signOut();
         mGoogleClient.clearDefaultAccountAndReconnect();
         mPreferences.edit()
                 .putBoolean(GoogleAuth.PREF_SIGNED_IN_BEFORE, false)
