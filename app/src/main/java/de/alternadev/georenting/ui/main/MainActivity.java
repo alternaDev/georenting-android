@@ -40,6 +40,7 @@ import com.squareup.picasso.Picasso;
 import javax.inject.Inject;
 
 import de.alternadev.georenting.R;
+import de.alternadev.georenting.data.ads.AdmobAds;
 import de.alternadev.georenting.data.api.GeoRentingService;
 import de.alternadev.georenting.data.api.model.SessionToken;
 import de.alternadev.georenting.data.api.model.User;
@@ -92,6 +93,9 @@ public class MainActivity extends BaseActivity implements GoogleApiClient.OnConn
 
     @Inject
     Picasso mPicasso;
+
+    @Inject
+    AdmobAds mAds;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -391,7 +395,7 @@ public class MainActivity extends BaseActivity implements GoogleApiClient.OnConn
         } else if(requestCode == REQUEST_CODE_INVITE) {
             switch (resultCode) {
                 case Activity.RESULT_OK:
-                    logSentInvite();
+                    mAds.showInterstitialOrContinue(this, this::logSentInvite);
                     break;
             }
         }
