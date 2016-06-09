@@ -5,4 +5,5 @@
 
     <string name="admob_app_id">ca-app-pub-7543345627762272~7464640146</string>
     <string name="my_geofences_ad_unit_id">ca-app-pub-7543345627762272/4371572949</string>
+    <string name="interstitial_ad_unit_id">ca-app-pub-7543345627762272/3685085349</string>
 </resources>

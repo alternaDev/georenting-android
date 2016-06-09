@@ -42,6 +42,7 @@ import javax.inject.Inject;
 
 import de.alternadev.georenting.BuildConfig;
 import de.alternadev.georenting.R;
+import de.alternadev.georenting.data.ads.AdmobAds;
 import de.alternadev.georenting.data.api.GeoRentingService;
 import de.alternadev.georenting.data.api.model.CostEstimate;
 import de.alternadev.georenting.data.api.model.GeoFence;
@@ -75,6 +76,9 @@ public class CreateGeofenceActivity extends BaseActivity implements GoogleApiCli
 
     @Inject
     GeoRentingService mService;
+
+    @Inject
+    AdmobAds mAds;
 
 
     @Override
@@ -118,6 +122,8 @@ public class CreateGeofenceActivity extends BaseActivity implements GoogleApiCli
                 });
             }
         }
+
+        mAds.loadIntersitial(this);
     }
 
 
@@ -142,6 +148,7 @@ public class CreateGeofenceActivity extends BaseActivity implements GoogleApiCli
     }
 
     private void finishActivityWithAnimation() {
+
         if(Build.VERSION.SDK_INT < 21) {
             finish();
             return;
@@ -286,7 +293,7 @@ public class CreateGeofenceActivity extends BaseActivity implements GoogleApiCli
                     mBinding.setLoading(false);
 
                     logBuyGeoFence(geoFence, mCurrentPrice);
-                    finishActivityWithAnimation();
+                    mAds.showInterstitialOrContinue(this, this::finishActivityWithAnimation);
                 }, error -> {
                     mBinding.setLoading(false);
 
