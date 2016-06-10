@@ -55,7 +55,7 @@
                 android:layout_marginStart="4dp"
                 android:layout_marginLeft="4dp"
                 android:gravity="end"
-                android:text="@{DateUtils.getRelativeTimeSpanString(item.time * 1000)}"/>
+                android:text="@{DateUtils.getRelativeDateTimeString(context, item.time * 1000, 0, DateUtils.WEEK_IN_MILLIS, 0)}"/>
         </LinearLayout>
         <View
             android:layout_width="fill_parent"
