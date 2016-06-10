@@ -26,11 +26,11 @@ public class ActivityItemAdapter extends RecyclerView.Adapter {
     private final List<ActivityItem> mActivityItems;
     private final int VIEW_TYPE_ITEM = 0;
     private final int VIEW_TYPE_LOADER = 1;
+    public static final int VISIBLE_THRESHOLD = 5;
 
     private int totalItemCount;
     private int lastVisibleItem;
     private boolean loading;
-    private int visibleThreshold = 5;
     private OnLoadMoreListener onLoadMoreListener;
 
     public ActivityItemAdapter(List<ActivityItem> history, RecyclerView recyclerView) {
@@ -50,7 +50,7 @@ public class ActivityItemAdapter extends RecyclerView.Adapter {
                         lastVisibleItem = linearLayoutManager
                                 .findLastVisibleItemPosition();
                         if (!loading
-                                && totalItemCount <= (lastVisibleItem + visibleThreshold)) {
+                                && totalItemCount <= (lastVisibleItem + VISIBLE_THRESHOLD)) {
                             // End has been reached
                             // Do something
                             if (onLoadMoreListener != null) {

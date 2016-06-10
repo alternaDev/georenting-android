@@ -19,6 +19,7 @@ import javax.inject.Inject;
 import de.alternadev.georenting.GeoRentingApplication;
 import de.alternadev.georenting.R;
 import de.alternadev.georenting.data.api.GeoRentingService;
+import de.alternadev.georenting.data.api.model.ActivityItem;
 import de.alternadev.georenting.data.api.model.User;
 import de.alternadev.georenting.data.models.Notification;
 import de.alternadev.georenting.databinding.FragmentHistoryBinding;
@@ -30,6 +31,7 @@ import hugo.weaving.DebugLog;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 import timber.log.Timber;
+
 
 /**
  * Created by jhbruhn on 23.04.16.
@@ -94,7 +96,13 @@ public class HistoryFragment extends Fragment implements OnLoadMoreListener {
                         mAdapter = new ActivityItemAdapter(history, b.historyList);
                         mAdapter.setOnLoadMoreListener(this);
                         b.historyList.setAdapter(mAdapter);
+                        if(history.size() == 0) return;
+
+                        if(history.size() < ActivityItemAdapter.VISIBLE_THRESHOLD) {
+                            this.onLoadMore();
+                        }
                     }
+
                 }, t -> {
                     t.printStackTrace();
                     Snackbar.make(b.getRoot(), R.string.error_network, Snackbar.LENGTH_LONG).setAction(R.string.error_network_action_retry, v -> {
@@ -124,6 +132,10 @@ public class HistoryFragment extends Fragment implements OnLoadMoreListener {
                         mAdapter.notifyItemInserted(mAdapter.getActivityList().size());
                     }
                     mAdapter.setLoaded();
+                    if(history.size() == 0) return;
+                    if(mAdapter.getActivityList().size() < ActivityItemAdapter.VISIBLE_THRESHOLD) {
+                        this.onLoadMore();
+                    }
                 });
     }
 }
