@@ -34,6 +34,8 @@
                     android:layout_height="?android:attr/actionBarSize"
                     android:background="@color/primary_color"
                     android:transitionName="toolbar"
+                    app:elevation="4dp"
+                    android:elevation="4dp"
                     app:title="@string/title_activity_geofence_create"
                     app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
             </android.support.design.widget.AppBarLayout>
@@ -51,7 +53,6 @@
 
             <android.support.v7.widget.CardView
                 android:layout_width="match_parent"
-                android:layout_margin="8dp"
                 android:layout_height="0dp"
                 android:layout_weight="0.65">
                 <LinearLayout
