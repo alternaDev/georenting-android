@@ -115,7 +115,7 @@ public class MyGeofencesFragment extends Fragment implements GeofenceAdapter.Geo
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(geoFences -> {
                     if(geoFences != null) {
-                        if (mAdapater == null) {
+                        if (mAdapater == null && getActivity() != null) {
                             GeofenceAdapter adapter = new GeofenceAdapter(geoFences, this.getActivity());
                             adapter.setGeofenceAdapaterListener(this);
                             b.geofencesList.setAdapter(adapter);
@@ -130,6 +130,7 @@ public class MyGeofencesFragment extends Fragment implements GeofenceAdapter.Geo
                         b.setGeoFences(new ArrayList());
                     }
                 }, t -> {
+                    if(b.getRoot() == null) return;
                     Snackbar.make(b.getRoot(), R.string.error_network, Snackbar.LENGTH_LONG).setAction(R.string.error_network_action_retry, v -> {
                         this.loadFences(b);
                     }).show();
