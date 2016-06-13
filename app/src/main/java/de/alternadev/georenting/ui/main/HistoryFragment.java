@@ -3,7 +3,6 @@ package de.alternadev.georenting.ui.main;
 import android.app.Fragment;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,7 +10,6 @@ import android.view.ViewGroup;
 
 import com.squareup.sqlbrite.BriteDatabase;
 
-import java.util.ArrayList;
 import java.util.Date;
 
 import javax.inject.Inject;
@@ -19,18 +17,14 @@ import javax.inject.Inject;
 import de.alternadev.georenting.GeoRentingApplication;
 import de.alternadev.georenting.R;
 import de.alternadev.georenting.data.api.GeoRentingService;
-import de.alternadev.georenting.data.api.model.ActivityItem;
-import de.alternadev.georenting.data.api.model.User;
 import de.alternadev.georenting.data.models.Notification;
 import de.alternadev.georenting.databinding.FragmentHistoryBinding;
-import de.alternadev.georenting.databinding.FragmentMyGeofencesBinding;
+import de.alternadev.georenting.ui.CustomLinearLayoutManager;
 import de.alternadev.georenting.ui.main.history.ActivityItemAdapter;
 import de.alternadev.georenting.ui.main.history.OnLoadMoreListener;
-import de.alternadev.georenting.ui.main.mygeofences.GeofenceAdapter;
 import hugo.weaving.DebugLog;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
-import timber.log.Timber;
 
 
 /**
@@ -39,6 +33,7 @@ import timber.log.Timber;
 public class HistoryFragment extends Fragment implements OnLoadMoreListener {
 
     private static final long INFINITE_SCROLL_DISTANCE = 2 * 24 * 60 * 60;
+    private boolean mLoading;
 
     public static HistoryFragment newInstance() {
         HistoryFragment f = new HistoryFragment();
@@ -74,7 +69,7 @@ public class HistoryFragment extends Fragment implements OnLoadMoreListener {
 
         FragmentHistoryBinding b = FragmentHistoryBinding.inflate(inflater, container, false);
 
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
+        RecyclerView.LayoutManager layoutManager = new CustomLinearLayoutManager(getActivity());
         b.historyList.setLayoutManager(layoutManager);
 
         b.historyRefresh.setOnRefreshListener(() -> loadHistory(b));
@@ -87,6 +82,7 @@ public class HistoryFragment extends Fragment implements OnLoadMoreListener {
     private void loadHistory(FragmentHistoryBinding b) {
         mLastEndTime = (new Date().getTime() / 1000);
         mLastStartTime = mLastEndTime - INFINITE_SCROLL_DISTANCE;
+
         mService.getHistory(mLastEndTime, mLastStartTime)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -95,8 +91,8 @@ public class HistoryFragment extends Fragment implements OnLoadMoreListener {
                     if(history != null) {
                         mAdapter = new ActivityItemAdapter(history, b.historyList);
                         mAdapter.setOnLoadMoreListener(this);
+
                         b.historyList.setAdapter(mAdapter);
-                        if(history.size() == 0) return;
 
                         if(history.size() < ActivityItemAdapter.VISIBLE_THRESHOLD) {
                             this.onLoadMore();
@@ -116,6 +112,8 @@ public class HistoryFragment extends Fragment implements OnLoadMoreListener {
     @Override
     @DebugLog
     public void onLoadMore() {
+        if(mLoading) return;
+        mLoading = true;
         mAdapter.getActivityList().add(null);
         mAdapter.notifyItemInserted(mAdapter.getActivityList().size() - 1);
 
@@ -132,7 +130,8 @@ public class HistoryFragment extends Fragment implements OnLoadMoreListener {
                         mAdapter.notifyItemInserted(mAdapter.getActivityList().size());
                     }
                     mAdapter.setLoaded();
-                    if(history.size() == 0) return;
+                    mLoading = false;
+
                     if(mAdapter.getActivityList().size() < ActivityItemAdapter.VISIBLE_THRESHOLD) {
                         this.onLoadMore();
                     }

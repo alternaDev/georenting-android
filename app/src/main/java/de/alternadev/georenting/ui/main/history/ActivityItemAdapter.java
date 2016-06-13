@@ -26,7 +26,7 @@ public class ActivityItemAdapter extends RecyclerView.Adapter {
     private final List<ActivityItem> mActivityItems;
     private final int VIEW_TYPE_ITEM = 0;
     private final int VIEW_TYPE_LOADER = 1;
-    public static final int VISIBLE_THRESHOLD = 5;
+    public static final int VISIBLE_THRESHOLD = 7;
 
     private int totalItemCount;
     private int lastVisibleItem;
