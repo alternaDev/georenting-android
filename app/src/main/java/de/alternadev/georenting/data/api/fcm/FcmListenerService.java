@@ -172,9 +172,9 @@ public class FcmListenerService extends FirebaseMessagingService {
         for(Notification n : notifications) {
             Map data = mMoshi.adapter(Map.class).fromJson(n.data());
             if(data.get(KEY_NOTIFICATION_TYPE).equals(NOTIFICATION_TYPE_FOREIGN_FENCE_ENTERED)) {
-                foreignVisitCount++;
-            } else if(data.get(KEY_NOTIFICATION_TYPE).equals(NOTIFICATION_TYPE_OWN_FENCE_ENTERED)) {
                 visitCount++;
+            } else if(data.get(KEY_NOTIFICATION_TYPE).equals(NOTIFICATION_TYPE_OWN_FENCE_ENTERED)) {
+                foreignVisitCount++;
             } else if(data.get(KEY_NOTIFICATION_TYPE).equals(NOTIFICATION_TYPE_FENCE_EXPIRED)) {
                 expiryCount++;
             }
@@ -182,14 +182,17 @@ public class FcmListenerService extends FirebaseMessagingService {
 
         StringBuilder b = new StringBuilder();
         if(visitCount > 0) {
-            b.append(visitCount + " Fences visited, ");
+            b.append(visitCount + " Fences visited");
         }
         if(foreignVisitCount > 0) {
+            if(visitCount > 0) b.append(", ");
             b.append(foreignVisitCount + " visitors, ");
         }
         if(expiryCount > 0) {
-            b.append(expiryCount + " Fences expired.");
+            if(foreignVisitCount > 0 || visitCount > 0) b.append(", ");
+            b.append(expiryCount + " Fences expired");
         }
+        b.append(".");
         return b.toString();
     }
 
