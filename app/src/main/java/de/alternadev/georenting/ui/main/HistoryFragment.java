@@ -33,7 +33,7 @@ import rx.schedulers.Schedulers;
 public class HistoryFragment extends Fragment implements OnLoadMoreListener {
 
     private static final long INFINITE_SCROLL_DISTANCE = 2 * 24 * 60 * 60;
-    private boolean mLoading;
+    private static final int MAX_EMPTY_TRIES = 5;
 
     public static HistoryFragment newInstance() {
         HistoryFragment f = new HistoryFragment();
@@ -50,7 +50,9 @@ public class HistoryFragment extends Fragment implements OnLoadMoreListener {
     private ActivityItemAdapter mAdapter;
     private long mLastEndTime;
     private long mLastStartTime;
-
+    private boolean mLoading;
+    private int mEmptyTries;
+    
     public HistoryFragment() {
         // Required empty public constructor
     }
@@ -82,12 +84,13 @@ public class HistoryFragment extends Fragment implements OnLoadMoreListener {
     private void loadHistory(FragmentHistoryBinding b) {
         mLastEndTime = (new Date().getTime() / 1000);
         mLastStartTime = mLastEndTime - INFINITE_SCROLL_DISTANCE;
-
+        mEmptyTries = 0;
         mService.getHistory(mLastEndTime, mLastStartTime)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(history -> {
                     b.setItems(history);
+                    if(history.size() == 0) mEmptyTries++;
                     if(history != null) {
                         mAdapter = new ActivityItemAdapter(history, b.historyList);
                         mAdapter.setOnLoadMoreListener(this);
@@ -113,6 +116,7 @@ public class HistoryFragment extends Fragment implements OnLoadMoreListener {
     @DebugLog
     public void onLoadMore() {
         if(mLoading) return;
+        if(mEmptyTries > MAX_EMPTY_TRIES) return;
         mLoading = true;
         mAdapter.getActivityList().add(null);
         mAdapter.notifyItemInserted(mAdapter.getActivityList().size() - 1);
@@ -123,6 +127,9 @@ public class HistoryFragment extends Fragment implements OnLoadMoreListener {
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(history -> {
+                    if (history.size() == 0) mEmptyTries++;
+                    else mEmptyTries = 0;
+                    
                     mAdapter.getActivityList().remove(mAdapter.getActivityList().size() - 1);
                     mAdapter.notifyItemRemoved(mAdapter.getActivityList().size());
                     for(int i = 0; i < history.size(); i++) {
@@ -135,6 +142,7 @@ public class HistoryFragment extends Fragment implements OnLoadMoreListener {
                     if(mAdapter.getActivityList().size() < ActivityItemAdapter.VISIBLE_THRESHOLD) {
                         this.onLoadMore();
                     }
+                    
                 });
     }
 }
