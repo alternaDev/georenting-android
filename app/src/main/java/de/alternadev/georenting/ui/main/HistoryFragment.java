@@ -90,8 +90,8 @@ public class HistoryFragment extends Fragment implements OnLoadMoreListener {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(history -> {
                     b.setItems(history);
-                    if(history.size() == 0) mEmptyTries++;
                     if(history != null) {
+                        if(history.size() == 0) mEmptyTries++;
                         mAdapter = new ActivityItemAdapter(history, b.historyList);
                         mAdapter.setOnLoadMoreListener(this);
 
@@ -113,7 +113,6 @@ public class HistoryFragment extends Fragment implements OnLoadMoreListener {
     }
 
     @Override
-    @DebugLog
     public void onLoadMore() {
         if(mLoading) return;
         if(mEmptyTries > MAX_EMPTY_TRIES) return;
