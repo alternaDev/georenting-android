@@ -40,8 +40,8 @@ public class NetworkModule {
 
         return
             new OkHttpClient.Builder().connectTimeout(20, SECONDS)
-                    .readTimeout(20, SECONDS)
-                    .writeTimeout(20, SECONDS)
+                    .readTimeout(30, SECONDS)
+                    .writeTimeout(30, SECONDS)
                     .addNetworkInterceptor(new StethoInterceptor())
                     .addInterceptor(tokenInterceptor)
                     .cache(cache)
