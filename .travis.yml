@@ -22,12 +22,12 @@ env:
 android:
   components:
   - tools
-  - build-tools-23.0.3
-  - android-23
+  - build-tools-24
+  - android-24
   - android-22
   - extra-google-m2repository
   - extra-android-m2repository
-  - addon-google_apis-google-23
+  - addon-google_apis-google-24
   - addon-google_apis-google-22
   - sys-img-armeabi-v7a-google_apis-22
 
