@@ -387,8 +387,7 @@ public class CreateGeofenceActivity extends BaseActivity implements GoogleApiCli
             this.mLocation = l;
 
             if(l.isFromMockProvider() && !BuildConfig.DEBUG) return;
-
-           refreshEstimate();
+            refreshEstimate();
         };
 
         LocationServices.FusedLocationApi.requestLocationUpdates(mApiClient, request, mListener);
