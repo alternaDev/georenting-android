@@ -22,8 +22,8 @@ import javax.inject.Inject;
 
 import de.alternadev.georenting.R;
 import de.alternadev.georenting.data.api.GeoRentingService;
-import de.alternadev.georenting.data.api.fcm.FcmRegistrationIntentService;
 import de.alternadev.georenting.data.auth.GoogleAuth;
+import de.alternadev.georenting.data.tasks.RegisterFcmTask;
 import de.alternadev.georenting.databinding.ActivitySignInBinding;
 import de.alternadev.georenting.ui.main.MainActivity;
 import hugo.weaving.DebugLog;
@@ -114,7 +114,7 @@ public class SignInActivity extends BaseActivity implements GoogleApiClient.OnCo
                 .subscribe((sessionToken) -> {
                     Timber.d("Test: %s", sessionToken);
                     mProgressDialog.dismiss();
-                    startService(new Intent(this, FcmRegistrationIntentService.class));
+                    RegisterFcmTask.scheduleRegisterFcm(this);
                     logSignIn(sessionToken.user);
                     startMainActivity();
                 }, error -> {

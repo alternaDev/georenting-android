@@ -16,8 +16,8 @@ import javax.inject.Inject;
 import de.alternadev.georenting.GeoRentingApplication;
 import de.alternadev.georenting.R;
 import de.alternadev.georenting.data.api.GeoRentingService;
-import de.alternadev.georenting.data.api.fcm.FcmRegistrationIntentService;
 import de.alternadev.georenting.data.auth.GoogleAuth;
+import de.alternadev.georenting.data.tasks.RegisterFcmTask;
 import de.alternadev.georenting.data.tasks.UpdateGeofencesTask;
 import de.alternadev.georenting.ui.SignInActivity;
 import rx.android.schedulers.AndroidSchedulers;
@@ -75,7 +75,7 @@ public class SettingsFragment extends PreferenceFragment implements GoogleApiCli
                     .subscribe(sessionToken -> {
                         Auth.GoogleSignInApi.signOut(mGoogleClient).setResultCallback(
                                 status -> {
-                                    mPreferences.edit().remove(FcmRegistrationIntentService.CURRENT_GCM_TOKEN).commit();
+                                    mPreferences.edit().remove(RegisterFcmTask.CURRENT_GCM_TOKEN).commit();
                                     mGoogleAuth.signOut(mGoogleClient);
                                     removeUpdateGeofenceTask();
 

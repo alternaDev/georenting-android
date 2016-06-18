@@ -71,10 +71,14 @@
                 <action android:name="com.google.firebase.INSTANCEID_EVENT" />
             </intent-filter>
         </service>
-        <service
-            android:name=".data.api.fcm.FcmRegistrationIntentService"
-            android:exported="false" />
 
+        <service android:name=".data.tasks.RegisterFcmTask"
+            android:exported="true"
+            android:permission="com.google.android.gms.permission.BIND_NETWORK_TASK_SERVICE" >
+            <intent-filter>
+                <action android:name="com.google.android.gms.gcm.ACTION_TASK_READY" />
+            </intent-filter>
+        </service>
         <service android:name=".data.tasks.UpdateGeofencesTask"
             android:exported="true"
             android:permission="com.google.android.gms.permission.BIND_NETWORK_TASK_SERVICE" >

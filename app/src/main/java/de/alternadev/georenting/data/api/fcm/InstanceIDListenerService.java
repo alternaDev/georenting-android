@@ -5,6 +5,7 @@ import android.content.Intent;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.FirebaseInstanceIdService;
 
+import de.alternadev.georenting.data.tasks.RegisterFcmTask;
 import timber.log.Timber;
 
 public class InstanceIDListenerService extends FirebaseInstanceIdService {
@@ -13,6 +14,6 @@ public class InstanceIDListenerService extends FirebaseInstanceIdService {
         // Get updated InstanceID token.
         String refreshedToken = FirebaseInstanceId.getInstance().getToken();
         Timber.d("Refreshed token: %s", refreshedToken);
-        startService(new Intent(this, FcmRegistrationIntentService.class));
+        RegisterFcmTask.scheduleRegisterFcm(this);
     }
 }
