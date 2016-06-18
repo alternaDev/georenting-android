@@ -27,6 +27,8 @@ import de.alternadev.georenting.data.api.model.UpgradeSettings;
 import de.alternadev.georenting.data.api.model.User;
 import de.alternadev.georenting.data.auth.GoogleAuth;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.plugins.RxJavaErrorHandler;
+import rx.plugins.RxJavaPlugins;
 import rx.schedulers.Schedulers;
 import timber.log.Timber;
 
@@ -45,6 +47,16 @@ public class GeoRentingApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+
+        // Evil but works.
+        RxJavaPlugins.getInstance().registerErrorHandler(new RxJavaErrorHandler() {
+            @Override
+            public void handleError(Throwable e) {
+                super.handleError(e);
+                Timber.e(e, "Uncaught Rx Error.");
+            }
+        });
+
 
         setComponent(DaggerGeoRentingComponent.builder()
                 .geoRentingModule(new GeoRentingModule(this))
