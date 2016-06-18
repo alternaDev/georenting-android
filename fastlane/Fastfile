@@ -32,7 +32,8 @@ platform :android do
     # gradle(task: "assembleProductionDebugAndroidTest")
     # screengrab
     gradle(task: "assembleProductionRelease")
-    supply track: 'alpha', apk_paths: ["./app/build/outputs/apk/app-production-release.apk"]
+    sh "$ANDROID_HOME/build-tools/24.0.0/zipalign 4 ./app/build/outputs/apk/app-production-release.apk ./app/build/outputs/apk/app-production-release-aligned.apk"
+    supply track: 'alpha', apk_paths: ["./app/build/outputs/apk/app-production-release-aligned.apk"]
   end
 
   desc "Submit a new Beta Build to Google Play Beta"
@@ -42,7 +43,8 @@ platform :android do
     # gradle(task: "assembleProductionDebugAndroidTest")
     # screengrab
     gradle(task: "assembleProductionRelease")
-    supply track: 'alpha', apk_paths: ["./app/build/outputs/apk/app-production-release.apk"]
+    sh "$ANDROID_HOME/build-tools/24.0.0/zipalign 4 ./app/build/outputs/apk/app-production-release.apk ./app/build/outputs/apk/app-production-release-aligned.apk"
+    supply track: 'alpha', apk_paths: ["./app/build/outputs/apk/app-production-release.apk-aligned"]
     supply track: 'alpha', track_promote_to: 'beta', skip_upload_apk: true, skip_upload_metadata: true, skip_upload_screenshots: true, skip_upload_images: true
   end
 
