@@ -16,6 +16,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.maps.MapView;
+import com.google.firebase.crash.FirebaseCrash;
 
 import javax.inject.Inject;
 
@@ -51,6 +52,16 @@ public class GeoRentingApplication extends Application {
 
         if(BuildConfig.DEBUG) {
             Timber.plant(new Timber.DebugTree());
+        } else {
+            Timber.plant(new Timber.Tree() {
+                @Override
+                protected void log(int priority, String tag, String message, Throwable t) {
+                    FirebaseCrash.logcat(priority, tag, message);
+                    if (t != null) {
+                        FirebaseCrash.report(t);
+                    }
+                }
+            });
         }
 
         if(BuildConfig.DEBUG) {
