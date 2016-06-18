@@ -17,6 +17,7 @@ import javax.inject.Inject;
 import de.alternadev.georenting.GeoRentingApplication;
 import de.alternadev.georenting.data.api.GeoRentingService;
 import de.alternadev.georenting.data.api.model.GcmToken;
+import de.alternadev.georenting.data.auth.GoogleAuth;
 import hugo.weaving.DebugLog;
 import timber.log.Timber;
 
@@ -30,9 +31,16 @@ public class RegisterFcmTask extends GcmTaskService {
     @Inject
     SharedPreferences mPreferences;
 
+    @Inject
+    GoogleAuth mAuth;
+
     @Override
     public int onRunTask(TaskParams taskParams) {
         ((GeoRentingApplication) getApplication()).getComponent().inject(this);
+
+        if(!mAuth.blockingSignIn()) {
+            return GcmNetworkManager.RESULT_RESCHEDULE;
+        }
 
         try {
             String gcmTokenString = getToken();
