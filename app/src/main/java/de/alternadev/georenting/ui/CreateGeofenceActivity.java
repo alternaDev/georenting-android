@@ -386,7 +386,7 @@ public class CreateGeofenceActivity extends BaseActivity implements GoogleApiCli
 
             this.mLocation = l;
 
-            // if(l.isFromMockProvider() && !BuildConfig.DEBUG) return; //TODO: Detect mock location on api level 15-18
+            if(l.isFromMockProvider() && !BuildConfig.DEBUG) return;
 
            refreshEstimate();
         };
