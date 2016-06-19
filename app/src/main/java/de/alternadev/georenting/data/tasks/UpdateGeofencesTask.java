@@ -31,6 +31,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import de.alternadev.georenting.BuildConfig;
 import de.alternadev.georenting.GeoRentingApplication;
 import de.alternadev.georenting.data.api.GeoRentingService;
 import de.alternadev.georenting.data.api.model.GeoFence;
@@ -205,7 +206,7 @@ public class UpdateGeofencesTask extends GcmTaskService {
     }
 
     private List<GeoFence> getRemoteGeoFences(Location location) throws IOException {
-        return mService.getFencesNear(location.getLatitude(), location.getLongitude(), SEARCH_RADIUS, true).execute().body();
+        return mService.getFencesNear(location.getLatitude(), location.getLongitude(), SEARCH_RADIUS, !BuildConfig.DEBUG).execute().body();
     }
 
     private boolean addGeoFences(List<Geofence> fences) {
