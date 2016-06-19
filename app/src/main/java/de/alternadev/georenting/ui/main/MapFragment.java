@@ -155,7 +155,7 @@ public class MapFragment extends Fragment implements GoogleApiClient.OnConnectio
                 mMapInited = true;
             }
 
-            mService.getFencesNearObservable(l.getLatitude(), l.getLongitude(), 500)
+            mService.getFencesNearObservable(l.getLatitude(), l.getLongitude(), 500, false)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe((fences) -> {

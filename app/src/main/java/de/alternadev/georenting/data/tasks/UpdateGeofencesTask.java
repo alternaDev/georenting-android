@@ -34,6 +34,7 @@ import javax.inject.Inject;
 import de.alternadev.georenting.GeoRentingApplication;
 import de.alternadev.georenting.data.api.GeoRentingService;
 import de.alternadev.georenting.data.api.model.GeoFence;
+import de.alternadev.georenting.data.auth.GoogleAuth;
 import de.alternadev.georenting.data.geofencing.GeofenceTransitionsIntentService;
 import de.alternadev.georenting.data.models.Fence;
 import de.alternadev.georenting.data.models.FenceModel;
@@ -54,6 +55,9 @@ public class UpdateGeofencesTask extends GcmTaskService {
     @Inject
     BriteDatabase mDatabase;
 
+    @Inject
+    GoogleAuth mAuth;
+
     @Override
     public void onCreate() {
         super.onCreate();
@@ -63,6 +67,10 @@ public class UpdateGeofencesTask extends GcmTaskService {
 
     @Override
     public int onRunTask(TaskParams taskParams) {
+        if(!mAuth.blockingSignIn()) {
+            return GcmNetworkManager.RESULT_RESCHEDULE;
+        }
+
         Timber.i("Initializing Google");
         mApiClient = new GoogleApiClient.Builder(this)
                 .addApi(LocationServices.API)
@@ -197,7 +205,7 @@ public class UpdateGeofencesTask extends GcmTaskService {
     }
 
     private List<GeoFence> getRemoteGeoFences(Location location) throws IOException {
-        return mService.getFencesNear(location.getLatitude(), location.getLongitude(), SEARCH_RADIUS).execute().body();
+        return mService.getFencesNear(location.getLatitude(), location.getLongitude(), SEARCH_RADIUS, true).execute().body();
     }
 
     private boolean addGeoFences(List<Geofence> fences) {

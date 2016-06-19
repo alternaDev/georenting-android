@@ -45,10 +45,10 @@ public interface GeoRentingService {
     Observable<CashStatus> getCash();
 
     @GET("fences")
-    Call<List<GeoFence>> getFencesNear(@Query("latitude") double latitude, @Query("longitude") double longitude, @Query("radius") int radius);
+    Call<List<GeoFence>> getFencesNear(@Query("latitude") double latitude, @Query("longitude") double longitude, @Query("radius") int radius, @Query("excludeOwn") boolean excludeOwn);
 
     @GET("fences")
-    Observable<List<GeoFence>> getFencesNearObservable(@Query("latitude") double latitude, @Query("longitude") double longitude, @Query("radius") int radius);
+    Observable<List<GeoFence>> getFencesNearObservable(@Query("latitude") double latitude, @Query("longitude") double longitude, @Query("radius") int radius, @Query("excludeOwn") boolean excludeOwn);
 
     @GET("fences")
     Observable<List<GeoFence>> getFencesBy(@Query("user") String user);
