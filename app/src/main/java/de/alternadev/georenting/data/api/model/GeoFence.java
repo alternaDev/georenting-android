@@ -23,8 +23,8 @@ public class GeoFence {
     @Json(name = "ttl")
     public long ttl;
 
-    //@DateAdapter.DateType
-    //public Date diesAt; //TODO: FIX
+    @Json(name = "dies_at")
+    public Date diesAt;
 
     @Json(name = "rent_multiplier")
     public double rentMultiplier;

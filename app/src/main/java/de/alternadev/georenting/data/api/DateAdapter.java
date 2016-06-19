@@ -11,29 +11,21 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 
+import hugo.weaving.DebugLog;
+
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 public class DateAdapter {
     @ToJson
-    String toJson(@DateType Date date) {
-        String formatted = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ")
-                .format(date);
-        return formatted.substring(0, 22) + ":" + formatted.substring(22);
+    @DebugLog
+    long toJson(Date date) {
+        if(date == null) return 0;
+        return date.getTime() / 1000;
     }
 
     @FromJson
-    @DateType
-    Date fromJson(String iso8601string) throws ParseException {
-        String s = iso8601string.replace("Z", "+00:00");
-        try {
-            s = s.substring(0, 22) + s.substring(23);  // to get rid of the ":"
-        } catch (IndexOutOfBoundsException e) {
-            throw new ParseException("Invalid length", 0);
-        }
-        return new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ").parse(s);
-    }
-    @Retention(RUNTIME)
-    @JsonQualifier
-    public @interface DateType {
+    @DebugLog
+    Date fromJson(long time) throws ParseException {
+        return new Date(time * 1000);
     }
 }
