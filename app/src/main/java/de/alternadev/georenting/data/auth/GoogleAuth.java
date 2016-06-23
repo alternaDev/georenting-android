@@ -16,6 +16,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.OptionalPendingResult;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -35,6 +36,7 @@ import de.alternadev.georenting.data.api.model.User;
 import de.alternadev.georenting.ui.SignInActivity;
 import hugo.weaving.DebugLog;
 import rx.Observable;
+import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 import timber.log.Timber;
@@ -67,47 +69,52 @@ public class GoogleAuth {
         return Auth.GoogleSignInApi.silentSignIn(apiClient);
     }
 
-    @DebugLog
     public Observable<SessionToken> handleSignIn(GoogleSignInResult result) {
         if(result.isSuccess() && result.getSignInAccount() != null) {
-            return Observable.create(subscriber -> {
-                subscriber.onStart();
-                firebaseAuthWithGoogle(result.getSignInAccount()).addOnSuccessListener(authResult -> {
-                    Timber.d("Got Auth REsult!");
-
-                    authResult.getUser().getToken(false).addOnSuccessListener(getTokenResult -> {
-                        Timber.d("Got Token REsult:%s", getTokenResult.getToken());
-
-                        mGeoRentingService.auth(new User(getTokenResult.getToken()))
-                                .subscribeOn(Schedulers.io())
-                                .observeOn(AndroidSchedulers.mainThread())
-                                .map(sessionToken -> {
-                                    Timber.d("Got Session Token!");
-                                    if (sessionToken.token == null || sessionToken.token.equals("")) {
-                                        return sessionToken;
-                                    }
-
-                                    mPreferences.edit()
-                                            .putBoolean(PREF_SIGNED_IN_BEFORE, true)
-                                            .apply();
-
-                                    mApp.setSessionToken(sessionToken);
-
-
-                                    return sessionToken;
-                                }).subscribe((sessionToken) -> {
-                                    subscriber.onNext(sessionToken);
-                                    subscriber.onCompleted();
-                                }, error -> {
-                                    subscriber.onError(error);
-                                    subscriber.onCompleted();
-                                });
-                    });
-                });
-            });
+            return firebaseAuthWithGoogle(result.getSignInAccount()).switchMap( authResult -> startAuthTokenFetch());
         } else {
             return Observable.error(new Exception());
         }
+    }
+
+    public Observable<SessionToken> startAuthTokenFetch() {
+        return Observable.create(subscriber -> {
+            subscriber.onStart();
+            if(mAuth.getCurrentUser() == null) {
+                subscriber.onError(new Exception("Not user signed in."));
+                return;
+            }
+
+            mAuth.getCurrentUser().getToken(false).addOnSuccessListener(getTokenResult -> {
+                Timber.d("Got Token REsult:%s", getTokenResult.getToken());
+
+                mGeoRentingService.auth(new User(getTokenResult.getToken()))
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .map(sessionToken -> {
+                            Timber.d("Got Session Token!");
+                            if (sessionToken.token == null || sessionToken.token.equals("")) {
+                                return sessionToken;
+                            }
+
+                            mPreferences.edit()
+                                    .putBoolean(PREF_SIGNED_IN_BEFORE, true)
+                                    .apply();
+
+                            mApp.setSessionToken(sessionToken);
+
+
+                            return sessionToken;
+                        }).subscribe((sessionToken) -> {
+                    subscriber.onNext(sessionToken);
+                    subscriber.onCompleted();
+                }, error -> {
+                    subscriber.onError(error);
+                    subscriber.onCompleted();
+                });
+            });
+        });
+
     }
 
     @DebugLog
@@ -137,9 +144,7 @@ public class GoogleAuth {
         if(r.isSuccess()) {
             if(r.getSignInAccount() == null) return false;
 
-            Task<AuthResult> result = firebaseAuthWithGoogle(r.getSignInAccount());
-
-            String authCode = waitForTask(waitForTask(result).getUser().getToken(false)).getToken();
+            String authCode = waitForTask(firebaseAuthWithGoogle(r.getSignInAccount()).toBlocking().first().getUser().getToken(false)).getToken();
 
             SessionToken sessionToken = mGeoRentingService.auth(new User(authCode)).toBlocking().first();
             mApp.setSessionToken(sessionToken);
@@ -157,9 +162,24 @@ public class GoogleAuth {
         return t.getResult();
     }
 
-    @DebugLog
-    private Task<AuthResult> firebaseAuthWithGoogle(GoogleSignInAccount account) {
-        return mAuth.signInWithCredential(GoogleAuthProvider.getCredential(account.getIdToken(), null));
+    private Observable<AuthResult> firebaseAuthWithGoogle(GoogleSignInAccount account) {
+        return Observable.create(subscriber -> {
+            subscriber.onStart();
+            mAuth.signInWithCredential(GoogleAuthProvider.getCredential(account.getIdToken(), null))
+            .addOnSuccessListener(authResult -> {
+                Timber.d("Got Auth REsult!");
+
+                subscriber.onNext(authResult);
+                subscriber.onCompleted();
+
+            })
+            .addOnFailureListener(e -> {
+                Timber.d("Got Auth REsult!");
+
+                subscriber.onError(e);
+                subscriber.onCompleted();
+            });
+        });
     }
 
     public void signOut(GoogleApiClient mGoogleClient) {

@@ -133,7 +133,7 @@ public class MainActivity extends BaseActivity implements GoogleApiClient.OnConn
             getGeoRentingApplication().setSessionToken(savedToken);
         } else {
             Timber.i("Resigning in.");
-            reSignIn();
+            refreshToken();
             return;
         }
 
@@ -164,8 +164,19 @@ public class MainActivity extends BaseActivity implements GoogleApiClient.OnConn
                     setCurrentUser(sessionToken.user);
                 }, error -> {
                     Timber.d("Could not refresh Token.");
-                    reSignIn();
+                    refreshToken();
                 });
+    }
+
+    @DebugLog
+    private void refreshToken() {
+        mGoogleAuth.startAuthTokenFetch().subscribe(sessionToken -> {
+            getGeoRentingApplication().setSessionToken(sessionToken);
+            setCurrentUser(sessionToken.user);
+        }, error -> {
+            Timber.d("Could not refresh Token.");
+            reSignIn();
+        });
     }
 
     private void setCurrentUser(User user) {
