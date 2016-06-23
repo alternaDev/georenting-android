@@ -163,7 +163,7 @@ public class MainActivity extends BaseActivity implements GoogleApiClient.OnConn
                     getGeoRentingApplication().setSessionToken(sessionToken);
                     setCurrentUser(sessionToken.user);
                 }, error -> {
-                    Timber.e(error, "Could not refresh Token.");
+                    Timber.d("Could not refresh Token.");
                     reSignIn();
                 });
     }

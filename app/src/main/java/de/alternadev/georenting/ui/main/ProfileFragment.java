@@ -20,6 +20,7 @@ import de.alternadev.georenting.data.api.model.User;
 import de.alternadev.georenting.databinding.FragmentProfileBinding;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
+import timber.log.Timber;
 
 public class ProfileFragment extends Fragment {
     private static final String SAVED_INSTANCE_CURRENT_USER = "currentUser";
@@ -93,6 +94,8 @@ public class ProfileFragment extends Fragment {
                 .subscribe((cash) -> {
                     mBinding.setCash(cash);
                     mBinding.profileRefresh.setRefreshing(false);
+                }, throwable -> {
+                    Timber.e(throwable, "Could not get CashStatus.");
                 });
     }
 

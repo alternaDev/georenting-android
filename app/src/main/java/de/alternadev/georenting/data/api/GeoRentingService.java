@@ -54,7 +54,7 @@ public interface GeoRentingService {
     Observable<List<GeoFence>> getFencesBy(@Query("user") String user);
 
     @POST("fences/{fenceId}/visit")
-    Observable<Object> visitFence(@Path("fenceId") String fenceId);
+    Call<Object> visitFence(@Path("fenceId") String fenceId);
 
     @POST("fences/estimateCost")
     Observable<CostEstimate> estimateCost(@Body GeoFence f);

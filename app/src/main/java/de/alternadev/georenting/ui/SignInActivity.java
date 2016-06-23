@@ -39,12 +39,6 @@ public class SignInActivity extends BaseActivity implements GoogleApiClient.OnCo
     private ProgressDialog mProgressDialog;
 
     @Inject
-    SharedPreferences mPreferences;
-
-    @Inject
-    GeoRentingService mGeoRentingService;
-
-    @Inject
     GoogleAuth mGoogleAuth;
 
     @Override

@@ -7,6 +7,8 @@ import com.google.android.gms.gcm.GcmNetworkManager;
 import com.google.android.gms.gcm.GcmTaskService;
 import com.google.android.gms.gcm.TaskParams;
 
+import java.io.IOException;
+
 import javax.inject.Inject;
 
 import de.alternadev.georenting.GeoRentingApplication;
@@ -46,7 +48,7 @@ public class VisitGeofenceTask extends GcmTaskService {
 
         try {
             Timber.d("Visiting fence: %s", fenceId);
-            mService.visitFence(fenceId).toBlocking().first();
+            mService.visitFence(fenceId).execute().body();
             Timber.d("Visited Fence!");
         } catch (Exception e) {
             Timber.e(e, "Failed to Visit fence.");

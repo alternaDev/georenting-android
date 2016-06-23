@@ -25,6 +25,7 @@ import de.alternadev.georenting.ui.main.history.OnLoadMoreListener;
 import hugo.weaving.DebugLog;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
+import timber.log.Timber;
 
 
 /**
@@ -103,7 +104,7 @@ public class HistoryFragment extends Fragment implements OnLoadMoreListener {
                     }
 
                 }, t -> {
-                    t.printStackTrace();
+                    Timber.e(t, "Could not get History.");
                     Snackbar.make(b.getRoot(), R.string.error_network, Snackbar.LENGTH_LONG).setAction(R.string.error_network_action_retry, v -> {
                         this.loadHistory(b);
                     }).show();
@@ -142,6 +143,8 @@ public class HistoryFragment extends Fragment implements OnLoadMoreListener {
                         this.onLoadMore();
                     }
                     
+                }, throwable -> {
+                    Timber.e(throwable, "Could not get UpgradeSettings.");
                 });
     }
 }

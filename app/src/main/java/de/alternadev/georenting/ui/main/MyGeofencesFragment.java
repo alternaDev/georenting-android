@@ -130,6 +130,7 @@ public class MyGeofencesFragment extends Fragment implements GeofenceAdapter.Geo
                         b.setGeoFences(new ArrayList());
                     }
                 }, t -> {
+                    Timber.e(t, "Could not load Fences.");
                     if(b.getRoot() == null) return;
                     Snackbar.make(b.getRoot(), R.string.error_network, Snackbar.LENGTH_LONG).setAction(R.string.error_network_action_retry, v -> {
                         this.loadFences(b);

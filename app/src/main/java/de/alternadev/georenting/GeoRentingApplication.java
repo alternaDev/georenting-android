@@ -108,6 +108,8 @@ public class GeoRentingApplication extends Application {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe((settings) -> {
                     this.mUpgradeSettings = settings;
+                }, throwable -> {
+                    Timber.e(throwable, "Could not get UpgradeSettings.");
                 });
     }
 

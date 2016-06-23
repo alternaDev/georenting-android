@@ -180,6 +180,8 @@ public class MapFragment extends Fragment implements GoogleApiClient.OnConnectio
                                 }
                             }
                         });
+                    }, throwable -> {
+                        Timber.e(throwable, "Could not get Near GeoFences.");
                     });
         };
 
