@@ -6,13 +6,14 @@ import android.database.sqlite.SQLiteDatabase;
 
 import com.google.auto.value.AutoValue;
 import com.squareup.sqlbrite.BriteDatabase;
+import com.squareup.sqldelight.RowMapper;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @AutoValue public abstract class Fence implements FenceModel {
-    public static final Mapper<Fence> MAPPER = new Mapper<>((_id, name, owner, geofenceId, latitude, longitude, radius) -> builder()._id(_id).name(name).owner(owner).geofenceId(geofenceId).latitude(latitude).longitude(longitude).radius(radius).build());
-    public static final class Marshal extends FenceMarshal<Marshal> { }
+    public static final Factory<Fence> FACTORY = new Factory<>((_id, name, owner, geofenceId, latitude, longitude, radius) -> builder()._id(_id).name(name).owner(owner).geofenceId(geofenceId).latitude(latitude).longitude(longitude).radius(radius).build());
+    public static final RowMapper<Fence> MAPPER = FACTORY.select_allMapper();
 
     public static Builder builder() {
         return new AutoValue_Fence.Builder();
@@ -33,7 +34,7 @@ import java.util.List;
     }
 
     public static void insert(BriteDatabase db, Fence fence) {
-        db.insert(Fence.TABLE_NAME, new FenceModel.FenceMarshal<>(fence).asContentValues());
+        db.insert(Fence.TABLE_NAME, Fence.FACTORY.marshal(fence).asContentValues());
     }
 
     public static List<Fence> getAll(BriteDatabase db) {

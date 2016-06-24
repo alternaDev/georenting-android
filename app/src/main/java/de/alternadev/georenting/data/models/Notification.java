@@ -5,13 +5,14 @@ import android.database.Cursor;
 
 import com.google.auto.value.AutoValue;
 import com.squareup.sqlbrite.BriteDatabase;
+import com.squareup.sqldelight.RowMapper;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @AutoValue public abstract class Notification implements NotificationModel {
-    public static final NotificationModel.Mapper<Notification> MAPPER = new Mapper<>(( data) -> builder().data(data).build());
-    public static final class Marshal extends FenceModel.FenceMarshal<Fence.Marshal> { }
+    public static final Factory<Notification> FACTORY = new Factory<>(( data) -> builder().data(data).build());
+    public static final RowMapper<Notification> MAPPER = FACTORY.select_allMapper();
 
     public static Notification.Builder builder() {
         return new AutoValue_Notification.Builder();
@@ -26,7 +27,7 @@ import java.util.List;
     }
 
     public static void insert(BriteDatabase db, Notification data) {
-        db.insert(Notification.TABLE_NAME, new NotificationModel.NotificationMarshal<>(data).asContentValues());
+        db.insert(Notification.TABLE_NAME, Notification.FACTORY.marshal(data).asContentValues());
     }
 
     public static List<Notification> getAll(BriteDatabase db) {
