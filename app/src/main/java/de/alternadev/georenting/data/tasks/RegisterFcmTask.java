@@ -38,7 +38,11 @@ public class RegisterFcmTask extends GcmTaskService {
     public int onRunTask(TaskParams taskParams) {
         ((GeoRentingApplication) getApplication()).getComponent().inject(this);
 
-        if(!mAuth.blockingSignIn()) {
+        try {
+            if (!mAuth.blockingSignIn()) {
+                return GcmNetworkManager.RESULT_RESCHEDULE;
+            }
+        } catch(Exception e) {
             return GcmNetworkManager.RESULT_RESCHEDULE;
         }
 

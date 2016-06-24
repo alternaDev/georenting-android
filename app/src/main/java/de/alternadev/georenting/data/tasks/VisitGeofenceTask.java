@@ -38,7 +38,11 @@ public class VisitGeofenceTask extends GcmTaskService {
 
     @Override
     public int onRunTask(TaskParams taskParams) {
-        if(!mAuth.blockingSignIn()) {
+        try {
+            if (!mAuth.blockingSignIn()) {
+                return GcmNetworkManager.RESULT_RESCHEDULE;
+            }
+        } catch(Exception e) {
             return GcmNetworkManager.RESULT_RESCHEDULE;
         }
 
