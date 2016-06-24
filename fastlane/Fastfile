@@ -27,7 +27,7 @@ platform :android do
     # gradle(task: "assembleProductionDebugAndroidTest")
     # screengrab
     gradle(task: "assembleProductionRelease")
-    supply track: 'alpha', apk_paths: ["./app/build/outputs/apk/app-production-release-aligned.apk"]
+    supply track: 'alpha', apk_paths: ["./app/build/outputs/apk/app-production-release.apk"]
   end
 
   desc "Submit a new Beta Build to Google Play Beta"
@@ -40,7 +40,7 @@ platform :android do
 
     sh "curl https://api.github.com/repos/alternaDev/georenting-android/releases/tags/#{ENV['TRAVIS_TAG']} | jq '.body' >> ./fastlane/android/en-US/changelogs/#{ENV['TRAVIS_BUILD_NUMBER']}"
 
-    supply track: 'alpha', apk_paths: ["./app/build/outputs/apk/app-production-release.apk-aligned"]
+    supply track: 'alpha', apk_paths: ["./app/build/outputs/apk/app-production-release.apk"]
     supply track: 'alpha', track_promote_to: 'beta', skip_upload_apk: true, skip_upload_metadata: true, skip_upload_screenshots: true, skip_upload_images: true
   end
 
