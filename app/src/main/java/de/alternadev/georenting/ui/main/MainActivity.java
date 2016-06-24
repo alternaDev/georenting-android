@@ -297,6 +297,7 @@ public class MainActivity extends BaseActivity implements GoogleApiClient.OnConn
     }
 
     private void onInviteClicked() {
+        mAds.loadIntersitial(this);
         Intent intent = new AppInviteInvitation.IntentBuilder(getString(R.string.app_invite_title))
                 .setMessage(getString(R.string.app_invite_message))
                 //.setDeepLink(Uri.parse(getString(R.string.invitation_deep_link)))
