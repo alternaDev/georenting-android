@@ -66,6 +66,7 @@
     <string name="fragment_cash_expenses_geo_fence">Expenses GeoFence:</string>
     <string name="content_description_geofence_map">Map of the GeoFence.</string>
     <string name="content_description_empty" />
+    <string name="geofence_detail_geofence_dead">Dead.</string>
 
 
 </resources>

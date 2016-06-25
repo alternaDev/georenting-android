@@ -2,13 +2,19 @@ package de.alternadev.georenting.ui;
 
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.Toolbar;
+import android.text.format.DateFormat;
+import android.text.format.DateUtils;
 import android.view.MenuItem;
 
 import com.squareup.picasso.Picasso;
 
 import org.parceler.Parcels;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import javax.inject.Inject;
 
@@ -16,6 +22,8 @@ import de.alternadev.georenting.R;
 import de.alternadev.georenting.data.api.GoogleMapsStatic;
 import de.alternadev.georenting.data.api.model.GeoFence;
 import de.alternadev.georenting.databinding.ActivityGeofenceDetailBinding;
+
+import static de.alternadev.georenting.R.id.textView;
 
 /**
  * Created by jhbruhn on 18.04.16.
@@ -31,6 +39,7 @@ public class GeofenceDetailActivity extends BaseActivity {
     GoogleMapsStatic mStaticMap;
 
     private GeoFence mGeofence;
+    private CountDownTimer mCountDown;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -46,6 +55,21 @@ public class GeofenceDetailActivity extends BaseActivity {
             mGeofence = Parcels.unwrap(getIntent().getParcelableExtra(EXTRA_GEOFENCE));
 
         b.setGeoFence(mGeofence);
+
+        mCountDown = new CountDownTimer(mGeofence.diesAt.getTime() - new Date().getTime(), 1000) {
+
+            public void onTick(long millisUntilFinished) {
+                Date d = new Date(millisUntilFinished);
+                b.geofenceDeathCountdown.setText(new SimpleDateFormat("dd:hh:mm:ss").format(d));
+            }
+
+            public void onFinish() {
+                b.geofenceDeathCountdown.setText(getString(R.string.geofence_detail_geofence_dead));
+            }
+        };
+        mCountDown.start();
+
+
         final boolean[] imageLoaded = {false};
         b.geofenceMap.getViewTreeObserver().addOnPreDrawListener(() -> {
             if(imageLoaded[0]) return true;
@@ -79,5 +103,9 @@ public class GeofenceDetailActivity extends BaseActivity {
         return super.onOptionsItemSelected(item);
     }
 
-
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mCountDown.cancel();
+    }
 }
