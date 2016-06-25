@@ -7,7 +7,6 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.MenuInflater;
 import android.view.View;
@@ -107,9 +106,9 @@ public class MyGeofencesFragment extends Fragment implements GeofenceAdapter.Geo
                 .subscribe(geoFences -> {
                     if(geoFences != null) {
                         if (mAdapater == null && getActivity() != null) {
-                            GeofenceAdapter adapter = new GeofenceAdapter(geoFences, this.getActivity());
-                            adapter.setGeofenceAdapaterListener(this);
-                            b.geofencesList.setAdapter(adapter);
+                            mAdapater = new GeofenceAdapter(geoFences, this.getActivity());
+                            mAdapater.setGeofenceAdapaterListener(this);
+                            b.geofencesList.setAdapter(mAdapater);
                         } else {
                             mAdapater.setGeoFences(geoFences);
                         }
@@ -123,12 +122,8 @@ public class MyGeofencesFragment extends Fragment implements GeofenceAdapter.Geo
                 }, t -> {
                     Timber.e(t, "Could not load Fences.");
                     if(b.getRoot() == null) return;
-                    Snackbar.make(b.getRoot(), R.string.error_network, Snackbar.LENGTH_LONG).setAction(R.string.error_network_action_retry, v -> {
-                        this.loadFences(b);
-                    }).show();
-                }, () -> {
-                    b.geofencesRefresh.setRefreshing(false);
-                });
+                    Snackbar.make(b.getRoot(), R.string.error_network, Snackbar.LENGTH_LONG).setAction(R.string.error_network_action_retry, v -> this.loadFences(b)).show();
+                }, () -> b.geofencesRefresh.setRefreshing(false));
     }
 
     @Override
