@@ -1,14 +1,11 @@
 <resources>
     <string name="app_name">GeoRenting</string>
 
-    <string name="title_activity_sign_in">Sign In</string>
     <string name="message_signing_in">Connecting to Google+…</string>
 
-    <string name="title_activity_main">MainActivity</string>
     <string name="n_money_units">%1.2f GC</string>
     <string name="drawer_open">Open Drawer</string>
     <string name="drawer_close">Close Drawer</string>
-    <string name="action_settings">Settings</string>
     <string name="main_drawer_my_geofences">My Geofences</string>
     <string name="my_geofences_no_geofences">You do not own any GeoFence yet. Add one by clicking the button down right!</string>
     <string name="main_drawer_settings">Settings</string>
@@ -62,15 +59,13 @@
     <string name="app_invite_message">Try out GeoRenting now!</string>
     <string name="app_invite_cta">Build GeoFences</string>
     <string name="yes">Yes</string>
-    <string name="fragment_cash_earnings_rent_seven_days">Earnings Rent:</string>
-    <string name="fragment_cash_expenses_rent_seven_days">Expenses Rent:</string>
-    <string name="fragment_cash_expenses_geo_fence_seven_days">Expenses GeoFence:</string>
     <string name="fragment_cash_seven_days_title">Seven Days:</string>
     <string name="fragment_cash_all_time_title">All Time:</string>
     <string name="fragment_cash_earnings_rent">Earnings Rent:</string>
     <string name="fragment_cash_expenses_rent">Expenses Rent:</string>
     <string name="fragment_cash_expenses_geo_fence">Expenses GeoFence:</string>
-    <string name="default_geofence_name">MagicUlfs Area</string>
+    <string name="content_description_geofence_map">Map of the GeoFence.</string>
+    <string name="content_description_empty" />
 
 
 </resources>

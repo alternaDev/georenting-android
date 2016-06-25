@@ -4,8 +4,6 @@ import android.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
-import android.support.v4.app.ActivityOptionsCompat;
-import android.support.v4.util.Pair;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
@@ -14,12 +12,6 @@ import android.view.LayoutInflater;
 import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
-
-import com.google.android.gms.ads.AdListener;
-import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.MobileAds;
-import com.google.android.gms.location.Geofence;
 
 import org.parceler.Parcels;
 
@@ -38,7 +30,6 @@ import de.alternadev.georenting.databinding.ItemGeofenceBinding;
 import de.alternadev.georenting.ui.CreateGeofenceActivity;
 import de.alternadev.georenting.ui.GeofenceDetailActivity;
 import de.alternadev.georenting.ui.main.mygeofences.GeofenceAdapter;
-import hugo.weaving.DebugLog;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 import timber.log.Timber;
@@ -149,8 +140,6 @@ public class MyGeofencesFragment extends Fragment implements GeofenceAdapter.Geo
 
     @Override
     public void onClick(GeoFence fence, ItemGeofenceBinding b) {
-        Toolbar tb = ((MainActivity) getActivity()).getToolbar();
-
         Intent intent = new Intent(getActivity(), GeofenceDetailActivity.class);
         intent.putExtra(GeofenceDetailActivity.EXTRA_GEOFENCE, Parcels.wrap(fence));
 

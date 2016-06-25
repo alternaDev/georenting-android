@@ -9,10 +9,6 @@ import android.graphics.Bitmap;
 import android.support.v4.app.NotificationCompat;
 import android.text.Html;
 
-import com.google.android.gms.gcm.GcmNetworkManager;
-import com.google.android.gms.gcm.OneoffTask;
-import com.google.android.gms.gcm.PeriodicTask;
-import com.google.android.gms.gcm.Task;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 import com.squareup.moshi.Moshi;
@@ -182,15 +178,18 @@ public class FcmListenerService extends FirebaseMessagingService {
 
         StringBuilder b = new StringBuilder();
         if(visitCount > 0) {
-            b.append(visitCount + " Fences visited");
+            b.append(visitCount);
+            b.append(" Fences visited");
         }
         if(foreignVisitCount > 0) {
             if(visitCount > 0) b.append(", ");
-            b.append(foreignVisitCount + " visitors");
+            b.append(foreignVisitCount);
+            b.append(" visitors");
         }
         if(expiryCount > 0) {
             if(foreignVisitCount > 0 || visitCount > 0) b.append(", ");
-            b.append(expiryCount + " Fences expired");
+            b.append(expiryCount);
+            b.append(" Fences expired");
         }
         b.append(".");
         return b.toString();

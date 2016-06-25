@@ -1,13 +1,10 @@
 package de.alternadev.georenting.data.auth;
 
 import android.app.Application;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
-import android.util.Log;
 
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -15,13 +12,9 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.OptionalPendingResult;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.GetTokenResult;
 import com.google.firebase.auth.GoogleAuthProvider;
 
 import java.util.Date;
@@ -33,10 +26,8 @@ import de.alternadev.georenting.R;
 import de.alternadev.georenting.data.api.GeoRentingService;
 import de.alternadev.georenting.data.api.model.SessionToken;
 import de.alternadev.georenting.data.api.model.User;
-import de.alternadev.georenting.ui.SignInActivity;
 import hugo.weaving.DebugLog;
 import rx.Observable;
-import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 import timber.log.Timber;
@@ -57,7 +48,7 @@ public class GoogleAuth {
     @Inject
     SharedPreferences mPreferences;
 
-    private FirebaseAuth mAuth;
+    private final FirebaseAuth mAuth;
 
     public GoogleAuth(Application application) {
         ((GeoRentingApplication) application).getComponent().inject(this);
@@ -187,18 +178,18 @@ public class GoogleAuth {
         mGoogleClient.clearDefaultAccountAndReconnect();
         mPreferences.edit()
                 .putBoolean(GoogleAuth.PREF_SIGNED_IN_BEFORE, false)
-                .commit();
+                .apply();
         removeToken();
     }
 
     public void removeToken() {
         mPreferences.edit()
                 .remove(GoogleAuth.PREF_TOKEN)
-                .commit();
+                .apply();
         mApp.setSessionToken(null);
     }
 
-    public boolean getTokenExpired(String token) {
+    private boolean getTokenExpired(String token) {
         long expiration = JWTTool.getExpiration(token);
         return !new Date(expiration* 1000).after(new Date());
     }
@@ -223,11 +214,10 @@ public class GoogleAuth {
     }
 
     public GoogleSignInOptions getGoogleSignInOptions() {
-        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+        return new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestEmail()
                 .requestIdToken(mApp.getString(R.string.google_server_id))
                 //.requestServerAuthCode(mApp.getString(R.string.google_server_id), false)
                 .build();
-        return gso;
     }
 }

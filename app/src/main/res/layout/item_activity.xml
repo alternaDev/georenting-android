@@ -41,6 +41,7 @@
             android:layout_gravity="end"
             android:orientation="horizontal" >
             <ImageView
+                android:contentDescription="@string/content_description_empty"
                 android:layout_width="20dp"
                 android:layout_height="20dp"
                 android:layout_marginTop="0dp"
@@ -53,7 +54,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="4dp"
-                android:layout_marginLeft="4dp"
                 android:gravity="end"
                 android:text="@{DateUtils.getRelativeDateTimeString(context, item.time * 1000, 0, DateUtils.WEEK_IN_MILLIS, 0)}"/>
         </LinearLayout>

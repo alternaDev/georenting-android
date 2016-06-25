@@ -1,7 +1,6 @@
 package de.alternadev.georenting;
 
 
-import android.os.Build;
 import android.os.RemoteException;
 import android.support.multidex.MultiDex;
 import android.support.test.espresso.contrib.DrawerActions;
@@ -21,13 +20,7 @@ import tools.fastlane.screengrab.Screengrab;
 import tools.fastlane.screengrab.locale.LocaleUtil;
 
 import static android.support.test.InstrumentationRegistry.getTargetContext;
-import static android.support.test.espresso.action.ViewActions.click;
-import static android.support.test.espresso.assertion.ViewAssertions.matches;
-import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.Espresso.onView;
-import static android.support.test.espresso.action.ViewActions.click;
-import static android.support.test.espresso.assertion.ViewAssertions.matches;
-import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 
 public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActivity> {

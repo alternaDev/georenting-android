@@ -5,7 +5,6 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.database.Cursor;
 import android.database.SQLException;
 import android.location.Location;
 import android.support.v4.app.ActivityCompat;
@@ -38,8 +37,6 @@ import de.alternadev.georenting.data.api.model.GeoFence;
 import de.alternadev.georenting.data.auth.GoogleAuth;
 import de.alternadev.georenting.data.geofencing.GeofenceTransitionsIntentService;
 import de.alternadev.georenting.data.models.Fence;
-import de.alternadev.georenting.data.models.FenceModel;
-import hugo.weaving.DebugLog;
 import timber.log.Timber;
 
 public class UpdateGeofencesTask extends GcmTaskService {

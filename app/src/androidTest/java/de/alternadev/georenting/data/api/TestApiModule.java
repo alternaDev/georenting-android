@@ -5,11 +5,6 @@ import org.mockito.Mockito;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.annotation.OverridingMethodsMustInvokeSuper;
-import javax.inject.Singleton;
-
-import dagger.Module;
-import dagger.Provides;
 import de.alternadev.georenting.data.api.model.GeoFence;
 import de.alternadev.georenting.data.api.model.SessionToken;
 import okhttp3.HttpUrl;

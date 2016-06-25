@@ -10,16 +10,10 @@ import com.google.android.gms.common.api.OptionalPendingResult;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
 
-import org.mockito.Mock;
 import org.mockito.Mockito;
 
 import java.util.concurrent.TimeUnit;
 
-import javax.inject.Singleton;
-
-import dagger.Module;
-import dagger.Provides;
-import de.alternadev.georenting.R;
 import de.alternadev.georenting.data.api.ApiModule;
 import de.alternadev.georenting.data.api.AvatarService;
 import de.alternadev.georenting.data.api.model.SessionToken;

@@ -2,18 +2,13 @@ package de.alternadev.georenting.data.api;
 
 
 import com.squareup.moshi.FromJson;
-import com.squareup.moshi.JsonQualifier;
 import com.squareup.moshi.ToJson;
 
-import java.lang.annotation.Retention;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 
 
 import hugo.weaving.DebugLog;
-
-import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 public class DateAdapter {
     @ToJson
@@ -25,7 +20,7 @@ public class DateAdapter {
 
     @FromJson
     @DebugLog
-    Date fromJson(long time) throws ParseException {
+    Date fromJson(long time) {
         return new Date(time * 1000);
     }
 }

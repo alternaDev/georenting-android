@@ -46,36 +46,28 @@ public class RegisterFcmTask extends GcmTaskService {
             return GcmNetworkManager.RESULT_RESCHEDULE;
         }
 
-        try {
-            String gcmTokenString = getToken();
+        String gcmTokenString = getToken();
 
-            if (mPreferences.getString(CURRENT_GCM_TOKEN, "").equals(gcmTokenString)) {
-                Timber.i("GCM already registered.");
-                return GcmNetworkManager.RESULT_SUCCESS;
-            }
-
-            try {
-                mGeoRentingService.registerGcmToken(new GcmToken(gcmTokenString)).execute();
-                mPreferences.edit().putString(CURRENT_GCM_TOKEN, gcmTokenString).apply();
-                Timber.i("GCM Token submitted.");
-            } catch (IOException e ) {
-                e.printStackTrace();
-                Timber.e(e, "Sending GCM token failed. ");
-                return GcmNetworkManager.RESULT_RESCHEDULE;
-
-            }
-
-        } catch (IOException e) {
-            e.printStackTrace();
-            Timber.e(e, "Generating GCM token failed. ");
-            return GcmNetworkManager.RESULT_RESCHEDULE;
-
+        if (mPreferences.getString(CURRENT_GCM_TOKEN, "").equals(gcmTokenString)) {
+            Timber.i("GCM already registered.");
+            return GcmNetworkManager.RESULT_SUCCESS;
         }
+
+        try {
+            mGeoRentingService.registerGcmToken(new GcmToken(gcmTokenString)).execute();
+            mPreferences.edit().putString(CURRENT_GCM_TOKEN, gcmTokenString).apply();
+            Timber.i("GCM Token submitted.");
+        } catch (IOException e ) {
+            e.printStackTrace();
+            Timber.e(e, "Sending GCM token failed. ");
+            return GcmNetworkManager.RESULT_RESCHEDULE;
+        }
+
         return GcmNetworkManager.RESULT_SUCCESS;
     }
 
     @DebugLog
-    private String getToken() throws IOException {
+    private String getToken() {
         return FirebaseInstanceId.getInstance().getToken();
     }
 

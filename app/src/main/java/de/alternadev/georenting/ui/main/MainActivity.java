@@ -9,10 +9,9 @@ import android.content.IntentSender;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.databinding.DataBindingUtil;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.design.widget.NavigationView;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -34,7 +33,6 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.LocationSettingsRequest;
 import com.google.android.gms.location.LocationSettingsResult;
 import com.google.android.gms.location.LocationSettingsStatusCodes;
-import com.google.firebase.analytics.FirebaseAnalytics;
 import com.squareup.picasso.Picasso;
 
 import javax.inject.Inject;
@@ -56,7 +54,6 @@ import permissions.dispatcher.OnShowRationale;
 import permissions.dispatcher.PermissionRequest;
 import permissions.dispatcher.RuntimePermissions;
 import rebus.header.view.HeaderCompactView;
-import rebus.header.view.HeaderView;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 import timber.log.Timber;
@@ -66,7 +63,7 @@ public class MainActivity extends BaseActivity implements GoogleApiClient.OnConn
     private static final int REQUEST_CODE_CHECK_SETTINGS = 45;
     private static final int REQUEST_CODE_INVITE = 43;
 
-    public static String EXTRA_FRAGMENT = "fragment";
+    public static final String EXTRA_FRAGMENT = "fragment";
 
     public static final String FRAGMENT_MAP = "map";
     public static final String FRAGMENT_PROFILE = "profile";
@@ -320,7 +317,7 @@ public class MainActivity extends BaseActivity implements GoogleApiClient.OnConn
 
 
     private void showUserInHeader(User user) {
-        mHeaderView.background().setBackgroundColor(getResources().getColor(R.color.dark_primary_color));
+        mHeaderView.background().setBackgroundColor(ActivityCompat.getColor(this, R.color.dark_primary_color));
         if(user.avatarUrl != null && !user.avatarUrl.isEmpty()) {
             mPicasso.load(user.avatarUrl)
                     .into(mHeaderView.avatar());

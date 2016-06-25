@@ -11,6 +11,7 @@
 
 
     <application
+        android:supportsRtl="true"
         android:name=".GeoRentingApplication"
         tools:replace="android:allowBackup"
         android:allowBackup="false"

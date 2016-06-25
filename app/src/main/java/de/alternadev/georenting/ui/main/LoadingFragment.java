@@ -12,20 +12,12 @@ import de.alternadev.georenting.R;
 
 public class LoadingFragment extends Fragment {
     public static LoadingFragment newInstance() {
-        LoadingFragment fragment = new LoadingFragment();
 
-        return fragment;
+        return new LoadingFragment();
     }
 
     public LoadingFragment() {
         // Required empty public constructor
-    }
-
-
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
     }
 
     @Override

@@ -1,13 +1,10 @@
 package de.alternadev.georenting.data.tasks;
 
-import android.support.v4.text.TextUtilsCompat;
 import android.text.TextUtils;
 
 import com.google.android.gms.gcm.GcmNetworkManager;
 import com.google.android.gms.gcm.GcmTaskService;
 import com.google.android.gms.gcm.TaskParams;
-
-import java.io.IOException;
 
 import javax.inject.Inject;
 

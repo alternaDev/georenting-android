@@ -10,11 +10,8 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.text.TextUtilsCompat;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
-import android.transition.Transition;
-import android.transition.TransitionValues;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -47,9 +44,7 @@ import de.alternadev.georenting.data.api.GeoRentingService;
 import de.alternadev.georenting.data.api.model.CostEstimate;
 import de.alternadev.georenting.data.api.model.GeoFence;
 import de.alternadev.georenting.data.api.model.UpgradeSettings;
-import de.alternadev.georenting.data.models.Fence;
 import de.alternadev.georenting.databinding.ActivityGeofenceCreateBinding;
-import de.alternadev.georenting.databinding.ActivityGeofenceDetailBinding;
 import hugo.weaving.DebugLog;
 import retrofit2.adapter.rxjava.HttpException;
 import rx.android.schedulers.AndroidSchedulers;
@@ -117,7 +112,7 @@ public class CreateGeofenceActivity extends BaseActivity implements GoogleApiCli
                     @Override
                     public void onGlobalLayout() {
                         circularRevealActivity();
-                        mBinding.getRoot().getViewTreeObserver().removeGlobalOnLayoutListener(this);
+                        mBinding.getRoot().getViewTreeObserver().removeOnGlobalLayoutListener(this);
                     }
                 });
             }
@@ -413,8 +408,8 @@ public class CreateGeofenceActivity extends BaseActivity implements GoogleApiCli
         GeoFence fence = getGeoFenceFromParams();
 
         CircleOptions circle = new CircleOptions().center(new LatLng(fence.centerLat, fence.centerLon)).radius(fence.radius);
-        circle.fillColor(getResources().getColor(R.color.blue));
-        circle.strokeColor(getResources().getColor( R.color.blue));
+        circle.fillColor(ActivityCompat.getColor(this, R.color.blue));
+        circle.strokeColor(ActivityCompat.getColor(this, R.color.blue));
         mGoogleMap.addCircle(circle);
 
         mService.estimateCost(fence)

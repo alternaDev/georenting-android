@@ -66,16 +66,14 @@ public class SettingsFragment extends PreferenceFragment implements GoogleApiCli
     }
 
     private boolean logOut() {
-
         if(mGoogleClient.isConnected()) {
-
             mApi.deAuth()
                     .subscribeOn(Schedulers.newThread())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(sessionToken -> {
                         Auth.GoogleSignInApi.signOut(mGoogleClient).setResultCallback(
                                 status -> {
-                                    mPreferences.edit().remove(RegisterFcmTask.CURRENT_GCM_TOKEN).commit();
+                                    mPreferences.edit().remove(RegisterFcmTask.CURRENT_GCM_TOKEN).apply();
                                     mGoogleAuth.signOut(mGoogleClient);
                                     removeUpdateGeofenceTask();
 

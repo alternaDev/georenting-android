@@ -1,8 +1,6 @@
 package de.alternadev.georenting.data.api;
 
 import de.alternadev.georenting.data.api.model.GeoFence;
-import hugo.weaving.DebugLog;
-import timber.log.Timber;
 
 /**
  * Created by jhbruhn on 15.05.16.

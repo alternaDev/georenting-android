@@ -3,30 +3,19 @@ package de.alternadev.georenting;
 import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.os.Bundle;
 import android.os.StrictMode;
-import android.support.annotation.Nullable;
 //import android.support.multidex.MultiDex;
 import android.support.multidex.MultiDex;
-import android.text.TextUtils;
 
 import com.facebook.stetho.Stetho;
-import com.google.android.gms.auth.api.Auth;
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
-import com.google.android.gms.auth.api.signin.GoogleSignInResult;
-import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.maps.MapView;
-import com.google.firebase.FirebaseApp;
-import com.google.firebase.FirebaseOptions;
 import com.google.firebase.crash.FirebaseCrash;
 
 import javax.inject.Inject;
 
-import dagger.Component;
 import de.alternadev.georenting.data.api.GeoRentingService;
 import de.alternadev.georenting.data.api.model.SessionToken;
 import de.alternadev.georenting.data.api.model.UpgradeSettings;
-import de.alternadev.georenting.data.api.model.User;
 import de.alternadev.georenting.data.auth.GoogleAuth;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.plugins.RxJavaErrorHandler;

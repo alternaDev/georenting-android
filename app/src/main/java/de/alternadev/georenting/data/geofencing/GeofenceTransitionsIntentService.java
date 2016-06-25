@@ -3,7 +3,6 @@ package de.alternadev.georenting.data.geofencing;
 import android.app.IntentService;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.database.Cursor;
 import android.os.Bundle;
 
 import com.google.android.gms.gcm.GcmNetworkManager;
@@ -20,11 +19,9 @@ import java.util.List;
 import javax.inject.Inject;
 
 import de.alternadev.georenting.GeoRentingApplication;
-import de.alternadev.georenting.data.api.GeoRentingService;
 import de.alternadev.georenting.data.models.Fence;
 import de.alternadev.georenting.data.tasks.UpdateGeofencesTask;
 import de.alternadev.georenting.data.tasks.VisitGeofenceTask;
-import hugo.weaving.DebugLog;
 import timber.log.Timber;
 
 public class GeofenceTransitionsIntentService extends IntentService {
@@ -92,8 +89,6 @@ public class GeofenceTransitionsIntentService extends IntentService {
     }
 
     private void notifyServer(Geofence f) {
-        List<Fence> result = new ArrayList<>();
-
         Bundle taskData = new Bundle();
         taskData.putString(VisitGeofenceTask.EXTRAS_FENCE_ID, f.getRequestId());
 

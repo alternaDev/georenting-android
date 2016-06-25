@@ -3,7 +3,6 @@ package de.alternadev.georenting.ui;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.IntentSender;
-import android.content.SharedPreferences;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -21,7 +20,6 @@ import com.google.android.gms.location.LocationServices;
 import javax.inject.Inject;
 
 import de.alternadev.georenting.R;
-import de.alternadev.georenting.data.api.GeoRentingService;
 import de.alternadev.georenting.data.auth.GoogleAuth;
 import de.alternadev.georenting.data.tasks.RegisterFcmTask;
 import de.alternadev.georenting.databinding.ActivitySignInBinding;

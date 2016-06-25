@@ -2,7 +2,6 @@ package de.alternadev.georenting.data.models;
 
 
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 
 import com.google.auto.value.AutoValue;
 import com.squareup.sqlbrite.BriteDatabase;

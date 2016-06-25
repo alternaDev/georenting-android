@@ -9,18 +9,14 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.FragmentActivity;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
-import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -37,7 +33,6 @@ import de.alternadev.georenting.R;
 import de.alternadev.georenting.data.api.GeoRentingService;
 import de.alternadev.georenting.data.api.model.GeoFence;
 import de.alternadev.georenting.data.api.model.User;
-import de.alternadev.georenting.data.models.Fence;
 import de.alternadev.georenting.databinding.FragmentMapBinding;
 import de.alternadev.georenting.ui.GeofenceDetailActivity;
 import rx.android.schedulers.AndroidSchedulers;
@@ -48,8 +43,7 @@ public class MapFragment extends Fragment implements GoogleApiClient.OnConnectio
     private LocationListener mListener;
 
     public static MapFragment newInstance() {
-        MapFragment fragment = new MapFragment();
-        return fragment;
+        return new MapFragment();
     }
 
     @Inject
@@ -165,8 +159,8 @@ public class MapFragment extends Fragment implements GoogleApiClient.OnConnectio
                         for(GeoFence f : fences) {
                             CircleOptions circle = new CircleOptions().center(new LatLng(f.centerLat, f.centerLon)).radius(f.radius);
                             if(getActivity() == null) continue;
-                            circle.fillColor(getActivity().getResources().getColor(f.owner == mCurrentUser.id ? R.color.blue : R.color.red));
-                            circle.strokeColor(getActivity().getResources().getColor(f.owner == mCurrentUser.id ? R.color.blue : R.color.red));
+                            circle.fillColor(ActivityCompat.getColor(getActivity(), f.owner == mCurrentUser.id ? R.color.blue : R.color.red));
+                            circle.strokeColor(ActivityCompat.getColor(getActivity(), f.owner == mCurrentUser.id ? R.color.blue : R.color.red));
                             map.addCircle(circle);
                         }
                         map.setOnMapClickListener(latLng -> {

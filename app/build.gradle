@@ -62,7 +62,7 @@ android {
     defaultConfig {
         signingConfig signingConfigs.release
         minSdkVersion 18
-        targetSdkVersion 23
+        targetSdkVersion 24
 
         versionCode vCode + 1000
         versionName "${vName}"

@@ -4,8 +4,6 @@ import java.util.Date;
 
 import com.squareup.moshi.Json;
 
-import de.alternadev.georenting.data.api.DateAdapter;
-
 @org.parceler.Parcel
 public class GeoFence {
     @Json(name = "id")

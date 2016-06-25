@@ -22,7 +22,6 @@ import de.alternadev.georenting.databinding.FragmentHistoryBinding;
 import de.alternadev.georenting.ui.CustomLinearLayoutManager;
 import de.alternadev.georenting.ui.main.history.ActivityItemAdapter;
 import de.alternadev.georenting.ui.main.history.OnLoadMoreListener;
-import hugo.weaving.DebugLog;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 import timber.log.Timber;
@@ -37,9 +36,8 @@ public class HistoryFragment extends Fragment implements OnLoadMoreListener {
     private static final int MAX_EMPTY_TRIES = 5;
 
     public static HistoryFragment newInstance() {
-        HistoryFragment f = new HistoryFragment();
 
-        return f;
+        return new HistoryFragment();
     }
 
     @Inject

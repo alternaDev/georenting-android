@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="gcm_default_sender_id">241559709275</string>
     <string name="google_server_id">241559709275-nrik7ri1ltvprjqqmp0vcgq7cq7jj91p.apps.googleusercontent.com</string>
 
     <string name="admob_app_id">ca-app-pub-7543345627762272~7464640146</string>

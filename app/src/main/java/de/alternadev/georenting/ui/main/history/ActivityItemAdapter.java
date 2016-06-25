@@ -1,23 +1,16 @@
 package de.alternadev.georenting.ui.main.history;
 
-import android.app.Activity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewGroupOverlay;
 
 import java.util.List;
 
 import de.alternadev.georenting.R;
 import de.alternadev.georenting.data.api.model.ActivityItem;
-import de.alternadev.georenting.data.api.model.GeoFence;
 import de.alternadev.georenting.databinding.ItemActivityBinding;
-import de.alternadev.georenting.databinding.ItemGeofenceBinding;
-import de.alternadev.georenting.ui.main.mygeofences.GeofenceViewHolder;
-import hugo.weaving.DebugLog;
-import timber.log.Timber;
 
 /**
  * Created by jhbruhn on 23.04.16.

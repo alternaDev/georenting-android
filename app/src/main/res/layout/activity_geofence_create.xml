@@ -80,7 +80,6 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="14dp"
                         android:layout_marginStart="4dp"
-                        android:layout_marginLeft="4dp"
                         android:textSize="12sp"
                         android:text="@string/create_geofence_ttl_title"/>
                     <LinearLayout
