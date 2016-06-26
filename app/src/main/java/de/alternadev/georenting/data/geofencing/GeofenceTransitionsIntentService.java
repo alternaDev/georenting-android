@@ -14,6 +14,7 @@ import com.google.android.gms.location.GeofencingEvent;
 import com.squareup.sqlbrite.BriteDatabase;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -26,6 +27,8 @@ import timber.log.Timber;
 
 public class GeofenceTransitionsIntentService extends IntentService {
     private static final String PREF_CURRENT_GEOFENCE = "currentGeofence";
+    private static final String PREF_FENCE_COOLDOWN = "geofenceCooldown";
+    private static final long MINIMUM_FENCE_COOLDOWN = 24 * 60 * 60 * 1000;
 
     public GeofenceTransitionsIntentService() {
         super("GeoRenting GeoFence Service");
@@ -67,9 +70,12 @@ public class GeofenceTransitionsIntentService extends IntentService {
 
             for(Geofence f : triggeringGeofences) {
                 // Only trigger if not currently in a Geofence.
-                if (!mPreferences.getBoolean(PREF_CURRENT_GEOFENCE + "_" + f.getRequestId(), false)) {
+                boolean currentFenceCooldown = new Date().getTime() - mPreferences.getLong(PREF_FENCE_COOLDOWN + "_" + f.getRequestId(), 0) < MINIMUM_FENCE_COOLDOWN;
+                boolean currentFenceOk = !mPreferences.getBoolean(PREF_CURRENT_GEOFENCE + "_" + f.getRequestId(), false);
+                if (currentFenceCooldown && currentFenceOk) {
                     notifyServer(f);
-                    mPreferences.edit().putBoolean(PREF_CURRENT_GEOFENCE + "_" + f.getRequestId(), true).apply();
+                    mPreferences.edit().putLong(PREF_FENCE_COOLDOWN + "_" + f.getRequestId(), new Date().getTime()).apply();
+                    mPreferences.edit().putBoolean(PREF_CURRENT_GEOFENCE+ "_" + f.getRequestId(), true).apply();
                 }
             }
 
