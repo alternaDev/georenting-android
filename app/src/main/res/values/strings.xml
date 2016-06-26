@@ -67,6 +67,8 @@
     <string name="content_description_geofence_map">Map of the GeoFence.</string>
     <string name="content_description_empty" />
     <string name="geofence_detail_geofence_dead">Dead.</string>
+    <string name="pref_notify_expired">Expired Notification</string>
+    <string name="pref_notify_expired_desc">Show Notification if one of your GeoFences expires.</string>
 
 
 </resources>
