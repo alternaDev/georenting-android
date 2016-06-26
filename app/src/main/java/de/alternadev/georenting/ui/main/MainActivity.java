@@ -7,8 +7,10 @@ import android.content.IntentSender;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.databinding.DataBindingUtil;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.customtabs.CustomTabsIntent;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -144,8 +146,6 @@ public class MainActivity extends BaseActivity implements GoogleApiClient.OnConn
         }
 
         showFragment(LoadingFragment.newInstance());
-
-
 
         getGeoRentingApplication().createMapViewCacheIfNecessary();
     }
@@ -299,6 +299,9 @@ public class MainActivity extends BaseActivity implements GoogleApiClient.OnConn
             case R.id.nav_settings:
                 startActivity(new Intent(this, SettingsActivity.class));
                 break;
+            case R.id.nav_support:
+                onSupportClicked();
+                break;
             case R.id.nav_invite:
                 onInviteClicked();
                 break;
@@ -308,6 +311,16 @@ public class MainActivity extends BaseActivity implements GoogleApiClient.OnConn
             mDrawerLayout.closeDrawer(GravityCompat.START);
 
         return true;
+    }
+
+    private void onSupportClicked() {
+        String url = "http://magicpedarecords.de";
+        CustomTabsIntent.Builder builder = new CustomTabsIntent.Builder();
+        builder.setToolbarColor(ActivityCompat.getColor(this, R.color.primary_color));
+        CustomTabsIntent customTabsIntent = builder.build();
+        customTabsIntent.intent.putExtra(Intent.EXTRA_REFERRER,
+                Uri.parse("app://" + getPackageName()));
+        customTabsIntent.launchUrl(this, Uri.parse(url));
     }
 
     private void onInviteClicked() {
