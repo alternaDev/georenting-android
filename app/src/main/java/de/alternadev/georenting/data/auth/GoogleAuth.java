@@ -26,6 +26,7 @@ import de.alternadev.georenting.R;
 import de.alternadev.georenting.data.api.GeoRentingService;
 import de.alternadev.georenting.data.api.model.SessionToken;
 import de.alternadev.georenting.data.api.model.User;
+import de.alternadev.georenting.util.TaskUtil;
 import hugo.weaving.DebugLog;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
@@ -135,7 +136,7 @@ public class GoogleAuth {
         if(r.isSuccess()) {
             if(r.getSignInAccount() == null) return false;
 
-            String authCode = waitForTask(firebaseAuthWithGoogle(r.getSignInAccount()).toBlocking().first().getUser().getToken(false)).getToken();
+            String authCode = TaskUtil.waitForTask(firebaseAuthWithGoogle(r.getSignInAccount()).toBlocking().first().getUser().getToken(false)).getToken();
 
             SessionToken sessionToken = mGeoRentingService.auth(new User(authCode)).toBlocking().first();
             mApp.setSessionToken(sessionToken);
@@ -146,12 +147,7 @@ public class GoogleAuth {
         return false;
     }
 
-    private <T> T waitForTask(Task<T> t) {
-        while(!t.isComplete()) {
-            Thread.yield();
-        }
-        return t.getResult();
-    }
+
 
     private Observable<AuthResult> firebaseAuthWithGoogle(GoogleSignInAccount account) {
         return Observable.create(subscriber -> {
