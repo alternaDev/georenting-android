@@ -12,14 +12,12 @@ import hugo.weaving.DebugLog;
 
 public class DateAdapter {
     @ToJson
-    @DebugLog
     long toJson(Date date) {
         if(date == null) return 0;
         return date.getTime() / 1000;
     }
 
     @FromJson
-    @DebugLog
     Date fromJson(long time) {
         return new Date(time * 1000);
     }
