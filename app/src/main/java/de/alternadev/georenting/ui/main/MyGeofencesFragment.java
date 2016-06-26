@@ -1,9 +1,9 @@
 package de.alternadev.georenting.ui.main;
 
-import android.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
@@ -104,8 +104,8 @@ public class MyGeofencesFragment extends Fragment implements GeofenceAdapter.Geo
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(geoFences -> {
-                    if(geoFences != null) {
-                        if (mAdapater == null && getActivity() != null) {
+                    if(geoFences != null && getActivity() != null) {
+                        if (mAdapater == null) {
                             mAdapater = new GeofenceAdapter(geoFences, this.getActivity());
                             mAdapater.setGeofenceAdapaterListener(this);
                             b.geofencesList.setAdapter(mAdapater);
@@ -121,7 +121,7 @@ public class MyGeofencesFragment extends Fragment implements GeofenceAdapter.Geo
                     }
                 }, t -> {
                     Timber.e(t, "Could not load Fences.");
-                    if(b.getRoot() == null || b.getRoot().getContext() == null) return;
+                    if(b.getRoot() == null || b.getRoot().getContext() == null && getActivity() != null) return;
 
                     Snackbar.make(b.getRoot(), R.string.error_network, Snackbar.LENGTH_LONG).setAction(R.string.error_network_action_retry, v -> this.loadFences(b)).show();
                 }, () -> b.geofencesRefresh.setRefreshing(false));

@@ -2,8 +2,6 @@ package de.alternadev.georenting.ui.main;
 
 import android.Manifest;
 import android.app.Activity;
-import android.app.Fragment;
-import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.content.SharedPreferences;
@@ -12,6 +10,8 @@ import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -78,6 +78,7 @@ public class MainActivity extends BaseActivity implements GoogleApiClient.OnConn
     private Toolbar mToolbar;
     private User mCurrentUser;
     private String mCurrentFragment = FRAGMENT_MY_FENCES;
+    private Fragment mContent;
 
     @Inject
     GeoRentingService mService;
@@ -95,6 +96,7 @@ public class MainActivity extends BaseActivity implements GoogleApiClient.OnConn
     AdmobAds mAds;
 
     @Override
+    @DebugLog
     protected void onCreate(Bundle savedInstanceState) {
         setTheme(R.style.AppTheme);
 
@@ -137,7 +139,13 @@ public class MainActivity extends BaseActivity implements GoogleApiClient.OnConn
         UpdateGeofencesTask.initializeTasks(this);
 
         mCurrentUser = getGeoRentingApplication().getSessionToken().user;
+        if(savedInstanceState != null) {
+            mCurrentFragment = savedInstanceState.getString(EXTRA_FRAGMENT, FRAGMENT_MY_FENCES);
+        }
+
         showFragment(LoadingFragment.newInstance());
+
+
 
         getGeoRentingApplication().createMapViewCacheIfNecessary();
     }
@@ -244,17 +252,26 @@ public class MainActivity extends BaseActivity implements GoogleApiClient.OnConn
                 });
     }
 
+    @Override
+    @DebugLog
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
 
+        outState.putString(EXTRA_FRAGMENT, mCurrentFragment);
+    }
+
+
+    @DebugLog
     private void showFragment(Fragment fragment) {
-        Fragment currentFragment = getFragmentManager().findFragmentById(R.id.main_content_frame);
+        if(fragment.getClass().isInstance(mContent)) return;
 
-        if(fragment.getClass().isInstance(currentFragment)) return;
-
-        FragmentTransaction transaction = getFragmentManager().beginTransaction();
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
 
         transaction.replace(R.id.main_content_frame, fragment);
 
         transaction.commit();
+
+        mContent = fragment;
     }
 
     private boolean onNavigationItemSelected(MenuItem menuItem) {
