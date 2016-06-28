@@ -1,5 +1,6 @@
 package de.alternadev.georenting.ui.main;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
@@ -7,14 +8,19 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 
 import org.parceler.Parcels;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -29,6 +35,7 @@ import de.alternadev.georenting.databinding.ItemGeofenceBinding;
 import de.alternadev.georenting.ui.CreateGeofenceActivity;
 import de.alternadev.georenting.ui.GeofenceDetailActivity;
 import de.alternadev.georenting.ui.main.mygeofences.GeofenceAdapter;
+import hugo.weaving.DebugLog;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 import timber.log.Timber;
@@ -54,7 +61,8 @@ public class MyGeofencesFragment extends Fragment implements GeofenceAdapter.Geo
 
     private User mCurrentUser;
     private FragmentMyGeofencesBinding mBinding;
-    private GeofenceAdapter mAdapater;
+    private GeofenceAdapter mAdapter;
+    private List<GeoFence> mGeoFences;
 
     public MyGeofencesFragment() {
         // Required empty public constructor
@@ -66,6 +74,8 @@ public class MyGeofencesFragment extends Fragment implements GeofenceAdapter.Geo
         ((GeoRentingApplication) getActivity().getApplicationContext()).getComponent().inject(this);
 
         mAds.initialize(getActivity());
+
+        setHasOptionsMenu(true);
     }
 
     @Override
@@ -105,15 +115,15 @@ public class MyGeofencesFragment extends Fragment implements GeofenceAdapter.Geo
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(geoFences -> {
                     if(geoFences != null && getActivity() != null) {
-                        if (mAdapater == null) {
-                            mAdapater = new GeofenceAdapter(geoFences, this.getActivity());
-                            mAdapater.setGeofenceAdapaterListener(this);
-                            b.geofencesList.setAdapter(mAdapater);
+                        if (mAdapter == null) {
+                            mAdapter = new GeofenceAdapter(mGeoFences = geoFences, this.getActivity());
+                            mAdapter.setGeofenceAdapaterListener(this);
+                            b.geofencesList.setAdapter(mAdapter);
                         } else {
-                            mAdapater.setGeoFences(geoFences);
+                            mAdapter.setGeoFences(geoFences);
                         }
 
-                        b.setGeoFences(geoFences);
+                        b.setGeoFences(mGeoFences = geoFences);
 
 
                     } else {
@@ -125,6 +135,41 @@ public class MyGeofencesFragment extends Fragment implements GeofenceAdapter.Geo
 
                     Snackbar.make(b.getRoot(), R.string.error_network, Snackbar.LENGTH_LONG).setAction(R.string.error_network_action_retry, v -> this.loadFences(b)).show();
                 }, () -> b.geofencesRefresh.setRefreshing(false));
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.my_geofences_toolbar, menu);
+    }
+
+    @Override
+    public void onPrepareOptionsMenu(Menu menu) {
+        MenuItem mSearchMenuItem = menu.findItem(R.id.action_search);
+        SearchView searchView = (SearchView) mSearchMenuItem.getActionView();
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(searchView.getApplicationWindowToken(), 0);
+                return false;
+            }
+
+            @Override
+            @DebugLog
+            public boolean onQueryTextChange(String newText) {
+                if(mGeoFences != null) {
+                    List<GeoFence> filteredList = new ArrayList<>();
+                    for(GeoFence f : mGeoFences) {
+                        if(f.name.toLowerCase().contains(newText.toLowerCase().trim())) {
+                            filteredList.add(f);
+                        }
+                    }
+                    mAdapter.setGeoFences(filteredList);
+                }
+                return true;
+            }
+        });
     }
 
     @Override
