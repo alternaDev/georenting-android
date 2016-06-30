@@ -40,7 +40,8 @@ public class NetworkModule {
         Cache cache = new Cache(cacheDir, DISK_CACHE_SIZE);
 
         return
-            new OkHttpClient.Builder().connectTimeout(20, SECONDS)
+            new OkHttpClient.Builder()
+                    .connectTimeout(30, SECONDS)
                     .readTimeout(30, SECONDS)
                     .writeTimeout(30, SECONDS)
                     .addNetworkInterceptor(new StethoInterceptor())
