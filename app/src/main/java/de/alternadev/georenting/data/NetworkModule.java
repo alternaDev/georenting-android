@@ -14,6 +14,7 @@ import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
+import de.alternadev.georenting.BuildConfig;
 import de.alternadev.georenting.GeoRentingApplication;
 import de.alternadev.georenting.data.api.DateAdapter;
 import okhttp3.Cache;
@@ -30,7 +31,7 @@ import static java.util.concurrent.TimeUnit.SECONDS;
 
 @Module
 public class NetworkModule {
-    static final int DISK_CACHE_SIZE = (int) MEGABYTES.toBytes(50);
+    static final int DISK_CACHE_SIZE = (int) MEGABYTES.toBytes(100);
 
     @Provides
     OkHttpClient provideOkHttpClient(Application app, @Named("sessionToken") Interceptor tokenInterceptor) {
@@ -57,7 +58,7 @@ public class NetworkModule {
     @Provides
     @Singleton
     Picasso providePicasso(Application app, OkHttpClient client) {
-        return new Picasso.Builder(app).downloader(new OkHttp3Downloader(client)).build();
+        return new Picasso.Builder(app).indicatorsEnabled(BuildConfig.DEBUG).downloader(new OkHttp3Downloader(client)).build();
     }
 
     @Provides
