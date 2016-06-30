@@ -48,6 +48,7 @@ import de.alternadev.georenting.databinding.ActivityGeofenceCreateBinding;
 import hugo.weaving.DebugLog;
 import retrofit2.adapter.rxjava.HttpException;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
 import rx.schedulers.Schedulers;
 import timber.log.Timber;
 
@@ -93,8 +94,9 @@ public class CreateGeofenceActivity extends BaseActivity implements GoogleApiCli
                 .build();
         mApiClient.connect();
 
-        populateSpinners();
-        setupTTLSlider();
+
+        getGeoRentingApplication().getUpgradeSettings().subscribe(this::populateSpinners);
+        getGeoRentingApplication().getUpgradeSettings().subscribe(this::setupTTLSlider);
 
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -187,9 +189,9 @@ public class CreateGeofenceActivity extends BaseActivity implements GoogleApiCli
         circularReveal.start();
     }
 
-    private void populateSpinners() {
-        List<String> sizes = new ArrayList<>(getGeoRentingApplication().getUpgradeSettings().radius.size());
-        for (Integer i : getGeoRentingApplication().getUpgradeSettings().radius) {
+    private void populateSpinners(UpgradeSettings upgradeSettings) {
+        List<String> sizes = new ArrayList<>(upgradeSettings.radius.size());
+        for (Integer i : upgradeSettings.radius) {
             sizes.add(i + "m");
         }
         String[] array = sizes.toArray(new String[sizes.size()]);
@@ -203,7 +205,7 @@ public class CreateGeofenceActivity extends BaseActivity implements GoogleApiCli
             @Override
             public void onItemChosen(View labelledSpinner, AdapterView<?> adapterView, View itemView, int position, long id) {
                 mSelectedRadiusPosition = position;
-                refreshEstimate();
+                CreateGeofenceActivity.this.getGeoRentingApplication().getUpgradeSettings().subscribe(CreateGeofenceActivity.this::refreshEstimate);
             }
 
             @Override
@@ -212,7 +214,7 @@ public class CreateGeofenceActivity extends BaseActivity implements GoogleApiCli
             }
         });
 
-        Double[] array2 = getGeoRentingApplication().getUpgradeSettings().rent.toArray(new Double[getGeoRentingApplication().getUpgradeSettings().rent.size()]);
+        Double[] array2 = upgradeSettings.rent.toArray(new Double[upgradeSettings.rent.size()]);
         ArrayAdapter<Double> adapter2 = new ArrayAdapter<>(this,
                 android.R.layout.simple_spinner_item, array2);
         adapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -223,7 +225,7 @@ public class CreateGeofenceActivity extends BaseActivity implements GoogleApiCli
             @Override
             public void onItemChosen(View labelledSpinner, AdapterView<?> adapterView, View itemView, int position, long id) {
                 mSelectedRentPosition = position;
-                refreshEstimate();
+                CreateGeofenceActivity.this.getGeoRentingApplication().getUpgradeSettings().subscribe(CreateGeofenceActivity.this::refreshEstimate);
             }
 
             @Override
@@ -234,8 +236,8 @@ public class CreateGeofenceActivity extends BaseActivity implements GoogleApiCli
 
     }
 
-    private void setupTTLSlider() {
-        mBinding.ttlSeekBar.setMax((int) getGeoRentingApplication().getUpgradeSettings().maxTtl - MINIMUM_TTL);
+    private void setupTTLSlider(UpgradeSettings upgradeSettings) {
+        mBinding.ttlSeekBar.setMax((int) upgradeSettings.maxTtl - MINIMUM_TTL);
         mBinding.ttlSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean b) {
@@ -249,7 +251,8 @@ public class CreateGeofenceActivity extends BaseActivity implements GoogleApiCli
 
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
-                refreshEstimate();
+                CreateGeofenceActivity.this.getGeoRentingApplication().getUpgradeSettings().subscribe(CreateGeofenceActivity.this::refreshEstimate);
+
             }
         });
         refreshTTLEditText();
@@ -273,38 +276,43 @@ public class CreateGeofenceActivity extends BaseActivity implements GoogleApiCli
             return;
         }
 
-        GeoFence fence = getGeoFenceFromParams();
-        fence.name = fenceName;
+        getGeoRentingApplication().getUpgradeSettings().subscribe(upgradeSettings -> {
+            GeoFence fence = getGeoFenceFromParams(upgradeSettings);
+            fence.name = fenceName;
 
-        stopLocationUpdates();
-        setBuyButtonEnabled(false);
+            stopLocationUpdates();
+            setBuyButtonEnabled(false);
 
-        mBinding.setLoading(true);
+            mBinding.setLoading(true);
 
-        mService.createGeoFence(fence)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe((geoFence) -> {
-                    mBinding.setLoading(false);
+            mService.createGeoFence(fence)
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe((geoFence) -> {
+                        mBinding.setLoading(false);
 
-                    logBuyGeoFence(geoFence, mCurrentPrice);
-                    mAds.showInterstitialOrContinue(this, this::finishActivityWithAnimation);
-                }, error -> {
-                    mBinding.setLoading(false);
+                        logBuyGeoFence(geoFence, mCurrentPrice);
+                        mAds.showInterstitialOrContinue(CreateGeofenceActivity.this, CreateGeofenceActivity.this::finishActivityWithAnimation);
+                    }, error -> {
+                        mBinding.setLoading(false);
 
-                    setBuyButtonEnabled(true);
+                        setBuyButtonEnabled(true);
 
-                    if(mApiClient.isConnected())
-                        mMapView.getMapAsync(this::initMap);
+                        if(mApiClient.isConnected())
+                            mMapView.getMapAsync(CreateGeofenceActivity.this::initMap);
 
-                    if(error instanceof HttpException) {
-                        if (((HttpException) error).code() == 400) { // Overlap
-                            Snackbar.make(mBinding.getRoot(), R.string.error_create_fence_overlap, Snackbar.LENGTH_LONG).show();
-                        } else if (((HttpException) error).code() == 402) { // GeoCoins
-                            Snackbar.make(mBinding.getRoot(), R.string.error_create_fence_cant_afford, Snackbar.LENGTH_LONG).show();
+                        if(error instanceof HttpException) {
+                            if (((HttpException) error).code() == 400) { // Overlap
+                                Snackbar.make(mBinding.getRoot(), R.string.error_create_fence_overlap, Snackbar.LENGTH_LONG).show();
+                            } else if (((HttpException) error).code() == 402) { // GeoCoins
+                                Snackbar.make(mBinding.getRoot(), R.string.error_create_fence_cant_afford, Snackbar.LENGTH_LONG).show();
+                            }
                         }
-                    }
-                });
+                    });
+        });
+
+
+
     }
 
     @DebugLog
@@ -382,14 +390,13 @@ public class CreateGeofenceActivity extends BaseActivity implements GoogleApiCli
             this.mLocation = l;
 
             if(l.isFromMockProvider() && !BuildConfig.DEBUG) return;
-            refreshEstimate();
+            getGeoRentingApplication().getUpgradeSettings().subscribe(this::refreshEstimate);
         };
 
         LocationServices.FusedLocationApi.requestLocationUpdates(mApiClient, request, mListener);
     }
 
-    private GeoFence getGeoFenceFromParams() {
-        UpgradeSettings s = getGeoRentingApplication().getUpgradeSettings();
+    private GeoFence getGeoFenceFromParams(UpgradeSettings s) {
         GeoFence fence = new GeoFence(mLocation.getLatitude(), mLocation.getLongitude());
         fence.radius = s.radius.get(mSelectedRadiusPosition);
         fence.rentMultiplier = s.rent.get(mSelectedRentPosition);
@@ -397,7 +404,7 @@ public class CreateGeofenceActivity extends BaseActivity implements GoogleApiCli
         return fence;
     }
 
-    private void refreshEstimate() {
+    private void refreshEstimate(UpgradeSettings s) {
         if(mLocation == null) return;
         mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(mLocation.getLatitude(), mLocation.getLongitude()), 14));
         mGoogleMap.clear();
@@ -405,7 +412,7 @@ public class CreateGeofenceActivity extends BaseActivity implements GoogleApiCli
         mBinding.setLoading(true);
         setBuyButtonEnabled(false);
 
-        GeoFence fence = getGeoFenceFromParams();
+        GeoFence fence = getGeoFenceFromParams(s);
 
         CircleOptions circle = new CircleOptions().center(new LatLng(fence.centerLat, fence.centerLon)).radius(fence.radius);
         circle.fillColor(ActivityCompat.getColor(this, R.color.blue));

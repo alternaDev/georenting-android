@@ -17,6 +17,7 @@ import de.alternadev.georenting.data.api.GeoRentingService;
 import de.alternadev.georenting.data.api.model.SessionToken;
 import de.alternadev.georenting.data.api.model.UpgradeSettings;
 import de.alternadev.georenting.data.auth.GoogleAuth;
+import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.plugins.RxJavaErrorHandler;
 import rx.plugins.RxJavaPlugins;
@@ -27,7 +28,7 @@ public class GeoRentingApplication extends Application {
 
     private GeoRentingComponent mComponent;
     private SessionToken mSessionToken = null;
-    private UpgradeSettings mUpgradeSettings = null;
+    private Observable<UpgradeSettings> mUpgradeSettings = null;
     private boolean mMapViewCached;
 
     @Inject
@@ -98,14 +99,11 @@ public class GeoRentingApplication extends Application {
     }
 
     private void loadSettings() {
-        mService.getUpgradeSettings()
+        this.mUpgradeSettings = mService.getUpgradeSettings()
+                .cache()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe((settings) -> {
-                    this.mUpgradeSettings = settings;
-                }, throwable -> {
-                    Timber.e(throwable, "Could not get UpgradeSettings.");
-                });
+                .cache();
     }
 
     @Override
@@ -118,7 +116,7 @@ public class GeoRentingApplication extends Application {
         return mComponent;
     }
 
-    public UpgradeSettings getUpgradeSettings() {
+    public Observable<UpgradeSettings> getUpgradeSettings() {
         return mUpgradeSettings;
     }
 
