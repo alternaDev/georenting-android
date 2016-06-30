@@ -184,7 +184,9 @@ public class MyGeofencesFragment extends Fragment implements GeofenceAdapter.Geo
         Intent intent = new Intent(getActivity(), GeofenceDetailActivity.class);
         intent.putExtra(GeofenceDetailActivity.EXTRA_GEOFENCE, Parcels.wrap(fence));
 
-        getActivity().startActivityForResult(intent, 0);
+        getActivity().startActivity(intent);
+        getActivity().overridePendingTransition(R.anim.left_to_right, R.anim.fade_back);
+
     }
 
     @Override

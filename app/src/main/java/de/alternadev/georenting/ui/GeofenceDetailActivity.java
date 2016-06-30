@@ -96,9 +96,17 @@ public class GeofenceDetailActivity extends BaseActivity {
             // Respond to the action bar's Up/Home button
             case android.R.id.home:
                 finish();
+                overridePendingTransition(R.anim.fade_forward, R.anim.right_to_left);
+
                 return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onBackPressed() {
+        finish();
+        overridePendingTransition(R.anim.fade_forward, R.anim.right_to_left);
     }
 
     @Override
