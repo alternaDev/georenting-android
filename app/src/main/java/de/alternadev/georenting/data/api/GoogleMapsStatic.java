@@ -1,15 +1,41 @@
 package de.alternadev.georenting.data.api;
 
 import de.alternadev.georenting.data.api.model.GeoFence;
+import hugo.weaving.DebugLog;
+import timber.log.Timber;
 
 /**
  * Created by jhbruhn on 15.05.16.
  */
 public class GoogleMapsStatic {
 
+
+    private static final double MAXIMUM_WIDTH = 640;
+    private static final double MAXIMUM_HEIGHT = 640;
     private static final String BASE_URL = "http://maps.google.com/maps/api/staticmap";
 
     public String getFenceThumbnailMapUrl(GeoFence fence, int width, int height) {
+
+        double wRatio = 1, hRatio = 1;
+
+        if(width >= height) {
+            if(width > MAXIMUM_WIDTH || height > MAXIMUM_HEIGHT) {
+                wRatio = MAXIMUM_WIDTH / width;
+                hRatio = MAXIMUM_HEIGHT / height;
+            }
+        } else {
+            if(width > MAXIMUM_WIDTH || height > MAXIMUM_HEIGHT) {
+                wRatio = MAXIMUM_HEIGHT / width;
+                hRatio = MAXIMUM_WIDTH / height;
+            }
+        }
+
+        double ratio = Math.min(wRatio, hRatio);
+
+        width = (int) Math.round(width * ratio);
+        height = (int) Math.round(height * ratio);
+
+
         String path = "&path=color:0x0000ff|weight:5";
         int r = 6371;
         double lat = (fence.centerLat * Math.PI) / 180;

@@ -74,8 +74,8 @@ public class GeofenceDetailActivity extends BaseActivity {
         b.geofenceMap.getViewTreeObserver().addOnPreDrawListener(() -> {
             if(imageLoaded[0]) return true;
             mPicasso.load(mStaticMap.getFenceThumbnailMapUrl(mGeofence,
-                    b.geofenceMap.getWidth() / 2,
-                    b.geofenceMap.getHeight() / 2))
+                    b.geofenceMap.getWidth(),
+                    b.geofenceMap.getHeight()))
                     .fit()
                     .centerCrop()
                     .into(b.geofenceMap);
