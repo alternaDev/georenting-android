@@ -141,10 +141,7 @@ public class MyGeofencesFragment extends Fragment implements GeofenceAdapter.Geo
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.my_geofences_toolbar, menu);
-    }
 
-    @Override
-    public void onPrepareOptionsMenu(Menu menu) {
         MenuItem searchMenuItem = menu.findItem(R.id.action_search);
 
         if(searchMenuItem == null) return;
@@ -175,6 +172,11 @@ public class MyGeofencesFragment extends Fragment implements GeofenceAdapter.Geo
                 return true;
             }
         });
+    }
+
+    @Override
+    public void onPrepareOptionsMenu(Menu menu) {
+        
     }
 
     @Override
