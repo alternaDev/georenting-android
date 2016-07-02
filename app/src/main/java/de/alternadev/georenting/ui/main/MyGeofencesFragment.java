@@ -145,8 +145,13 @@ public class MyGeofencesFragment extends Fragment implements GeofenceAdapter.Geo
 
     @Override
     public void onPrepareOptionsMenu(Menu menu) {
-        MenuItem mSearchMenuItem = menu.findItem(R.id.action_search);
-        SearchView searchView = (SearchView) mSearchMenuItem.getActionView();
+        MenuItem searchMenuItem = menu.findItem(R.id.action_search);
+
+        if(searchMenuItem == null) return;
+
+        SearchView searchView = (SearchView) searchMenuItem.getActionView();
+        if(searchView == null) return;
+
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
