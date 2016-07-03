@@ -20,6 +20,7 @@ import com.google.firebase.auth.GoogleAuthProvider;
 import java.util.Date;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 
 import de.alternadev.georenting.GeoRentingApplication;
 import de.alternadev.georenting.R;
@@ -41,6 +42,7 @@ public class GoogleAuth {
     public static final String PREF_TOKEN = "t";
 
     @Inject
+    @Named("unAuthed")
     GeoRentingService mGeoRentingService;
 
     @Inject
@@ -54,7 +56,13 @@ public class GoogleAuth {
     public GoogleAuth(Application application) {
         ((GeoRentingApplication) application).getComponent().inject(this);
 
-        mAuth = FirebaseAuth.getInstance();
+        FirebaseAuth auth = null;
+        try {
+            auth = FirebaseAuth.getInstance();
+        } catch (IllegalStateException e) {
+            Timber.e(e, "Could not get FirebaseAuth");
+        }
+        mAuth = auth;
     }
 
     public OptionalPendingResult<GoogleSignInResult> getAuthTokenSilent(GoogleApiClient apiClient) {
@@ -178,6 +186,7 @@ public class GoogleAuth {
         removeToken();
     }
 
+    @DebugLog
     public void removeToken() {
         mPreferences.edit()
                 .remove(GoogleAuth.PREF_TOKEN)
@@ -190,6 +199,7 @@ public class GoogleAuth {
         return !new Date(expiration* 1000).after(new Date());
     }
 
+    @DebugLog
     public SessionToken getSavedToken() {
         if(mApp.getSessionToken() != null && !TextUtils.isEmpty(mApp.getSessionToken().token)) {
             Timber.i("Using token from App");

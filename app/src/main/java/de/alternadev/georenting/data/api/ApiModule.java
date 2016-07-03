@@ -1,5 +1,6 @@
 package de.alternadev.georenting.data.api;
 
+import javax.inject.Named;
 import javax.inject.Singleton;
 
 import dagger.Module;
@@ -18,6 +19,13 @@ public class ApiModule {
     @Provides
     @Singleton
     GeoRentingService provideGeoRentingService(Retrofit restAdapter) {
+        return restAdapter.create(GeoRentingService.class);
+    }
+
+    @Provides
+    @Singleton
+    @Named("unAuthed")
+    GeoRentingService proviedUnAuthedGeoRentingService(@Named("unAuthed") Retrofit restAdapter) {
         return restAdapter.create(GeoRentingService.class);
     }
 
