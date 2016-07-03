@@ -34,6 +34,9 @@ public interface GeoRentingService {
     @POST("users/refreshToken")
     Observable<SessionToken> refreshToken(@Body SessionToken token);
 
+    @GET("users/me")
+    Observable<User> getCurrentUser();
+
     @POST("users/me/gcm")
     Call<Void> registerGcmToken(@Body GcmToken token);
 

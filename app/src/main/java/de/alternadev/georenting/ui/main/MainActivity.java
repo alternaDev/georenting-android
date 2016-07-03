@@ -130,7 +130,7 @@ public class MainActivity extends BaseActivity implements GoogleApiClient.OnConn
         SessionToken savedToken = mGoogleAuth.getSavedToken();
 
         if(savedToken != null && savedToken.token != null && !savedToken.token.equals("")) {
-            Timber.i("Using Token.");
+            Timber.i("Using Saved Token.");
             getGeoRentingApplication().setSessionToken(savedToken);
         } else {
             Timber.i("Resigning in.");
@@ -141,6 +141,7 @@ public class MainActivity extends BaseActivity implements GoogleApiClient.OnConn
         UpdateGeofencesTask.initializeTasks(this);
 
         mCurrentUser = getGeoRentingApplication().getSessionToken().user;
+
         if(savedInstanceState != null) {
             mCurrentFragment = savedInstanceState.getString(EXTRA_FRAGMENT, FRAGMENT_MY_FENCES);
         }
@@ -150,6 +151,7 @@ public class MainActivity extends BaseActivity implements GoogleApiClient.OnConn
         getGeoRentingApplication().createMapViewCacheIfNecessary();
     }
 
+    @DebugLog
     private void loadCurrentUser() {
         if(mCurrentUser == null) {
             reloadCurrentUser();
@@ -159,16 +161,17 @@ public class MainActivity extends BaseActivity implements GoogleApiClient.OnConn
         }
     }
 
+    @DebugLog
     private void reloadCurrentUser() {
         Timber.i("Refreshing Token.");
-        mService.refreshToken(getGeoRentingApplication().getSessionToken())
+        mService.getCurrentUser()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe((sessionToken) -> {
-                    getGeoRentingApplication().setSessionToken(sessionToken);
-                    setCurrentUser(sessionToken.user);
+                .subscribe((user) -> {
+                    getGeoRentingApplication().getSessionToken().user = user;
+                    setCurrentUser(user);
                 }, error -> {
-                    Timber.d("Could not refresh Token.");
+                    Timber.d("Could not get Current User.");
                     refreshToken();
                 });
     }
@@ -184,6 +187,7 @@ public class MainActivity extends BaseActivity implements GoogleApiClient.OnConn
         });
     }
 
+    @DebugLog
     private void setCurrentUser(User user) {
         mCurrentUser = user;
         showUserInHeader(user);
@@ -228,6 +232,7 @@ public class MainActivity extends BaseActivity implements GoogleApiClient.OnConn
         showStartFragment();
     }
 
+    @DebugLog
     private void reSignIn() {
         mGoogleAuth.removeToken();
         OptionalPendingResult<GoogleSignInResult> opr = mGoogleAuth.getAuthTokenSilent(mApiClient);
@@ -253,7 +258,6 @@ public class MainActivity extends BaseActivity implements GoogleApiClient.OnConn
     }
 
     @Override
-    @DebugLog
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
 
@@ -261,7 +265,6 @@ public class MainActivity extends BaseActivity implements GoogleApiClient.OnConn
     }
 
 
-    @DebugLog
     private void showFragment(Fragment fragment) {
         if(fragment.getClass().isInstance(mContent)) return;
 
@@ -445,7 +448,6 @@ public class MainActivity extends BaseActivity implements GoogleApiClient.OnConn
     }
 
     @Override
-    @DebugLog
     protected void onResume() {
         super.onResume();
         mCurrentUser = null;
