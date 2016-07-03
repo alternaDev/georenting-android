@@ -17,6 +17,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewAnimationUtils;
 import android.view.ViewTreeObserver;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.SeekBar;
@@ -121,6 +123,18 @@ public class CreateGeofenceActivity extends BaseActivity implements GoogleApiCli
         }
 
         mAds.loadIntersitial(this);
+    }
+
+    @Override
+    protected void setStatusBarColor() {
+        Window window = getWindow();
+        if (Build.VERSION.SDK_INT >= 21) {
+            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+            window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+
+            window.setStatusBarColor(ActivityCompat.getColor(this, R.color.dark_accent));
+        }
+
     }
 
 
