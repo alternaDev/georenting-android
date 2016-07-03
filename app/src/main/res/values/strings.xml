@@ -9,7 +9,7 @@
     <string name="n_money_units">%1.2f GC</string>
     <string name="drawer_open">Open Drawer</string>
     <string name="drawer_close">Close Drawer</string>
-    <string name="main_drawer_my_geofences">My Geofences</string>
+    <string name="main_drawer_my_geofences">My GeoFences</string>
     <string name="my_geofences_no_geofences">You do not own any GeoFence yet. Add one by clicking the button down right!</string>
     <string name="geofence_item_action_tear_down">Tear Down</string>
     <string name="main_drawer_settings">Settings</string>
@@ -27,23 +27,23 @@
     <string name="fragment_cash_all_time_title">All Time:</string>
     <string name="fragment_cash_earnings_rent">Earnings Rent:</string>
     <string name="fragment_cash_expenses_rent">Expenses Rent:</string>
-    <string name="fragment_cash_expenses_geo_fence">Expenses GeoFence:</string>
+    <string name="fragment_cash_expenses_geo_fence">Expenses GeoFences:</string>
 
 
     <string name="title_activity_geofence_detail">GeoFence</string>
     <string name="geofence_detail_geofence_dead">Dead.</string>
 
     <string name="pref_account_title">Account</string>
-    <string name="pref_key_account_logout">account_logout</string>
+    <string name="pref_key_account_logout" translatable="false">account_logout</string>
     <string name="pref_account_logout">Log Out</string>
     <string name="pref_notify_title">Notifications</string>
-    <string name="pref_key_notify_visit">notifyVisits</string>
+    <string name="pref_key_notify_visit" translatable="false">notifyVisits</string>
     <string name="pref_notify_visit">Visit Notification</string>
-    <string name="pref_key_notify_visited">notifyVisited</string>
+    <string name="pref_key_notify_visited" translatable="false">notifyVisited</string>
     <string name="pref_notify_visited">Visited Notification</string>
     <string name="pref_notify_visited_desc">Show Notification if someone visits your GeoFence.</string>
     <string name="pref_notify_visit_desc">Show Notification if you visit a GeoFence.</string>
-    <string name="pref_key_notify_expired">notifyExpired</string>
+    <string name="pref_key_notify_expired" translatable="false">notifyExpired</string>
     <string name="pref_notify_expired">Expired Notification</string>
     <string name="pref_notify_expired_desc">Show Notification if one of your GeoFences expires.</string>
 
@@ -52,7 +52,7 @@
     <string name="button_deny">Deny</string>
 
     <string name="title_activity_geofence_create">Create GeoFence</string>
-    <string name="create_geofence_cost_estimate">&lt;b&gt;%1$.2f GC&lt;/b&gt; </string>
+    <string name="create_geofence_cost_estimate" translatable="false">&lt;b&gt;%1$.2f GC&lt;/b&gt; </string>
     <string name="create_geofence_name_title">Name</string>
     <string name="create_geofence_radius_title">Radius</string>
     <string name="create_geofence_rent_title">Rent Multiplier</string>
@@ -60,7 +60,7 @@
     <string name="create_geofence_ttl_hours">%1$.2fh</string>
     <string name="create_geofence_error_overlap">You can not create a GeoFence at this place.</string>
     <string name="create_geofence_action_buy">Buy GeoFence</string>
-    <string name="create_geofence_error_name_empty">The name is required.</string>
+    <string name="create_geofence_error_name_empty">Name is required.</string>
     <string name="error_create_fence_overlap">You can not create this GeoFence because it overlaps with other GeoFences.</string>
     <string name="error_create_fence_cant_afford">You can not afford this GeoFence!</string>
 
