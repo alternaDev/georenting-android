@@ -38,7 +38,7 @@
     <string name="main_drawer_settings">Einstellungen</string>
     <string name="main_drawer_support">Hilfe</string>
     <string name="message_signing_in">Verbinde mit Google+...</string>
-    <string name="my_geofences_no_geofences">Du besitzt noch kein GeoFence. Kaufe eins indem du auf den Knopf unten rechts drückst!</string>
+    <string name="my_geofences_no_geofences">Du besitzt noch kein GeoFence. Kaufe eines, indem du auf den Knopf unten rechts drückst!</string>
     <string name="n_money_units">%1.2f GC</string>
     <string name="permission_location_rationale">Wir brauchen Zugriff auf den Standort deines Gerätest, damit das Spiel funktioniert.</string>
     <string name="pref_account_logout">Abmelden</string>
