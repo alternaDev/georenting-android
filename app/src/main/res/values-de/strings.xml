@@ -53,4 +53,6 @@
     <string name="title_activity_geofence_create">GeoFence erstellen</string>
     <string name="title_activity_geofence_detail">GeoFence</string>
     <string name="yes">Ja</string>
+    <string name="content_description_geofence_map">Karte.</string>
+    <string name="title_activity_settings">Einstellungen</string>
 </resources>

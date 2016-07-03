@@ -33,19 +33,20 @@
     <string name="title_activity_geofence_detail">GeoFence</string>
     <string name="geofence_detail_geofence_dead">Dead.</string>
 
+    <string name="title_activity_settings">Settings</string>
     <string name="pref_account_title">Account</string>
-    <string name="pref_key_account_logout" translatable="false">account_logout</string>
     <string name="pref_account_logout">Log Out</string>
     <string name="pref_notify_title">Notifications</string>
-    <string name="pref_key_notify_visit" translatable="false">notifyVisits</string>
     <string name="pref_notify_visit">Visit Notification</string>
-    <string name="pref_key_notify_visited" translatable="false">notifyVisited</string>
     <string name="pref_notify_visited">Visited Notification</string>
     <string name="pref_notify_visited_desc">Show Notification if someone visits your GeoFence.</string>
     <string name="pref_notify_visit_desc">Show Notification if you visit a GeoFence.</string>
-    <string name="pref_key_notify_expired" translatable="false">notifyExpired</string>
     <string name="pref_notify_expired">Expired Notification</string>
     <string name="pref_notify_expired_desc">Show Notification if one of your GeoFences expires.</string>
+    <string name="pref_key_account_logout" translatable="false">account_logout</string>
+    <string name="pref_key_notify_visit" translatable="false">notifyVisits</string>
+    <string name="pref_key_notify_visited" translatable="false">notifyVisited</string>
+    <string name="pref_key_notify_expired" translatable="false">notifyExpired</string>
 
     <string name="permission_location_rationale">We need access to your devices Location to deliver the core functionality of the Game.</string>
     <string name="button_allow">Allow</string>
@@ -71,7 +72,7 @@
 
 
     <string name="content_description_geofence_map">Map of the GeoFence.</string>
-    <string name="content_description_empty" />
+    <string name="content_description_empty" translatable="false" />
 
 
     <string name="action_search">Search</string>
