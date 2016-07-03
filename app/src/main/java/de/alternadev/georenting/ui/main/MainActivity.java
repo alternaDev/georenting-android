@@ -163,7 +163,7 @@ public class MainActivity extends BaseActivity implements GoogleApiClient.OnConn
 
     @DebugLog
     private void reloadCurrentUser() {
-        Timber.i("Refreshing Token.");
+        Timber.i("Refreshing User.");
         mService.getCurrentUser()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
