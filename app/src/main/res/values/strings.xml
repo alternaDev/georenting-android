@@ -19,9 +19,9 @@
     <string name="main_drawer_history">History</string>
     <string name="main_drawer_invite">Invite Friends</string>
 
-    <string name="activity_own_fence_visited"><b>%2$s</b> visited your GeoFence &lt;b&gt;%1$s&lt;/b&gt; and paid &lt;b&gt;%3$.2f&lt;/b&gt; GC in rent.</string>
+    <string name="activity_own_fence_visited">&lt;b&gt;2$s&lt;/b&gt; visited your GeoFence &lt;b&gt;%1$s&lt;/b&gt; and paid &lt;b&gt;%3$.2f&lt;/b&gt; GC in rent.</string>
     <string name="activity_foreign_fence_visited">You visited &lt;b&gt;%2$s&lt;/b&gt;s GeoFence &lt;b&gt;%1$s&lt;/b&gt; and paid &lt;b&gt;%3$.2f&lt;/b&gt; GC in rent.</string>
-    <string name="activity_fence_expired">Your Fence <b>%1$s</b> has expired.</string>
+    <string name="activity_fence_expired">Your Fence &lt;b&gt;%1$s&lt;/b&gt; has expired.</string>
 
     <string name="fragment_cash_seven_days_title">Seven Days:</string>
     <string name="fragment_cash_all_time_title">All Time:</string>
