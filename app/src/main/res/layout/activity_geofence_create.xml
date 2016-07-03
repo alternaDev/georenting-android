@@ -32,7 +32,7 @@
                     android:id="@+id/toolbar"
                     android:layout_width="match_parent"
                     android:layout_height="?android:attr/actionBarSize"
-                    android:background="@color/primary_color"
+                    android:background="@color/accent"
                     android:transitionName="toolbar"
                     app:elevation="4dp"
                     android:elevation="4dp"
