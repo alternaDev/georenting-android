@@ -193,7 +193,6 @@ public class MyGeofencesFragment extends Fragment implements GeofenceAdapter.Geo
 
         getActivity().startActivity(intent);
         getActivity().overridePendingTransition(R.anim.left_to_right, R.anim.fade_back);
-
     }
 
     @Override

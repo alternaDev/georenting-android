@@ -186,6 +186,7 @@ public class MapFragment extends Fragment implements GoogleApiClient.OnConnectio
         Intent intent = new Intent(getActivity(), GeofenceDetailActivity.class);
         intent.putExtra(GeofenceDetailActivity.EXTRA_GEOFENCE, Parcels.wrap(f));
         startActivity(intent);
+        getActivity().overridePendingTransition(R.anim.left_to_right, R.anim.fade_back);
     }
 
     @Override
