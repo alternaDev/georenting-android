@@ -198,15 +198,19 @@ public class MainActivity extends BaseActivity implements GoogleApiClient.OnConn
         switch(this.mCurrentFragment) {
             case FRAGMENT_MY_FENCES:
                 showFragment(MyGeofencesFragment.newInstance(mCurrentUser));
+                mToolbar.setTitle(R.string.main_drawer_my_geofences);
                 break;
             case FRAGMENT_PROFILE:
                 showFragment(ProfileFragment.newInstance(mCurrentUser));
+                mToolbar.setTitle(R.string.main_drawer_profile);
                 break;
             case FRAGMENT_MAP:
                 showFragment(MapFragment.newInstance());
+                mToolbar.setTitle(R.string.main_drawer_map);
                 break;
             case FRAGMENT_HISTORY:
                 showFragment(HistoryFragment.newInstance());
+                mToolbar.setTitle(R.string.main_drawer_history);
                 break;
         }
     }
