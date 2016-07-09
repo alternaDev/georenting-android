@@ -14,6 +14,7 @@ import org.parceler.Parcels;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
+import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
 
@@ -56,8 +57,12 @@ public class GeofenceDetailActivity extends BaseActivity {
         mCountDown = new CountDownTimer(mGeofence.diesAt.getTime() - new Date().getTime(), 1000) {
 
             public void onTick(long millisUntilFinished) {
-                Date d = new Date(millisUntilFinished);
-                b.geofenceDeathCountdown.setText(new SimpleDateFormat("dd:hh:mm:ss", Locale.getDefault()).format(d));
+                long seconds = millisUntilFinished / 1000;
+                int day = (int)TimeUnit.SECONDS.toDays(seconds);        
+                long hours = TimeUnit.SECONDS.toHours(seconds) - (day *24);
+                long minute = TimeUnit.SECONDS.toMinutes(seconds) - (TimeUnit.SECONDS.toHours(seconds)* 60);
+                long second = TimeUnit.SECONDS.toSeconds(seconds) - (TimeUnit.SECONDS.toMinutes(seconds) *60);
+                b.geofenceDeathCountdown.setText(day+":"+hours+":"+minute+":"+second);
             }
 
             public void onFinish() {
