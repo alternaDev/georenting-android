@@ -2,7 +2,6 @@ package de.alternadev.georenting.data.api;
 
 import de.alternadev.georenting.data.api.model.GeoFence;
 import hugo.weaving.DebugLog;
-import timber.log.Timber;
 
 /**
  * Created by jhbruhn on 15.05.16.
@@ -14,6 +13,28 @@ public class GoogleMapsStatic {
     private static final double MAXIMUM_HEIGHT = 640;
     private static final String BASE_URL = "http://maps.google.com/maps/api/staticmap";
 
+    private static final String[] STYLES = {
+            "feature:administrative|element:labels.text.fill|color:0x444444",
+            "feature:road|element:geometry.fill|color:0xffc107",
+            "feature:water|element:all|visibility:on|color:0x46bcec",
+            "feature:administrative.country|element:all|visibility:off",
+            "feature:administrative.locality|element:all|visibility:off",
+            "feature:landscape.man_made|element:geometry.fill|visibility:on",
+            "feature:landscape.natural|element:geometry.fill|visibility:on",
+            "feature:poi.park|element:geometry.fill|visibility:on",
+            "feature:poi.school|element:geometry.fill|visibility:on",
+            "feature:poi.sports_complex|element:geometry.fill|visibility:on",
+            "feature:road.highway|element:all|visibility:simplified",
+            "feature:road.highway|element:labels.icon|visibility:off",
+            "feature:road.arterial|element:labels|visibility:on",
+            "feature:road.arterial|element:labels.icon|visibility:off",
+            "feature:transit|element:all|visibility:off",
+            "feature:transit.line|element:geometry.fill|visibility:on",
+            "feature:transit.station|element:geometry.fill|visibility:on",
+    };
+
+
+    @DebugLog
     public String getFenceThumbnailMapUrl(GeoFence fence, int width, int height) {
 
         double wRatio = 1, hRatio = 1;
@@ -42,7 +63,7 @@ public class GoogleMapsStatic {
         double lon = (fence.centerLon * Math.PI) / 180;
         double d = fence.radius / 1000.0 / r;
 
-        for (int i = 0; i <= 360; i += 8) {
+        for (int i = 0; i <= 360; i += 16) {
             double brng = i * Math.PI / 180;
             double pLat = Math.asin(Math.sin(lat) * Math.cos(d) + Math.cos(lat) * Math.sin(d) * Math.cos(brng));
             double pLon = ((lon + Math.atan2(Math.sin(brng) * Math.sin(d) * Math.cos(lat), Math.cos(d) - Math.sin(lat) * Math.sin(pLat))) * 180) / Math.PI;
@@ -51,7 +72,13 @@ public class GoogleMapsStatic {
         }
 
 
-        return BASE_URL + "?center=" + fence.centerLat + "," + fence.centerLon +
-                "&zoom=14&size=" + width + "x" + height + path + "&sensor=false";
+        String url = BASE_URL + "?center=" + fence.centerLat + "," + fence.centerLon +
+                "&zoom=14&size=" + width + "x" + height + path + "&sensor=false&scale=2";
+
+        for (String styling : STYLES) {
+            url += "&style=" + styling;
+        }
+
+        return url;
     }
 }
