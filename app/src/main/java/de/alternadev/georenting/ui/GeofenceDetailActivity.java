@@ -62,7 +62,7 @@ public class GeofenceDetailActivity extends BaseActivity {
                 long hours = TimeUnit.SECONDS.toHours(seconds) - (day *24);
                 long minute = TimeUnit.SECONDS.toMinutes(seconds) - (TimeUnit.SECONDS.toHours(seconds)* 60);
                 long second = TimeUnit.SECONDS.toSeconds(seconds) - (TimeUnit.SECONDS.toMinutes(seconds) *60);
-                b.geofenceDeathCountdown.setText(day+":"+hours+":"+minute+":"+second);
+                b.geofenceDeathCountdown.setText(String.format(Locale.getDefault(), "%02d:%02d:%02d:%02d", day, hours, minute, second));
             }
 
             public void onFinish() {
