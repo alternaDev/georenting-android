@@ -8,9 +8,8 @@
             name="geoFence"
             type="de.alternadev.georenting.data.api.model.GeoFence" />
     </data>
-    <LinearLayout
+    <android.support.design.widget.CoordinatorLayout
         android:background="@android:color/background_light"
-        android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -19,34 +18,66 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
-            <android.support.v7.widget.Toolbar
-                android:id="@+id/toolbar"
+            <android.support.design.widget.CollapsingToolbarLayout
                 android:layout_width="match_parent"
-                android:layout_height="72dp"
-                android:background="@color/primary_color"
-                android:transitionName="toolbar"
-                app:title="@{geoFence.name}"
-                app:subtitle="@string/title_activity_geofence_detail"
-                app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-                app:layout_scrollFlags="scroll|enterAlways" />
+                android:layout_height="280dp"
+                app:layout_scrollFlags="scroll|exitUntilCollapsed"
+                android:fitsSystemWindows="true"
+                app:contentScrim="?attr/colorPrimary"
+                app:expandedTitleMarginStart="48dp"
+                app:expandedTitleMarginEnd="64dp"
+                app:toolbarId="@+id/toolbar">
+                <ImageView
+                    android:contentDescription="@string/content_description_geofence_map"
+                    android:id="@+id/geofence_map"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:transitionName="map"
+                    app:layout_collapseMode="parallax"/>
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:layout_alignBottom="@+id/image"
+                    app:layout_collapseMode="pin"
+                    android:background="@drawable/reverse_black_gradient"/>
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="88dp"
+                    android:layout_gravity="bottom"
+                    android:layout_alignBottom="@+id/image"
+                    android:background="@drawable/black_gradient"/>
+                <android.support.v7.widget.Toolbar
+                    android:id="@+id/toolbar"
+                    android:layout_width="match_parent"
+                    android:layout_height="?attr/actionBarSize"
+                    app:layout_collapseMode="pin"
+                    app:title="@{geoFence.name}"
+                    app:subtitle="@string/title_activity_geofence_detail"
+                    app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+                    app:layout_scrollFlags="scroll|enterAlways">
+                    </android.support.v7.widget.Toolbar>
+            </android.support.design.widget.CollapsingToolbarLayout>
         </android.support.design.widget.AppBarLayout>
 
-        <ImageView
-            android:contentDescription="@string/content_description_geofence_map"
-            android:id="@+id/geofence_map"
-            android:layout_width="match_parent"
-            android:layout_height="200dp"
-            android:transitionName="map" />
+        <android.support.v4.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_gravity="fill_vertical"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-        <TextView
-            android:id="@+id/geofence_death_countdown"
-            android:textSize="20sp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginTop="50dp" />
-
-
-
-    </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingTop="24dp">
+                <TextView
+                    android:id="@+id/geofence_death_countdown"
+                    android:textSize="20sp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="5000dp"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="50dp" />
+            </LinearLayout>
+        </android.support.v4.widget.NestedScrollView>
+    </android.support.design.widget.CoordinatorLayout>
 </layout>

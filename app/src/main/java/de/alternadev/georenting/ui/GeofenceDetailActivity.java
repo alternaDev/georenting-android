@@ -89,10 +89,13 @@ public class GeofenceDetailActivity extends BaseActivity {
             logSelectGeoFence(mGeofence);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        //Toolbar toolbarCollapse = (Toolbar) findViewById(R.id.toolbar_collapse);
         setSupportActionBar(toolbar);
 
         if(getSupportActionBar() != null)
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+
     }
 
     @Override
