@@ -30,7 +30,7 @@ if (!vName) {
 
 android {
     compileSdkVersion 24
-    buildToolsVersion '24'
+    buildToolsVersion '24.0.1'
 
     adbOptions {
         timeOutInMs 600000 // set timeout to 1 minute
