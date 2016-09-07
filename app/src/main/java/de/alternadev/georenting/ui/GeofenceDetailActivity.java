@@ -1,6 +1,8 @@
 package de.alternadev.georenting.ui;
 
 import android.databinding.DataBindingUtil;
+import android.location.Address;
+import android.location.Geocoder;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.support.annotation.Nullable;
@@ -11,9 +13,11 @@ import com.squareup.picasso.Picasso;
 
 import org.parceler.Parcels;
 
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
+import java.util.Observable;
 import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
@@ -22,6 +26,11 @@ import de.alternadev.georenting.R;
 import de.alternadev.georenting.data.api.GoogleMapsStatic;
 import de.alternadev.georenting.data.api.model.GeoFence;
 import de.alternadev.georenting.databinding.ActivityGeofenceDetailBinding;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Func0;
+import rx.schedulers.Schedulers;
+import rx.util.async.Async;
+import timber.log.Timber;
 
 /**
  * Created by jhbruhn on 18.04.16.
@@ -38,6 +47,7 @@ public class GeofenceDetailActivity extends BaseActivity {
 
     private GeoFence mGeofence;
     private CountDownTimer mCountDown;
+    private Geocoder mGeocoder;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -46,6 +56,8 @@ public class GeofenceDetailActivity extends BaseActivity {
 
         super.onCreate(savedInstanceState);
 
+        mGeocoder = new Geocoder(getGeoRentingApplication());
+
         ActivityGeofenceDetailBinding b = DataBindingUtil.setContentView(this, R.layout.activity_geofence_detail);
 
 
@@ -53,6 +65,19 @@ public class GeofenceDetailActivity extends BaseActivity {
             mGeofence = Parcels.unwrap(getIntent().getParcelableExtra(EXTRA_GEOFENCE));
 
         b.setGeoFence(mGeofence);
+
+        rx.Observable.fromCallable(() -> {
+            try {
+                Address address = mGeocoder.getFromLocation(mGeofence.centerLat, mGeofence.centerLon, 1).get(0);
+                String val = address.getLocality() + ", " + address.getCountryName();
+
+                return val;
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return "";
+        }).observeOn(Schedulers.io())
+          .subscribe(b::setLocation);
 
         mCountDown = new CountDownTimer(mGeofence.diesAt.getTime() - new Date().getTime(), 1000) {
 

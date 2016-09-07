@@ -60,5 +60,5 @@
     <string name="geofence_detail_time_to_live">Lebenszeit</string>
     <string name="geofence_detail_total_earnings">Einnahmen Gesamt</string>
     <string name="geofence_detail_total_visitors">Besucher</string>
-    <string name="n_meters"></string>
+    <string name="geofence_detail_location">Ort</string>
 </resources>

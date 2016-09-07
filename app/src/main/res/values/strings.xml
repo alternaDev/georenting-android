@@ -7,7 +7,7 @@
     <string name="error_network_action_retry">Retry</string>
 
     <string name="n_money_units" translatable="false">%1.2f GC</string>
-    <string name="n_meters" translatable="false">%dm</string>
+    <string name="n_meters" translatable="false">%d m</string>
     <string name="n_rent_multiplier" translatable="false">%1.2f</string>
 
     <string name="drawer_open">Open Drawer</string>
@@ -87,6 +87,7 @@
     <string name="action_search">Search</string>
 
     <string name="yes">Yes</string>
+    <string name="geofence_detail_location">Location</string>
 
 
 </resources>

@@ -7,6 +7,9 @@
         <variable
             name="geoFence"
             type="de.alternadev.georenting.data.api.model.GeoFence" />
+        <variable
+            name="location"
+            type="java.lang.String" />
     </data>
     <android.support.design.widget.CoordinatorLayout
         android:background="@android:color/background_light"
@@ -234,7 +237,33 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="end" />
                 </LinearLayout>
-
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="16dp">
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/ic_pin_drop_white_24dp"
+                        android:tint="@color/dark_gray"
+                        android:contentDescription="@string/content_description_empty" />
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:text="@string/geofence_detail_location"
+                        android:textSize="18sp"
+                        android:textColor="@color/dark_gray"
+                        android:layout_weight="1"
+                        android:layout_marginStart="24dp"
+                        android:layout_gravity="start" />
+                    <TextView
+                        android:text="@{location}"
+                        android:textSize="18sp"
+                        android:textColor="@color/black"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="end" />
+                </LinearLayout>
             </LinearLayout>
         </android.support.v4.widget.NestedScrollView>
     </android.support.design.widget.CoordinatorLayout>
