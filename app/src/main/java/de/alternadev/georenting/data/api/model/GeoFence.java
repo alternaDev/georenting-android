@@ -33,6 +33,15 @@ public class GeoFence {
     @Json(name = "owner")
     public int owner;
 
+    @Json(name = "total_visitors")
+    public int totalVisitors;
+
+    @Json(name = "total_earnings")
+    public double totalEarnings;
+
+    @Json(name = "cost")
+    public double cost;
+
     public GeoFence() {}
     public GeoFence(double lat, double lon) {
         this.centerLat = lat;
