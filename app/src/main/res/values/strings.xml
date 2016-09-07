@@ -88,6 +88,7 @@
 
     <string name="yes">Yes</string>
     <string name="geofence_detail_location">Location</string>
+    <string name="geofence_detail_owner">Owner</string>
 
 
 </resources>

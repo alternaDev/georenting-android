@@ -33,6 +33,9 @@ public class GeoFence {
     @Json(name = "owner")
     public int owner;
 
+    @Json(name = "owner_name")
+    public String owner_name;
+
     @Json(name = "total_visitors")
     public int totalVisitors;
 

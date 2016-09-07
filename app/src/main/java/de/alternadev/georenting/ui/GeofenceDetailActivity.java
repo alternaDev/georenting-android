@@ -22,9 +22,11 @@ import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
 
+import de.alternadev.georenting.GeoRentingApplication;
 import de.alternadev.georenting.R;
 import de.alternadev.georenting.data.api.GoogleMapsStatic;
 import de.alternadev.georenting.data.api.model.GeoFence;
+import de.alternadev.georenting.data.api.model.User;
 import de.alternadev.georenting.databinding.ActivityGeofenceDetailBinding;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Func0;
@@ -48,6 +50,7 @@ public class GeofenceDetailActivity extends BaseActivity {
     private GeoFence mGeofence;
     private CountDownTimer mCountDown;
     private Geocoder mGeocoder;
+    private User mCurrentUser;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -55,6 +58,9 @@ public class GeofenceDetailActivity extends BaseActivity {
         getGeoRentingApplication().getComponent().inject(this);
 
         super.onCreate(savedInstanceState);
+
+        if(getGeoRentingApplication().getSessionToken() != null)
+            mCurrentUser = getGeoRentingApplication().getSessionToken().user;
 
         mGeocoder = new Geocoder(getGeoRentingApplication());
 
@@ -65,6 +71,7 @@ public class GeofenceDetailActivity extends BaseActivity {
             mGeofence = Parcels.unwrap(getIntent().getParcelableExtra(EXTRA_GEOFENCE));
 
         b.setGeoFence(mGeofence);
+        b.setOwnedByUser(mCurrentUser.id == mGeofence.owner);
 
         rx.Observable.fromCallable(() -> {
             try {

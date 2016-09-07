@@ -10,6 +10,10 @@
         <variable
             name="location"
             type="java.lang.String" />
+        <variable
+            name="ownedByUser"
+            type="java.lang.Boolean" />
+        <import type="android.view.View" />
     </data>
     <android.support.design.widget.CoordinatorLayout
         android:background="@android:color/background_light"
@@ -77,8 +81,36 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="16dp">
+                    android:layout_marginBottom="16dp"
+                    android:visibility="@{!ownedByUser ? View.VISIBLE : View.GONE}">
                     <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/ic_person_black_24dp"
+                        android:tint="@color/dark_gray"
+                        android:contentDescription="@string/content_description_empty" />
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:text="@string/geofence_detail_owner"
+                        android:textSize="18sp"
+                        android:textColor="@color/dark_gray"
+                        android:layout_weight="1"
+                        android:layout_marginStart="24dp"
+                        android:layout_gravity="start" />
+                    <TextView
+                        android:text="@{geoFence.owner_name}"
+                        android:textSize="18sp"
+                        android:textColor="@color/black"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="end" />
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="16dp">
+                <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:src="@drawable/ic_history_black_24dp"
@@ -105,7 +137,8 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="16dp">
+                    android:layout_marginBottom="16dp"
+                    android:visibility="@{ownedByUser ? View.VISIBLE : View.GONE}">
                     <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -132,7 +165,8 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="16dp">
+                    android:layout_marginBottom="16dp"
+                    android:visibility="@{ownedByUser ? View.VISIBLE : View.GONE}">
                     <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -159,7 +193,8 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="16dp">
+                    android:layout_marginBottom="16dp"
+                    android:visibility="@{ownedByUser ? View.VISIBLE : View.GONE}">
                     <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
