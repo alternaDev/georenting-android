@@ -46,11 +46,8 @@ public class SettingsFragment extends PreferenceFragment implements GoogleApiCli
 
         ((GeoRentingApplication) getActivity().getApplication()).getComponent().inject(this);
 
-        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestEmail()
-                .requestProfile()
-                .requestServerAuthCode(getString(R.string.google_server_id), false)
-                .build();
+
+        GoogleSignInOptions gso = mGoogleAuth.getGoogleSignInOptions();
         mGoogleClient = new GoogleApiClient.Builder(this.getActivity())
                 .addConnectionCallbacks(this)
                 .addOnConnectionFailedListener(this)
