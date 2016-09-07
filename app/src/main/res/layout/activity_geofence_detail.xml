@@ -64,19 +64,177 @@
         android:layout_gravity="fill_vertical"
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
-
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:paddingTop="24dp">
-                <TextView
-                    android:id="@+id/geofence_death_countdown"
-                    android:textSize="20sp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="5000dp"
-                    android:layout_gravity="center"
-                    android:layout_marginTop="50dp" />
+                android:paddingTop="24dp"
+                android:paddingEnd="16dp"
+                android:paddingStart="16dp">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="16dp">
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/ic_history_black_24dp"
+                        android:tint="@color/dark_gray"
+                        android:contentDescription="@string/content_description_empty" />
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:text="@string/geofence_detail_time_to_live"
+                        android:textSize="18sp"
+                        android:textColor="@color/dark_gray"
+                        android:layout_weight="1"
+                        android:layout_marginStart="24dp"
+                        android:layout_gravity="start" />
+                    <TextView
+                        android:id="@+id/geofence_death_countdown"
+                        android:text="00:00:00:00"
+                        android:textSize="18sp"
+                        android:textColor="@color/black"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="end" />
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="16dp">
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/ic_group_black_24dp"
+                        android:tint="@color/dark_gray"
+                        android:contentDescription="@string/content_description_empty" />
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:text="@string/geofence_detail_total_visitors"
+                        android:textSize="18sp"
+                        android:textColor="@color/dark_gray"
+                        android:layout_weight="1"
+                        android:layout_marginStart="24dp"
+                        android:layout_gravity="start" />
+                    <TextView
+                        android:text="@{Integer.toString(geoFence.totalVisitors)}"
+                        android:textSize="18sp"
+                        android:textColor="@color/black"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="end" />
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="16dp">
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/ic_attach_money_black_24dp"
+                        android:tint="@color/dark_gray"
+                        android:contentDescription="@string/content_description_empty" />
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:text="@string/geofence_detail_total_earnings"
+                        android:textSize="18sp"
+                        android:textColor="@color/dark_gray"
+                        android:layout_weight="1"
+                        android:layout_marginStart="24dp"
+                        android:layout_gravity="start" />
+                    <TextView
+                        android:text="@{@string/n_money_units(geoFence.totalEarnings)}"
+                        android:textSize="18sp"
+                        android:textColor="@color/black"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="end" />
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="16dp">
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/ic_attach_money_black_24dp"
+                        android:tint="@color/dark_gray"
+                        android:contentDescription="@string/content_description_empty" />
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:text="@string/geofence_detail_cost"
+                        android:textSize="18sp"
+                        android:textColor="@color/dark_gray"
+                        android:layout_weight="1"
+                        android:layout_marginStart="24dp"
+                        android:layout_gravity="start" />
+                    <TextView
+                        android:text="@{@string/n_money_units(geoFence.cost)}"
+                        android:textSize="18sp"
+                        android:textColor="@color/black"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="end" />
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="16dp">
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/ic_blur_on_black_24dp"
+                        android:tint="@color/dark_gray"
+                        android:contentDescription="@string/content_description_empty" />
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:text="@string/geofence_detail_rent_multiplier"
+                        android:textSize="18sp"
+                        android:textColor="@color/dark_gray"
+                        android:layout_weight="1"
+                        android:layout_marginStart="24dp"
+                        android:layout_gravity="start" />
+                    <TextView
+                        android:text="@{@string/n_rent_multiplier(geoFence.rentMultiplier)}"
+                        android:textSize="18sp"
+                        android:textColor="@color/black"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="end" />
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="16dp">
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/ic_lens_black_24dp"
+                        android:tint="@color/dark_gray"
+                        android:contentDescription="@string/content_description_empty" />
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:text="@string/geofence_detail_radius"
+                        android:textSize="18sp"
+                        android:textColor="@color/dark_gray"
+                        android:layout_weight="1"
+                        android:layout_marginStart="24dp"
+                        android:layout_gravity="start" />
+                    <TextView
+                        android:text="@{@string/n_meters(geoFence.radius)}"
+                        android:textSize="18sp"
+                        android:textColor="@color/black"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="end" />
+                </LinearLayout>
+
             </LinearLayout>
         </android.support.v4.widget.NestedScrollView>
     </android.support.design.widget.CoordinatorLayout>

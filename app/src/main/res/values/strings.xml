@@ -7,6 +7,8 @@
     <string name="error_network_action_retry">Retry</string>
 
     <string name="n_money_units">%1.2f GC</string>
+    <string name="n_meters">%dm</string>
+    <string name="n_rent_multiplier">%1.2f</string>
     <string name="drawer_open">Open Drawer</string>
     <string name="drawer_close">Close Drawer</string>
     <string name="main_drawer_my_geofences">My GeoFences</string>
@@ -32,6 +34,12 @@
 
     <string name="title_activity_geofence_detail">GeoFence</string>
     <string name="geofence_detail_geofence_dead">Dead.</string>
+    <string name="geofence_detail_time_to_live">Time to Live</string>
+    <string name="geofence_detail_rent_multiplier">Rent Multiplier</string>
+    <string name="geofence_detail_radius">Radius</string>
+    <string name="geofence_detail_total_visitors">Total Visitors</string>
+    <string name="geofence_detail_total_earnings">Total Earnings</string>
+    <string name="geofence_detail_cost">Initial Cost</string>
 
     <string name="title_activity_settings">Settings</string>
     <string name="pref_account_title">Account</string>
@@ -78,5 +86,6 @@
     <string name="action_search">Search</string>
 
     <string name="yes">Yes</string>
+
 
 </resources>
