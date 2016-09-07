@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <set xmlns:android="http://schemas.android.com/apk/res/android">
-    <alpha android:duration="@android:integer/config_mediumAnimTime"
+    <alpha android:duration="@integer/config_shortMediumAnimTime"
         android:fromAlpha="1.0"
         android:toAlpha="0.5"/>
     <scale
@@ -9,5 +9,5 @@
         android:toXScale="0.9"
         android:toYScale="0.9"
         android:pivotX="50%p" android:pivotY="50%p"
-        android:duration="@android:integer/config_mediumAnimTime"/>
+        android:duration="@integer/config_shortMediumAnimTime"/>
 </set>
