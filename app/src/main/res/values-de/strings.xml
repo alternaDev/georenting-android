@@ -37,9 +37,8 @@
     <string name="main_drawer_profile">Geld</string>
     <string name="main_drawer_settings">Einstellungen</string>
     <string name="main_drawer_support">Hilfe</string>
-    <string name="message_signing_in">Verbinde mit Google+...</string>
+    <string name="message_signing_in">Verbinde mit Google+…</string>
     <string name="my_geofences_no_geofences">Du besitzt noch kein GeoFence. Kaufe eines, indem du auf den Knopf unten rechts drückst!</string>
-    <string name="n_money_units">%1.2f GC</string>
     <string name="permission_location_rationale">Wir brauchen Zugriff auf den Standort deines Gerätest, damit das Spiel funktioniert.</string>
     <string name="pref_account_logout">Abmelden</string>
     <string name="pref_account_title">Nutzerkonto</string>
@@ -55,4 +54,11 @@
     <string name="yes">Ja</string>
     <string name="content_description_geofence_map">Karte.</string>
     <string name="title_activity_settings">Einstellungen</string>
+    <string name="geofence_detail_cost">Preis</string>
+    <string name="geofence_detail_radius">Radius</string>
+    <string name="geofence_detail_rent_multiplier">Mietenmultiplikator</string>
+    <string name="geofence_detail_time_to_live">Lebenszeit</string>
+    <string name="geofence_detail_total_earnings">Einnahmen Gesamt</string>
+    <string name="geofence_detail_total_visitors">Besucher</string>
+    <string name="n_meters"></string>
 </resources>

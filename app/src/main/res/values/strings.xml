@@ -6,9 +6,10 @@
     <string name="error_network">Network error.</string>
     <string name="error_network_action_retry">Retry</string>
 
-    <string name="n_money_units">%1.2f GC</string>
-    <string name="n_meters">%dm</string>
-    <string name="n_rent_multiplier">%1.2f</string>
+    <string name="n_money_units" translatable="false">%1.2f GC</string>
+    <string name="n_meters" translatable="false">%dm</string>
+    <string name="n_rent_multiplier" translatable="false">%1.2f</string>
+
     <string name="drawer_open">Open Drawer</string>
     <string name="drawer_close">Close Drawer</string>
     <string name="main_drawer_my_geofences">My GeoFences</string>
