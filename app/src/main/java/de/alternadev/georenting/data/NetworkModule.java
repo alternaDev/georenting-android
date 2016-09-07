@@ -34,7 +34,7 @@ import static java.util.concurrent.TimeUnit.SECONDS;
 
 @Module
 public class NetworkModule {
-    static final int DISK_CACHE_SIZE = (int) MEGABYTES.toBytes(100);
+    static final int DISK_CACHE_SIZE = (int) MEGABYTES.toBytes(200);
 
     @Provides
     @Singleton
@@ -45,9 +45,9 @@ public class NetworkModule {
 
         return
                 new OkHttpClient.Builder()
-                        .connectTimeout(30, SECONDS)
-                        .readTimeout(30, SECONDS)
-                        .writeTimeout(30, SECONDS)
+                        .connectTimeout(60, SECONDS)
+                        .readTimeout(60, SECONDS)
+                        .writeTimeout(60, SECONDS)
                         .addNetworkInterceptor(new StethoInterceptor())
                         .addInterceptor(tokenInterceptor)
                         .addInterceptor(reAuthInterceptor)
