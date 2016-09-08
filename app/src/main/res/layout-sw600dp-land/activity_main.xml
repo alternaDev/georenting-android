@@ -4,19 +4,28 @@
     xmlns:tools="http://schemas.android.com/tools">
     <data></data>
 
-    <android.support.v4.widget.DrawerLayout
+    <LinearLayout
         tools:context="de.alternadev.georenting.gui.main.MainActivity"
-        app:windowActionBar="false"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:fitsSystemWindows="true"
-        android:id="@+id/main_drawer_layout">
+        android:orientation="horizontal">
+
+        <android.support.design.widget.NavigationView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="start"
+            app:itemIconTint="@color/state_list_icon"
+            app:itemTextColor="@color/state_list_text"
+            android:id="@+id/main_navigation_view"
+            app:elevation="0dp"
+            app:menu="@menu/main_drawer"/>
 
         <android.support.design.widget.CoordinatorLayout
-
             android:id="@+id/main_content"
+            app:elevation="0dp"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="match_parent">
             <android.support.design.widget.AppBarLayout
                 android:id="@+id/appbar"
                 android:layout_width="match_parent"
@@ -39,14 +48,5 @@
         </android.support.design.widget.CoordinatorLayout>
 
 
-        <android.support.design.widget.NavigationView
-            android:fitsSystemWindows="true"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_gravity="start"
-            app:itemIconTint="@color/state_list_icon"
-            app:itemTextColor="@color/state_list_text"
-            android:id="@+id/main_navigation_view"
-            app:menu="@menu/main_drawer"/>
-    </android.support.v4.widget.DrawerLayout>
+    </LinearLayout>
 </layout>

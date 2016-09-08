@@ -119,8 +119,10 @@ public class MainActivity extends BaseActivity implements GoogleApiClient.OnConn
 
         mDrawerLayout = b.mainDrawerLayout;
 
-        mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, mToolbar, R.string.drawer_open, R.string.drawer_close);
-        mDrawerToggle.syncState();
+        if(mDrawerLayout != null) {
+            mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, mToolbar, R.string.drawer_open, R.string.drawer_close);
+            mDrawerToggle.syncState();
+        }
 
         mHeaderView = new HeaderCompactView(this, false);
 
@@ -344,12 +346,14 @@ public class MainActivity extends BaseActivity implements GoogleApiClient.OnConn
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
+        if(mDrawerToggle != null)
         mDrawerToggle.onConfigurationChanged(newConfig);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        return mDrawerToggle.onOptionsItemSelected(item) || super.onOptionsItemSelected(item);
+        if(mDrawerLayout != null) return mDrawerToggle.onOptionsItemSelected(item) || super.onOptionsItemSelected(item);
+        return super.onOptionsItemSelected(item);
     }
 
 
