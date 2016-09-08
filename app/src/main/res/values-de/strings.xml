@@ -23,11 +23,11 @@
     <string name="error_create_fence_overlap">Dieses GeoFence kann nicht errichtet werden, weil es mit anderen GeoFences überlappt.</string>
     <string name="error_network">Netzwerkfehler</string>
     <string name="error_network_action_retry">Erneut versuchen</string>
-    <string name="fragment_cash_all_time_title">Alle Zeit:</string>
-    <string name="fragment_cash_earnings_rent">Einnahmen Miete:</string>
-    <string name="fragment_cash_expenses_geo_fence">Ausgaben GeoFences:</string>
-    <string name="fragment_cash_expenses_rent">Ausgaben Miete:</string>
-    <string name="fragment_cash_seven_days_title">Sieben Tage:</string>
+    <string name="fragment_cash_all_time_title">Alle Zeit</string>
+    <string name="fragment_cash_earnings_rent">Einnahmen Miete</string>
+    <string name="fragment_cash_expenses_geo_fence">Ausgaben GeoFences</string>
+    <string name="fragment_cash_expenses_rent">Ausgaben Miete</string>
+    <string name="fragment_cash_seven_days_title">Sieben Tage</string>
     <string name="geofence_detail_geofence_dead">Abgelaufen.</string>
     <string name="geofence_item_action_tear_down">Abreißen</string>
     <string name="main_drawer_history">Geschichte</string>

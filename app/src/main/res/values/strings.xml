@@ -26,11 +26,11 @@
     <string name="activity_foreign_fence_visited">You visited &lt;b&gt;%2$s&lt;/b&gt;s GeoFence &lt;b&gt;%1$s&lt;/b&gt; and paid &lt;b&gt;%3$.2f&lt;/b&gt; GC in rent.</string>
     <string name="activity_fence_expired">Your Fence &lt;b&gt;%1$s&lt;/b&gt; has expired.</string>
 
-    <string name="fragment_cash_seven_days_title">Seven Days:</string>
-    <string name="fragment_cash_all_time_title">All Time:</string>
-    <string name="fragment_cash_earnings_rent">Earnings Rent:</string>
-    <string name="fragment_cash_expenses_rent">Expenses Rent:</string>
-    <string name="fragment_cash_expenses_geo_fence">Expenses GeoFences:</string>
+    <string name="fragment_cash_seven_days_title">Seven Days</string>
+    <string name="fragment_cash_all_time_title">All Time</string>
+    <string name="fragment_cash_earnings_rent">Earnings Rent</string>
+    <string name="fragment_cash_expenses_rent">Expenses Rent</string>
+    <string name="fragment_cash_expenses_geo_fence">Expenses GeoFences</string>
 
 
     <string name="title_activity_geofence_detail">GeoFence</string>
@@ -41,6 +41,8 @@
     <string name="geofence_detail_total_visitors">Total Visitors</string>
     <string name="geofence_detail_total_earnings">Total Earnings</string>
     <string name="geofence_detail_cost">Initial Cost</string>
+    <string name="geofence_detail_location">Location</string>
+    <string name="geofence_detail_owner">Owner</string>
 
     <string name="title_activity_settings">Settings</string>
     <string name="pref_account_title">Account</string>
@@ -87,8 +89,5 @@
     <string name="action_search">Search</string>
 
     <string name="yes">Yes</string>
-    <string name="geofence_detail_location">Location</string>
-    <string name="geofence_detail_owner">Owner</string>
-
 
 </resources>
