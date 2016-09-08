@@ -74,19 +74,20 @@
                     app:cardElevation="2dp">
                     <LinearLayout
                         android:orientation="vertical"
-                        android:paddingTop="8dp"
-                        android:paddingBottom="24dp"
-                        android:paddingStart="8dp"
-                        android:paddingEnd="8dp"
+                        android:paddingTop="16dp"
+                        android:paddingBottom="16dp"
+                        android:paddingStart="16dp"
+                        android:paddingEnd="16dp"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent">
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="@string/fragment_cash_seven_days_title"
+                            android:textSize="20sp"
+                            android:textColor="@color/black"
                             android:gravity="start"
-                            android:layout_marginBottom="8dp"
-                            style="@style/TextAppearance.AppCompat.Headline" />
+                            android:layout_marginBottom="8dp" />
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content">
@@ -94,12 +95,14 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="@string/fragment_cash_earnings_rent"
+                                android:textSize="16sp"
                                 android:layout_weight="1"
                                 android:layout_gravity="start" />
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="@{@string/n_money_units(cash.earningsRentSevenDays)}"
+                                android:textSize="16sp"
                                 android:layout_weight="1"
                                 android:gravity="end"
                                 android:textColor="@color/green"/>
@@ -111,12 +114,14 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="@string/fragment_cash_expenses_rent"
+                                android:textSize="16sp"
                                 android:layout_weight="1"
                                 android:layout_gravity="start" />
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="@{@string/n_money_units(-cash.expensesRentSevenDays)}"
+                                android:textSize="16sp"
                                 android:layout_weight="1"
                                 android:gravity="end"
                                 android:textColor="@color/red"/>
@@ -128,12 +133,14 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="@string/fragment_cash_expenses_geo_fence"
+                                android:textSize="16sp"
                                 android:layout_weight="1"
                                 android:layout_gravity="start" />
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="@{@string/n_money_units(-cash.expensesGeoFenceSevenDays)}"
+                                android:textSize="16sp"
                                 android:layout_weight="1"
                                 android:gravity="end"
                                 android:textColor="@color/red"/>
@@ -160,6 +167,7 @@
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
                                 android:text="@{@string/n_money_units(cash.getSevenDaysTotal())}"
+                                android:textSize="16sp"
                                 android:layout_weight="1"
                                 android:gravity="end"
                                 android:textColor="@{cash.getSevenDaysTotal() &lt; 0 ? @color/red : @color/green}"/>
@@ -177,19 +185,20 @@
                     app:cardElevation="2dp">
                     <LinearLayout
                         android:orientation="vertical"
-                        android:paddingTop="8dp"
-                        android:paddingBottom="24dp"
-                        android:paddingStart="8dp"
-                        android:paddingEnd="8dp"
+                        android:paddingTop="16dp"
+                        android:paddingBottom="16dp"
+                        android:paddingStart="16dp"
+                        android:paddingEnd="16dp"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent">
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="@string/fragment_cash_all_time_title"
+                            android:textSize="20sp"
+                            android:textColor="@color/black"
                             android:gravity="start"
-                            android:layout_marginBottom="8dp"
-                            style="@style/TextAppearance.AppCompat.Headline" />
+                            android:layout_marginBottom="8dp" />
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content">
@@ -197,12 +206,14 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="@string/fragment_cash_earnings_rent"
+                                android:textSize="16sp"
                                 android:layout_weight="1"
                                 android:layout_gravity="start" />
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="@{@string/n_money_units(cash.earningsRentAllTime)}"
+                                android:textSize="16sp"
                                 android:layout_weight="1"
                                 android:gravity="end"
                                 android:textColor="@color/green"/>
@@ -214,12 +225,14 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="@string/fragment_cash_expenses_rent"
+                                android:textSize="16sp"
                                 android:layout_weight="1"
                                 android:layout_gravity="start" />
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="@{@string/n_money_units(-cash.expensesRentAllTime)}"
+                                android:textSize="16sp"
                                 android:layout_weight="1"
                                 android:gravity="end"
                                 android:textColor="@color/red"/>
@@ -231,12 +244,14 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="@string/fragment_cash_expenses_geo_fence"
+                                android:textSize="16sp"
                                 android:layout_weight="1"
                                 android:layout_gravity="start" />
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="@{@string/n_money_units(-cash.expensesGeoFenceAllTime)}"
+                                android:textSize="16sp"
                                 android:layout_weight="1"
                                 android:gravity="end"
                                 android:textColor="@color/red"/>
@@ -263,6 +278,7 @@
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
                                 android:text="@{@string/n_money_units(cash.getAllTimeTotal())}"
+                                android:textSize="16sp"
                                 android:layout_weight="1"
                                 android:gravity="end"
                                 android:textColor="@{cash.getAllTimeTotal() &lt; 0 ? @color/red : @color/green}"/>
