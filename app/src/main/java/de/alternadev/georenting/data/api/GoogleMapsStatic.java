@@ -57,13 +57,13 @@ public class GoogleMapsStatic {
         height = (int) Math.round(height * ratio);
 
 
-        String path = "&path=color:0x0000ff|weight:5";
+        String path = "&path=fillcolor:0x2196F3|weight:2";
         int r = 6371;
         double lat = (fence.centerLat * Math.PI) / 180;
         double lon = (fence.centerLon * Math.PI) / 180;
         double d = fence.radius / 1000.0 / r;
 
-        for (int i = 0; i <= 360; i += 16) {
+        for (int i = 0; i <= 360; i += 15) {
             double brng = i * Math.PI / 180;
             double pLat = Math.asin(Math.sin(lat) * Math.cos(d) + Math.cos(lat) * Math.sin(d) * Math.cos(brng));
             double pLon = ((lon + Math.atan2(Math.sin(brng) * Math.sin(d) * Math.cos(lat), Math.cos(d) - Math.sin(lat) * Math.sin(pLat))) * 180) / Math.PI;
