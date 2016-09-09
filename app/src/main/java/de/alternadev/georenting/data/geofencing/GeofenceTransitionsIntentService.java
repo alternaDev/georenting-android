@@ -26,6 +26,7 @@ import de.alternadev.georenting.data.models.Fence;
 import de.alternadev.georenting.data.tasks.UpdateGeofencesTask;
 import de.alternadev.georenting.data.tasks.VisitGeofenceTask;
 import de.alternadev.georenting.util.TaskUtil;
+import hugo.weaving.DebugLog;
 import timber.log.Timber;
 
 public class GeofenceTransitionsIntentService extends IntentService {
@@ -52,6 +53,7 @@ public class GeofenceTransitionsIntentService extends IntentService {
     }
 
     @Override
+    @DebugLog
     protected void onHandleIntent(Intent intent) {
         GeofencingEvent geofencingEvent = GeofencingEvent.fromIntent(intent);
         if (geofencingEvent.hasError()) {
@@ -61,11 +63,17 @@ public class GeofenceTransitionsIntentService extends IntentService {
             return;
         }
 
+        Timber.d("Initializing Remote Config.");
+
         FirebaseRemoteConfig remoteConfig = FirebaseRemoteConfig.getInstance();
         remoteConfig.setDefaults(R.xml.remote_config_defaults);
 
-        TaskUtil.waitForTask(remoteConfig.fetch());
-        remoteConfig.activateFetched();
+
+        //TODO: Wait for Google to Fix This. OnComplete never gets called.
+        //Timber.d("Fetching Remote Config.");
+        //TaskUtil.waitForTask2(remoteConfig.fetch());
+        //remoteConfig.activateFetched();
+        //Timber.d("Fetched Remote Config.");
 
         long fenceCooldown = remoteConfig.getLong(REMOTE_CONFIG_GEOFENCE_COOLDOWN);
 
@@ -81,9 +89,11 @@ public class GeofenceTransitionsIntentService extends IntentService {
 
 
             for(Geofence f : triggeringGeofences) {
+                Timber.d("Enter Triggering fence: %s", f);
                 // Only trigger if not currently in a Geofence.
-                boolean currentFenceCooldown = new Date().getTime() - mPreferences.getLong(PREF_FENCE_COOLDOWN + "_" + f.getRequestId(), 0) < fenceCooldown;
+                boolean currentFenceCooldown = new Date().getTime() - mPreferences.getLong(PREF_FENCE_COOLDOWN + "_" + f.getRequestId(), new Date().getTime()) < fenceCooldown;
                 boolean currentFenceOk = !mPreferences.getBoolean(PREF_CURRENT_GEOFENCE + "_" + f.getRequestId(), false);
+                Timber.d("Enter Cooldown: %b, OK: %b", currentFenceCooldown, currentFenceOk);
                 if (currentFenceCooldown && currentFenceOk) {
                     notifyServer(f);
                     mPreferences.edit().putLong(PREF_FENCE_COOLDOWN + "_" + f.getRequestId(), new Date().getTime()).apply();
@@ -94,6 +104,8 @@ public class GeofenceTransitionsIntentService extends IntentService {
         } else if(geofenceTransition == Geofence.GEOFENCE_TRANSITION_EXIT) {
             List<Geofence> triggeringGeofences = geofencingEvent.getTriggeringGeofences();
             for(Geofence f : triggeringGeofences) {
+                Timber.d("Exit Triggering fence: %s", f);
+
                 if(f.getRequestId().equals(UpdateGeofencesTask.GEOFENCE_UPDATE)) {
                     UpdateGeofencesTask.scheduleUpdate(getApplicationContext());
                 } else {
@@ -102,7 +114,7 @@ public class GeofenceTransitionsIntentService extends IntentService {
             }
         } else {
             // Log the error.
-            Timber.e("Invalid Type");
+            Timber.e("Invalid GeoFence Transition Type");
         }
     }
 
