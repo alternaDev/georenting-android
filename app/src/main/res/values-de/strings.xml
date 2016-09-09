@@ -2,7 +2,7 @@
 <resources>
     <string name="action_search">Suchen</string>
     <string name="activity_fence_expired">Dein GeoFence &lt;b&gt;%1$s&lt;/b&gt; ist abgelaufen.</string>
-    <string name="activity_foreign_fence_visited">Du hast &lt;b&gt;%2$s&lt;/b&gt;s GeoFence besucht &lt;b&gt;%1$s&lt;/b&gt; und &lt;b&gt;%3$.2f&lt;/b&gt; GC Miete bezahlt.</string>
+    <string name="activity_foreign_fence_visited">Du hast &lt;b&gt;%2$s&lt;/b&gt;s GeoFence &lt;b&gt;%1$s&lt;/b&gt; besucht und &lt;b&gt;%3$.2f&lt;/b&gt; GC Miete bezahlt.</string>
     <string name="activity_own_fence_visited">&lt;b&gt;%2$s&lt;/b&gt; hat dein GeoFence &lt;b&gt;%1$s&lt;/b&gt; besucht und &lt;b&gt;%3$.2f&lt;/b&gt; GC Miete bezahlt.</string>
     <string name="app_invite_cta">GeoFences Errichten</string>
     <string name="app_invite_message">Probiere jetzt GeoRenting aus!</string>
