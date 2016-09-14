@@ -75,9 +75,9 @@ public class GoogleMapsStatic {
         String url = BASE_URL + "?center=" + fence.centerLat + "," + fence.centerLon +
                 "&zoom=14&size=" + width + "x" + height + path + "&sensor=false&scale=2";
 
-        for (String styling : STYLES) {
+        /*for (String styling : STYLES) {
             url += "&style=" + styling;
-        }
+        }*/
 
         return url;
     }
