@@ -95,5 +95,8 @@
     <string name="onboarding_3_description">If someone enters your GeoFence, you will receive Rent.</string>
     <string name="onboarding_4_description">But if you visit someones GeoFence, you will have to pay rent.</string>
     <string name="onboarding_5_description">The game will be running in the background, so you won\'t need to do anything.</string>
+    <string name="dialog_teardown_action_teardown">Tear Down</string>
+    <string name="dialog_teardown_action_cancel">Cancel</string>
+    <string name="dialog_teardown_message">Tear down GeoFence?</string>
 
 </resources>

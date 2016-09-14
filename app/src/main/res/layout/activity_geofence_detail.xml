@@ -305,6 +305,7 @@
                     android:layout_height="wrap_content"
                     android:text="@string/geofence_item_action_tear_down"
                     android:elevation="4dp"
+                    android:onClick="onClickTeardown"
                     style="@style/AppTheme.ButtonDelete" />
             </LinearLayout>
         </android.support.v4.widget.NestedScrollView>

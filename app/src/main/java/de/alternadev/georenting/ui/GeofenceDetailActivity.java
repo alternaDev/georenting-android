@@ -6,8 +6,10 @@ import android.location.Geocoder;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.support.annotation.Nullable;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.view.View;
 
 import com.squareup.picasso.Picasso;
 
@@ -24,6 +26,7 @@ import javax.inject.Inject;
 
 import de.alternadev.georenting.GeoRentingApplication;
 import de.alternadev.georenting.R;
+import de.alternadev.georenting.data.api.GeoRentingService;
 import de.alternadev.georenting.data.api.GoogleMapsStatic;
 import de.alternadev.georenting.data.api.model.GeoFence;
 import de.alternadev.georenting.data.api.model.User;
@@ -46,6 +49,9 @@ public class GeofenceDetailActivity extends BaseActivity {
 
     @Inject
     GoogleMapsStatic mStaticMap;
+
+    @Inject
+    GeoRentingService mService;
 
     private GeoFence mGeofence;
     private CountDownTimer mCountDown;
@@ -153,5 +159,24 @@ public class GeofenceDetailActivity extends BaseActivity {
     protected void onDestroy() {
         super.onDestroy();
         mCountDown.cancel();
+    }
+
+    public void onClickTeardown(View view) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage(getString(R.string.dialog_teardown_message));
+        builder.setPositiveButton(getString(R.string.dialog_teardown_action_teardown), (dialogInterface, i) -> {
+            mService.deleteGeoFence(mGeofence.id).subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe((f) -> {
+                        Timber.d("Removed GeoFence");
+                        dialogInterface.cancel();
+                        GeofenceDetailActivity.this.finish();
+                    }, error -> {
+                        Timber.e(error, "Could not tear down GeoFence.");
+                    });
+        });
+        builder.setNegativeButton(getString(R.string.dialog_teardown_action_cancel), null);
+
+        builder.show();
     }
 }
