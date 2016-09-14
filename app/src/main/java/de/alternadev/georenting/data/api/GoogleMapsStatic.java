@@ -57,7 +57,7 @@ public class GoogleMapsStatic {
         height = (int) Math.round(height * ratio);
 
 
-        String path = "&path=fillcolor:0x2196F3|weight:2";
+        String path = "&path=fillcolor:0x2196F3FF|weight:0";
         int r = 6371;
         double lat = (fence.centerLat * Math.PI) / 180;
         double lon = (fence.centerLon * Math.PI) / 180;
