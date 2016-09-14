@@ -42,17 +42,6 @@ public class OnboarderActivityHelper {
                 !mPreferences.getBoolean(KEY_ONBOARDER_ACTIVITY_STARTED, false);
     }
 
-    @Deprecated
-    public boolean show() {
-        return show(DEFAULT_ONBOARDER_ACTIVITY_REQUEST);
-    }
-
-
-    @Deprecated
-    public boolean show(int requestCode) {
-        return show(null, requestCode);
-    }
-
     public boolean show(Bundle savedInstanceState) {
         return show(savedInstanceState, DEFAULT_ONBOARDER_ACTIVITY_REQUEST);
     }
