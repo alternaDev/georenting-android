@@ -48,6 +48,8 @@ import de.alternadev.georenting.data.auth.GoogleAuth;
 import de.alternadev.georenting.data.tasks.UpdateGeofencesTask;
 import de.alternadev.georenting.databinding.ActivityMainBinding;
 import de.alternadev.georenting.ui.BaseActivity;
+import de.alternadev.georenting.ui.IntroActivity;
+import de.alternadev.georenting.ui.OnboarderActivityHelper;
 import de.alternadev.georenting.ui.SignInActivity;
 import de.alternadev.georenting.ui.settings.SettingsActivity;
 import hugo.weaving.DebugLog;
@@ -81,6 +83,7 @@ public class MainActivity extends BaseActivity implements GoogleApiClient.OnConn
     private User mCurrentUser;
     private String mCurrentFragment = FRAGMENT_MY_FENCES;
     private Fragment mContent;
+    private OnboarderActivityHelper mOnboarderHelper;
 
     @Inject
     GeoRentingService mService;
@@ -151,6 +154,9 @@ public class MainActivity extends BaseActivity implements GoogleApiClient.OnConn
         showFragment(LoadingFragment.newInstance());
 
         getGeoRentingApplication().createMapViewCacheIfNecessary();
+
+        mOnboarderHelper = new OnboarderActivityHelper(this, IntroActivity.class);
+        mOnboarderHelper.show(savedInstanceState);
     }
 
     @DebugLog
@@ -266,7 +272,7 @@ public class MainActivity extends BaseActivity implements GoogleApiClient.OnConn
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-
+        mOnboarderHelper.onSaveInstanceState(outState);
         outState.putString(EXTRA_FRAGMENT, mCurrentFragment);
     }
 

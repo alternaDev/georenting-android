@@ -89,5 +89,11 @@
     <string name="action_search">Search</string>
 
     <string name="yes">Yes</string>
+    <string name="onboarding_1_title">Welcome!</string>
+    <string name="onboarding_1_description">This is GeoRenting!</string>
+    <string name="onboarding_2_description">You can buy GeoFences for GeoCoins.</string>
+    <string name="onboarding_3_description">If someone enters your GeoFence, you will receive Rent.</string>
+    <string name="onboarding_4_description">But if you visit someones GeoFence, you will have to pay rent.</string>
+    <string name="onboarding_5_description">The game will be running in the background, so you won\'t need to do anything.</string>
 
 </resources>
