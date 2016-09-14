@@ -43,6 +43,9 @@
     <string name="geofence_detail_cost">Initial Cost</string>
     <string name="geofence_detail_location">Location</string>
     <string name="geofence_detail_owner">Owner</string>
+    <string name="dialog_teardown_action_teardown">Tear Down</string>
+    <string name="dialog_teardown_action_cancel">Cancel</string>
+    <string name="dialog_teardown_message">Tear down GeoFence?</string>
 
     <string name="title_activity_settings">Settings</string>
     <string name="pref_account_title">Account</string>
@@ -88,15 +91,19 @@
 
     <string name="action_search">Search</string>
 
-    <string name="yes">Yes</string>
-    <string name="onboarding_1_title">Welcome!</string>
-    <string name="onboarding_1_description">This is GeoRenting!</string>
+    <string name="onboarding_1_title">This is GeoRenting,</string>
+    <string name="onboarding_1_description">a game based on your location, played with other players in your local area.</string>
+    <string name="onboarding_2_title">Buy GeoFences!</string>
     <string name="onboarding_2_description">You can buy GeoFences for GeoCoins.</string>
-    <string name="onboarding_3_description">If someone enters your GeoFence, you will receive Rent.</string>
-    <string name="onboarding_4_description">But if you visit someones GeoFence, you will have to pay rent.</string>
-    <string name="onboarding_5_description">The game will be running in the background, so you won\'t need to do anything.</string>
-    <string name="dialog_teardown_action_teardown">Tear Down</string>
-    <string name="dialog_teardown_action_cancel">Cancel</string>
-    <string name="dialog_teardown_message">Tear down GeoFence?</string>
+    <string name="onboarding_3_title">Earn GeoCoins!</string>
+    <string name="onboarding_3_description">If someone enters your GeoFence, you will receive GeoCoins from them.</string>
+    <string name="onboarding_4_title">Pay Rent…</string>
+    <string name="onboarding_4_description">On the other side, if you visit someones GeoFence, GeoCoins will be taken from your account.</string>
+    <string name="onboarding_5_title">Let it go!</string>
+    <string name="onboarding_5_description">The game is running in the background, so you will earn GeoCoins even when the app is not active.</string>
+    <string name="onboarding_finish">Finish</string>
+
+    <string name="yes">Yes</string>
+
 
 </resources>

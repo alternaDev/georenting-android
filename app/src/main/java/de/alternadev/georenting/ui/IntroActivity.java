@@ -1,11 +1,13 @@
 package de.alternadev.georenting.ui;
 
 import android.content.Context;
+import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
 
 import com.chyrta.onboarder.OnboarderActivity;
 import com.chyrta.onboarder.OnboarderPage;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,18 +28,12 @@ public class IntroActivity extends OnboarderActivity {
         super.onCreate(savedInstanceState);
         onboarderPages = new ArrayList<OnboarderPage>();
 
-        // Create your first page
         OnboarderPage onboarderPage1 = new OnboarderPage(R.string.onboarding_1_title, R.string.onboarding_1_description, R.drawable.ic_launcher);
-        OnboarderPage onboarderPage2 = new OnboarderPage(R.string.content_description_empty, R.string.onboarding_2_description);
-        OnboarderPage onboarderPage3 = new OnboarderPage(R.string.content_description_empty, R.string.onboarding_3_description);
-        OnboarderPage onboarderPage4 = new OnboarderPage(R.string.content_description_empty, R.string.onboarding_4_description);
-        OnboarderPage onboarderPage5 = new OnboarderPage(R.string.content_description_empty, R.string.onboarding_5_description);
+        OnboarderPage onboarderPage2 = new OnboarderPage(R.string.onboarding_2_title, R.string.onboarding_2_description, R.drawable.ob2);
+        OnboarderPage onboarderPage3 = new OnboarderPage(R.string.onboarding_3_title, R.string.onboarding_3_description, R.drawable.ob3);
+        OnboarderPage onboarderPage4 = new OnboarderPage(R.string.onboarding_4_title, R.string.onboarding_4_description, R.drawable.ob4);
+        OnboarderPage onboarderPage5 = new OnboarderPage(R.string.onboarding_5_title, R.string.onboarding_5_description, R.drawable.ob5);
 
-        // You can define title and description colors (by default white)
-        onboarderPage1.setTitleColor(R.color.white);
-        onboarderPage1.setDescriptionColor(R.color.white);
-
-        // Add your pages to the list
         onboarderPages.add(onboarderPage1);
         onboarderPages.add(onboarderPage2);
         onboarderPages.add(onboarderPage3);
@@ -45,17 +41,16 @@ public class IntroActivity extends OnboarderActivity {
         onboarderPages.add(onboarderPage5);
 
         for(OnboarderPage p : onboarderPages) {
-            p.setBackgroundColor(R.color.dark_primary_color);
-            p.setDescriptionTextSize(16);
+            p.setBackgroundColor(R.color.primary_color);
+            p.setDescriptionTextSize(18);
             p.setDescriptionColor(R.color.white);
         }
 
         setDividerHeight(0);
         setSkipButtonHidden();
+        setFinishButtonTitle(R.string.onboarding_finish);
 
-        // And pass your pages to 'setOnboardPagesReady' method
         setOnboardPagesReady(onboarderPages);
-
     }
 
     @Override

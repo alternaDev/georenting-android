@@ -83,7 +83,6 @@ public class MainActivity extends BaseActivity implements GoogleApiClient.OnConn
     private User mCurrentUser;
     private String mCurrentFragment = FRAGMENT_MY_FENCES;
     private Fragment mContent;
-    private OnboarderActivityHelper mOnboarderHelper;
 
     @Inject
     GeoRentingService mService;
@@ -155,8 +154,7 @@ public class MainActivity extends BaseActivity implements GoogleApiClient.OnConn
 
         getGeoRentingApplication().createMapViewCacheIfNecessary();
 
-        mOnboarderHelper = new OnboarderActivityHelper(this, IntroActivity.class);
-        mOnboarderHelper.show(savedInstanceState);
+
     }
 
     @DebugLog
@@ -272,7 +270,6 @@ public class MainActivity extends BaseActivity implements GoogleApiClient.OnConn
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        mOnboarderHelper.onSaveInstanceState(outState);
         outState.putString(EXTRA_FRAGMENT, mCurrentFragment);
     }
 

@@ -32,9 +32,10 @@ public class SignInActivity extends BaseActivity implements GoogleApiClient.OnCo
     private static final int REQUEST_CODE_RESOLVE_ERR = 42;
     private static final int REQUEST_CODE_SIGN_IN = 44;
 
-
     private GoogleApiClient mApiClient;
     private ProgressDialog mProgressDialog;
+    private OnboarderActivityHelper mOnboarderHelper;
+
 
     @Inject
     GoogleAuth mGoogleAuth;
@@ -63,6 +64,9 @@ public class SignInActivity extends BaseActivity implements GoogleApiClient.OnCo
                 .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
                 .addApi(LocationServices.API)
                 .build();
+
+        mOnboarderHelper = new OnboarderActivityHelper(this, IntroActivity.class);
+        mOnboarderHelper.show(savedInstanceState);
     }
 
     @Override
@@ -145,6 +149,12 @@ public class SignInActivity extends BaseActivity implements GoogleApiClient.OnCo
             GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
             handleSignIn(result);
         }
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle b) {
+        super.onSaveInstanceState(b);
+        mOnboarderHelper.onSaveInstanceState(b);
     }
 
 
