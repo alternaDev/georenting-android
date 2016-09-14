@@ -30,4 +30,11 @@
         <item name="android:statusBarColor">@android:color/transparent</item>
         <item name="android:windowBackground">@android:color/transparent</item>
     </style>
+
+    <style name="AppTheme.ButtonDelete" parent="Widget.AppCompat.Button.Colored">
+        <item name="colorAccent">@color/red</item>
+        <item name="android:backgroundTint">@color/red</item>
+        <item name="android:colorAccent">@color/red</item>
+        <item name="android:textColorPrimary">@color/white</item>
+    </style>
 </resources>
