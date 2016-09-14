@@ -62,4 +62,18 @@
     <string name="geofence_detail_total_visitors">Besucher</string>
     <string name="geofence_detail_location">Ort</string>
     <string name="geofence_detail_owner">Besitzer</string>
+    <string name="dialog_teardown_action_cancel">Abbrechen</string>
+    <string name="dialog_teardown_action_teardown">Abreissen</string>
+    <string name="dialog_teardown_message">Soll das GeoFence wirklich abgerissen werden?</string>
+    <string name="onboarding_1_description">ein Spiel das von deinem Standort abhängt und zusammen mit anderen in deiner Umgebung gespielt wird.</string>
+    <string name="onboarding_1_title">Das ist GeoRenting,</string>
+    <string name="onboarding_2_description">Du kannst GeoFences im Tausch gegen GeoCoins kaufen.</string>
+    <string name="onboarding_2_title">GeoFences kaufen!</string>
+    <string name="onboarding_3_description">Wenn jemand dein GeoFence betritt, erhältst du von ihm GeoCoins.</string>
+    <string name="onboarding_3_title">Verdiene GeoCoins!</string>
+    <string name="onboarding_4_description">Andererseits wird von deinem GeoCoin-Konto Miete abgebucht, wenn du das GeoFence einer anderen Person betrittst.</string>
+    <string name="onboarding_4_title">Bezahle Miete...</string>
+    <string name="onboarding_5_description">Dieses Spiel läuft im Hintergrund, also verdienst du auch GeoCoins, wenn du gerade nicht im Spiel bist.</string>
+    <string name="onboarding_5_title">Läuft.</string>
+    <string name="onboarding_finish">Okidoki</string>
 </resources>
