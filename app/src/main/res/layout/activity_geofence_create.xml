@@ -85,6 +85,13 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content">
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/ic_timelapse_black_24dp"
+                            android:tint="@color/dark_gray"
+                            android:layout_gravity="center"
+                            android:contentDescription="@string/content_description_empty" />
                         <SeekBar
                             android:layout_weight="0.8"
                             android:layout_width="0dp"
@@ -103,13 +110,28 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content">
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/ic_lens_black_24dp"
+                            android:tint="@color/dark_gray"
+                            android:layout_gravity="center"
+                            android:layout_marginEnd="8dp"
+                            android:contentDescription="@string/content_description_empty" />
                         <com.satsuware.usefulviews.LabelledSpinner
                             app:labelText="@string/create_geofence_radius_title"
                             android:id="@+id/radius_spinner"
                             android:layout_weight="0.5"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content" />
-
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/ic_blur_on_black_24dp"
+                            android:tint="@color/dark_gray"
+                            android:layout_gravity="center"
+                            android:layout_marginEnd="8dp"
+                            android:contentDescription="@string/content_description_empty" />
                         <com.satsuware.usefulviews.LabelledSpinner
                             android:id="@+id/rent_multiplier_spinner"
                             app:labelText="@string/create_geofence_rent_title"

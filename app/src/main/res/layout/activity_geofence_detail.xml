@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
     <data>
         <variable
             name="geoFence"
@@ -112,7 +112,7 @@
                     <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:src="@drawable/ic_history_black_24dp"
+                        android:src="@drawable/ic_timelapse_black_24dp"
                         android:tint="@color/dark_gray"
                         android:contentDescription="@string/content_description_empty" />
                     <TextView
@@ -126,7 +126,7 @@
                         android:layout_gravity="start" />
                     <TextView
                         android:id="@+id/geofence_death_countdown"
-                        android:text="00:00:00:00"
+                        tools:text="00:00:00:00"
                         android:textSize="18sp"
                         android:textColor="@color/black"
                         android:layout_width="wrap_content"
