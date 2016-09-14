@@ -192,7 +192,7 @@ dependencies {
     compile 'com.google.firebase:firebase-ads:9.4.0'
     compile 'com.google.firebase:firebase-config:9.4.0'
 
-    compile 'com.github.chyrta:AndroidOnboarder:0.6'
+    compile 'com.github.paolorotolo:appintro:4.0.0'
 
     compile 'rebus:header-view:1.1.6'
 

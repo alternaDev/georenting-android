@@ -6,8 +6,9 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 
-import com.chyrta.onboarder.OnboarderActivity;
-import com.facebook.stetho.inspector.domstorage.SharedPreferencesHelper;
+import com.github.paolorotolo.appintro.AppIntro;
+import com.github.paolorotolo.appintro.AppIntro2;
+
 
 /**
  * Created by jhbru on 14.09.2016.
@@ -21,10 +22,10 @@ public class OnboarderActivityHelper {
 
     private final SharedPreferences mPreferences;
     private Activity mActivity;
-    private Class<? extends OnboarderActivity> mActivityClass;
+    private Class<? extends AppIntro2> mActivityClass;
     private boolean onboarderActivityStarted = false;
 
-    public OnboarderActivityHelper(Activity activity, Class<? extends OnboarderActivity> activityClass) {
+    public OnboarderActivityHelper(Activity activity, Class<? extends AppIntro2> activityClass) {
         mActivity = activity;
         mActivityClass = activityClass;
         mPreferences = activity.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);

@@ -2,6 +2,7 @@
 <resources>
     <color name="text_geofence_card_background">#90000000</color>
     <color name="text_geofence_card">#f0ffffff</color>
+    <color name="white">#fff</color>
     <color name="gray">#dfdfdf</color>
     <color name="dark_gray">#555</color>
     <color name="red">#F44336</color>
