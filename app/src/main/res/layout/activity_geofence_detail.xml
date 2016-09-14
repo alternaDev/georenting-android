@@ -99,6 +99,7 @@
                         android:layout_gravity="start" />
                     <TextView
                         android:text="@{geoFence.owner_name}"
+                        tools:text="MagicPeda"
                         android:textSize="18sp"
                         android:textColor="@color/black"
                         android:layout_width="wrap_content"
@@ -156,6 +157,7 @@
                     <TextView
                         android:text="@{Integer.toString(geoFence.totalVisitors)}"
                         android:textSize="18sp"
+                        tools:text="2"
                         android:textColor="@color/black"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -184,6 +186,7 @@
                     <TextView
                         android:text="@{@string/n_money_units(geoFence.totalEarnings)}"
                         android:textSize="18sp"
+                        tools:text="42,00 GC"
                         android:textColor="@color/black"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -212,6 +215,7 @@
                     <TextView
                         android:text="@{@string/n_money_units(geoFence.cost)}"
                         android:textSize="18sp"
+                        tools:text="2000,0 GC"
                         android:textColor="@color/black"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -239,6 +243,7 @@
                     <TextView
                         android:text="@{@string/n_rent_multiplier(geoFence.rentMultiplier)}"
                         android:textSize="18sp"
+                        tools:text="1,5"
                         android:textColor="@color/black"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -266,6 +271,7 @@
                     <TextView
                         android:text="@{@string/n_meters(geoFence.radius)}"
                         android:textSize="18sp"
+                        tools:text="200m"
                         android:textColor="@color/black"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -293,6 +299,7 @@
                     <TextView
                         android:text="@{location}"
                         android:textSize="18sp"
+                        tools:text="Rolftopia, Malle"
                         android:textColor="@color/black"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
