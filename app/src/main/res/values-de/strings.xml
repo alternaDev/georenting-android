@@ -76,4 +76,5 @@
     <string name="onboarding_5_description">Dieses Spiel läuft im Hintergrund, also verdienst du auch GeoCoins, wenn du gerade nicht im Spiel bist.</string>
     <string name="onboarding_5_title">Läuft.</string>
     <string name="onboarding_finish">Okidoki</string>
+    <string name="create_geofence_place_title">Adresse</string>
 </resources>

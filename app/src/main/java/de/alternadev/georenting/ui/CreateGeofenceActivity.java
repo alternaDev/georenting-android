@@ -281,8 +281,8 @@ public class CreateGeofenceActivity extends BaseActivity implements GoogleApiCli
         String fenceName = mBinding.nameText.getText().toString().trim();
 
         if(TextUtils.isEmpty(fenceName)) {
-            mBinding.nameLayout.setErrorEnabled(true);
-            mBinding.nameLayout.setError(getString(R.string.create_geofence_error_name_empty));
+            //mBinding.nameText.setEr(true);
+            mBinding.nameText.setError(getString(R.string.create_geofence_error_name_empty));
             return;
         }
         if(mLocation == null || mLocation.getAccuracy() > MINIMUM_ACCURACY) {
