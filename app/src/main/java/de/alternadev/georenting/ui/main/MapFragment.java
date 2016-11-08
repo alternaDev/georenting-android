@@ -23,6 +23,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MapStyleOptions;
 
 import org.parceler.Parcels;
 
@@ -134,6 +135,10 @@ public class MapFragment extends Fragment implements GoogleApiClient.OnConnectio
     }
 
     private void startLocationUpdates(GoogleMap map) {
+        map.setMapStyle(
+                MapStyleOptions.loadRawResourceStyle(
+                        getContext(), R.raw.map_style));
+
         if (ActivityCompat.checkSelfPermission(this.getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this.getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             return;
         }
