@@ -89,6 +89,7 @@ public class GoogleAuth {
                 Timber.d("Got Token REsult:%s", getTokenResult.getToken());
 
                 mGeoRentingService.auth(new User(getTokenResult.getToken()))
+                        .retry(2)
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .map(sessionToken -> {
@@ -146,8 +147,12 @@ public class GoogleAuth {
 
             String authCode = TaskUtil.waitForTask(firebaseAuthWithGoogle(r.getSignInAccount()).toBlocking().first().getUser().getToken(false)).getToken();
 
-            SessionToken sessionToken = mGeoRentingService.auth(new User(authCode)).toBlocking().first();
-            mApp.setSessionToken(sessionToken);
+            try {
+                SessionToken sessionToken = mGeoRentingService.auth(new User(authCode)).retry(2).toBlocking().single();
+                mApp.setSessionToken(sessionToken);
+            } catch(Exception e) {
+                return false;
+            }
 
             return true;
         }
