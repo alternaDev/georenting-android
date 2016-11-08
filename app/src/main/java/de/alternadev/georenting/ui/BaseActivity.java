@@ -22,7 +22,7 @@ public class BaseActivity extends AppCompatActivity {
     public static final String ANALYTICS_PROPERTY_USER_NAME = "name";
     private static final String ANALYTICS_PROPERTY_USER_ID = "id";
 
-    private FirebaseAnalytics mFirebaseAnalytics;
+    protected FirebaseAnalytics mFirebaseAnalytics;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {

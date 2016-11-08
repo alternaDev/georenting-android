@@ -35,6 +35,7 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.LocationSettingsRequest;
 import com.google.android.gms.location.LocationSettingsResult;
 import com.google.android.gms.location.LocationSettingsStatusCodes;
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.squareup.picasso.Picasso;
 
 import javax.inject.Inject;
@@ -205,18 +206,22 @@ public class MainActivity extends BaseActivity implements GoogleApiClient.OnConn
             case FRAGMENT_MY_FENCES:
                 showFragment(MyGeofencesFragment.newInstance(mCurrentUser));
                 mToolbar.setTitle(R.string.main_drawer_my_geofences);
+                mFirebaseAnalytics.setCurrentScreen(this, getString(R.string.main_drawer_my_geofences), MyGeofencesFragment.class.getCanonicalName());
                 break;
             case FRAGMENT_PROFILE:
                 showFragment(ProfileFragment.newInstance(mCurrentUser));
                 mToolbar.setTitle(R.string.main_drawer_profile);
+                mFirebaseAnalytics.setCurrentScreen(this, getString(R.string.main_drawer_profile), ProfileFragment.class.getCanonicalName());
                 break;
             case FRAGMENT_MAP:
                 showFragment(MapFragment.newInstance());
                 mToolbar.setTitle(R.string.main_drawer_map);
+                mFirebaseAnalytics.setCurrentScreen(this, getString(R.string.main_drawer_map), MapFragment.class.getCanonicalName());
                 break;
             case FRAGMENT_HISTORY:
                 showFragment(HistoryFragment.newInstance());
                 mToolbar.setTitle(R.string.main_drawer_history);
+                mFirebaseAnalytics.setCurrentScreen(this, getString(R.string.main_drawer_history), HistoryFragment.class.getCanonicalName());
                 break;
         }
     }
