@@ -39,7 +39,7 @@ before_install:
 - echo "georentingKeystorePassword=$KEYSTORE_PASSWORD" >> ~/.gradle/gradle.properties
 - echo "testfairyKey=$TESTFAIRY_KEY" >> ~/.gradle/gradle.properties
 - sudo apt-get install -y jq
-- rvm use 2.2.2 --install --binary --fuzzy
+- rvm use ruby --latest --install --binary --fuzzy
 - gem install fastlane
 
 script:
