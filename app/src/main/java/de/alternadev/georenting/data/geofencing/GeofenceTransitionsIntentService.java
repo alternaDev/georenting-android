@@ -91,10 +91,10 @@ public class GeofenceTransitionsIntentService extends IntentService {
             for(Geofence f : triggeringGeofences) {
                 Timber.d("Enter Triggering fence: %s", f);
                 // Only trigger if not currently in a Geofence.
-                boolean currentFenceCooldown = new Date().getTime() - mPreferences.getLong(PREF_FENCE_COOLDOWN + "_" + f.getRequestId(), new Date().getTime()) < fenceCooldown;
                 boolean currentFenceOk = !mPreferences.getBoolean(PREF_CURRENT_GEOFENCE + "_" + f.getRequestId(), false);
-                Timber.d("Enter Cooldown: %b, OK: %b", currentFenceCooldown, currentFenceOk);
-                if (currentFenceCooldown && currentFenceOk) {
+                boolean currentFenceCooldownOk = new Date().getTime() - mPreferences.getLong(PREF_FENCE_COOLDOWN + "_" + f.getRequestId(), new Date().getTime()) > fenceCooldown;
+                Timber.d("Enter Cooldown: %b, OK: %b", currentFenceCooldownOk, currentFenceOk);
+                if (currentFenceCooldownOk && currentFenceOk) {
                     notifyServer(f);
                     mPreferences.edit().putLong(PREF_FENCE_COOLDOWN + "_" + f.getRequestId(), new Date().getTime()).apply();
                     mPreferences.edit().putBoolean(PREF_CURRENT_GEOFENCE+ "_" + f.getRequestId(), true).apply();
