@@ -124,6 +124,9 @@ public class FcmListenerService extends FirebaseMessagingService {
             if (name == null) {
                 name = (String) data.get("ownerName");
             }
+            if (name == null) {
+
+            }
             String avatarUrl = mAvatarService.getAvatarUrl(name);
             Timber.d("AvatarURL: %s", avatarUrl);
             Bitmap avatar;
