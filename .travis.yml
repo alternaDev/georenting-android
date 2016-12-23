@@ -32,11 +32,11 @@ android:
 #  - sys-img-armeabi-v7a-google_apis-22
 
 before_install:
-- openssl aes-256-cbc -K $encrypted_6ca2067ed10f_key -iv $encrypted_6ca2067ed10f_iv
-  -in secrets.tar.enc -out secrets.tar -d
+- openssl aes-256-cbc -K $encrypted_6ca2067ed10f_key -iv $encrypted_6ca2067ed10f_iv -in secrets.tar.enc -out secrets.tar -d
 - tar xvf secrets.tar
 - mkdir -p ~/.gradle
 - echo "georentingKeystorePassword=$KEYSTORE_PASSWORD" >> ~/.gradle/gradle.properties
+- echo "FirebaseServiceAccountFilePath=$TRAVIS_BUILD_DIR/georenting-1-firebase-crashreporting-7aqlr-ea40308c56.json" >> ~/.gradle/gradle.properties
 - echo "testfairyKey=$TESTFAIRY_KEY" >> ~/.gradle/gradle.properties
 - sudo apt-get install -y jq
 - rvm use ruby --latest --install --binary --fuzzy
