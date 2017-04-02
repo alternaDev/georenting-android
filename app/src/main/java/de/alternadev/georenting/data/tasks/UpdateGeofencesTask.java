@@ -69,106 +69,108 @@ public class UpdateGeofencesTask extends GcmTaskService {
             if (!mAuth.blockingSignIn()) {
                 return GcmNetworkManager.RESULT_RESCHEDULE;
             }
-        } catch(Exception e) {
-            return GcmNetworkManager.RESULT_RESCHEDULE;
-        }
 
-        Timber.i("Initializing Google");
-        mApiClient = new GoogleApiClient.Builder(this)
-                .addApi(LocationServices.API)
-                .build();
-        mApiClient.blockingConnect();
 
-        /* PLAN:
-         * 1. Remove all Google Geofences (using IDs from realm)
-         * 2. Remove all Realm Geofences
-         * 3. Get new Geofences from server
-         * 4. Put new Geofences into Google, save IDs
-         * 5. Put new Geofences into Realm, with IDs
-         */
-        Timber.i("removing old Fences");
+            Timber.i("Initializing Google");
+            mApiClient = new GoogleApiClient.Builder(this)
+                    .addApi(LocationServices.API)
+                    .build();
+            mApiClient.blockingConnect();
 
-        List<String> oldRequestIds = getOldRequestIDs();
-        oldRequestIds.add(GEOFENCE_UPDATE);
+            /* PLAN:
+             * 1. Remove all Google Geofences (using IDs from realm)
+             * 2. Remove all Realm Geofences
+             * 3. Get new Geofences from server
+             * 4. Put new Geofences into Google, save IDs
+             * 5. Put new Geofences into Realm, with IDs
+             */
+            Timber.i("removing old Fences");
 
-        if (!removeOldGeofences(oldRequestIds)) {
-            Timber.e("Could not remove old Geofences. Stopping.");
-            mDatabase.close();
-            return GcmNetworkManager.RESULT_FAILURE;
-        }
+            List<String> oldRequestIds = getOldRequestIDs();
+            oldRequestIds.add(GEOFENCE_UPDATE);
 
-        removeAllFences();
-
-        Location lastLocation = getLocation();
-        if(lastLocation == null) {
-            Timber.e("Could not get Location. Stopping.");
-            mDatabase.close();
-            return GcmNetworkManager.RESULT_RESCHEDULE;
-        }
-
-        List<GeoFence> remoteFences;
-        try {
-            remoteFences = getRemoteGeoFences(lastLocation);
-        } catch (IOException e) {
-            e.printStackTrace();
-            Timber.e("Could not get Remote Geofences. Stopping.");
-            mDatabase.close();
-            return GcmNetworkManager.RESULT_FAILURE;
-        }
-
-        if(remoteFences == null) {
-            Timber.w("Not remote Fences were returned. Stopping.");
-            mDatabase.close();
-            return GcmNetworkManager.RESULT_FAILURE;
-        }
-
-        Timber.i("Adding new Fences (%d)", remoteFences.size());
-
-        BriteDatabase.Transaction t = mDatabase.newTransaction();
-
-        List<Geofence> geofences = new ArrayList<>();
-        try {
-            long i = 0;
-            for (GeoFence remoteFence : remoteFences) {
-                geofences.add(createGeoFence(remoteFence.centerLat, remoteFence.centerLon, remoteFence.radius, remoteFence.id));
-                Fence f = Fence.builder()
-                        .name(remoteFence.name)
-                        .latitude(remoteFence.centerLat)
-                        .longitude(remoteFence.centerLon)
-                        .radius(remoteFence.radius)
-                        ._id(i++)
-                        .geofenceId(remoteFence.id)
-                        .owner(remoteFence.owner)
-                        .build();
-                Timber.i("Adding fence: %s", remoteFence.id);
-
-                Fence.insert(mDatabase, f);
+            if (!removeOldGeofences(oldRequestIds)) {
+                Timber.e("Could not remove old Geofences. Stopping.");
+                mDatabase.close();
+                return GcmNetworkManager.RESULT_FAILURE;
             }
-            t.markSuccessful();
-        } finally {
-            t.end();
-        }
 
-        geofences.add(createUpdateGeoFence(lastLocation.getLatitude(), lastLocation.getLongitude()));
+            removeAllFences();
 
-        if(geofences.size() == 0) {
-            Timber.i("No Fences. Done!");
+            Location lastLocation = getLocation();
+            if(lastLocation == null) {
+                Timber.e("Could not get Location. Stopping.");
+                mDatabase.close();
+                return GcmNetworkManager.RESULT_RESCHEDULE;
+            }
+
+            List<GeoFence> remoteFences;
+            try {
+                remoteFences = getRemoteGeoFences(lastLocation);
+            } catch (IOException e) {
+                e.printStackTrace();
+                Timber.e("Could not get Remote Geofences. Stopping.");
+                mDatabase.close();
+                return GcmNetworkManager.RESULT_FAILURE;
+            }
+
+            if(remoteFences == null) {
+                Timber.w("Not remote Fences were returned. Stopping.");
+                mDatabase.close();
+                return GcmNetworkManager.RESULT_FAILURE;
+            }
+
+            Timber.i("Adding new Fences (%d)", remoteFences.size());
+
+            BriteDatabase.Transaction t = mDatabase.newTransaction();
+
+            List<Geofence> geofences = new ArrayList<>();
+            try {
+                long i = 0;
+                for (GeoFence remoteFence : remoteFences) {
+                    geofences.add(createGeoFence(remoteFence.centerLat, remoteFence.centerLon, remoteFence.radius, remoteFence.id));
+                    Fence f = Fence.builder()
+                            .name(remoteFence.name)
+                            .latitude(remoteFence.centerLat)
+                            .longitude(remoteFence.centerLon)
+                            .radius(remoteFence.radius)
+                            ._id(i++)
+                            .geofenceId(remoteFence.id)
+                            .owner(remoteFence.owner)
+                            .build();
+                    Timber.i("Adding fence: %s", remoteFence.id);
+
+                    Fence.insert(mDatabase, f);
+                }
+                t.markSuccessful();
+            } finally {
+                t.end();
+            }
+
+            geofences.add(createUpdateGeoFence(lastLocation.getLatitude(), lastLocation.getLongitude()));
+
+            if(geofences.size() == 0) {
+                Timber.i("No Fences. Done!");
+                mDatabase.close();
+                return GcmNetworkManager.RESULT_SUCCESS;
+            }
+
+
+            boolean addGeofencesResult = addGeoFences(geofences);
+
+            if (geofences.size() > 0 && !addGeofencesResult) {
+                Timber.e("Could not add new Fences to google. Stopping.");
+                mDatabase.close();
+                return GcmNetworkManager.RESULT_FAILURE;
+            }
+
+            Timber.i("Done!");
             mDatabase.close();
             return GcmNetworkManager.RESULT_SUCCESS;
+        } catch(Exception e) {
+            Timber.e("Could not perform update Task", e);
+            return GcmNetworkManager.RESULT_RESCHEDULE;
         }
-
-
-        boolean addGeofencesResult = addGeoFences(geofences);
-
-        if (geofences.size() > 0 && !addGeofencesResult) {
-            Timber.e("Could not add new Fences to google. Stopping.");
-            mDatabase.close();
-            return GcmNetworkManager.RESULT_FAILURE;
-        }
-
-        Timber.i("Done!");
-        mDatabase.close();
-        return GcmNetworkManager.RESULT_SUCCESS;
     }
 
     private Location getLocation() {

@@ -145,9 +145,9 @@ public class GoogleAuth {
         if(r.isSuccess()) {
             if(r.getSignInAccount() == null) return false;
 
-            String authCode = TaskUtil.waitForTask(firebaseAuthWithGoogle(r.getSignInAccount()).toBlocking().first().getUser().getToken(false)).getToken();
 
             try {
+                String authCode = TaskUtil.waitForTask(firebaseAuthWithGoogle(r.getSignInAccount()).toBlocking().first().getUser().getToken(false)).getToken();
                 SessionToken sessionToken = mGeoRentingService.auth(new User(authCode)).retry(2).toBlocking().single();
                 mApp.setSessionToken(sessionToken);
             } catch(Exception e) {
